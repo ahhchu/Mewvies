@@ -3,6 +3,9 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import './App.css';
 import Header from './components/Header';
 import Login from './components/Login';
+import Signup from './components/Signup';
+import Movie from './components/Movie';
+
 import UserContext from './context/UserContext';
 
 function App() {
@@ -27,7 +30,9 @@ function App() {
       <div className="App">
         <Header token={token} updateToken={setTokenFromLocalStorage} />
         <main className="App-main">
-          {/*  main content goes here */}
+        <Routes>
+            <Route path="/movie" element={<Movie />} />
+          </Routes>
         </main>
       </div>
     </Router>
