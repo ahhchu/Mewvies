@@ -1,0 +1,25 @@
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+  }
+  
+  .btn {
+    margin: 10px;
+    width: 40%;
+    background-color: #BA3F1D;
+    color: white;
+    padding: 8px;
+    border-radius: 20px;
+  }
+
+  .btn:hover {
+    background-color: #D19121;
+  }
+
+  .error-message {
+  color: red;
+  margin-top: 5px;
+  }

@@ -1,0 +1,25 @@
+.popup{
+    width: 500px;
+    margin: 20px auto;
+    padding: 10px;
+    background-color: #ece8db; 
+    border: 8px solid #D19121;
+    }
+    
+    .btn {
+      margin: 5px;
+      width: 40%;
+      background-color: #BA3F1D;
+      color: white;
+      padding: 3px;
+      border-radius: 20px;
+    }
+  
+    .btn:hover {
+      background-color: #D19121;
+    }
+  
+    .error-message {
+      color: red;
+      margin-top: 5px;
+    }
