@@ -3,7 +3,7 @@ import React, { useContext, useState } from "react";
 import "./Login.css";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
-import UserContext from "../context/UserContext";
+import UserContext from "../context/UserContext"
 
 function Login({ toggle, updateToken }) {
     // used https://dev.to/afromatt6288/create-a-popup-form-for-login-and-then-style-it-37jl

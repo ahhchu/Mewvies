@@ -1,2 +1,11 @@
 import { createContext } from "react";
-export default createContext(null);
+
+const UserContext = createContext({
+  userData: {
+    token: undefined,
+    user: undefined,
+  },
+  setUserData: () => {},
+});
+
+export default UserContext;

@@ -3,23 +3,23 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: white;
+    background-color: #ceb992; 
+    border: 8px solid #73937e;
   }
   
   .btn {
     margin: 10px;
     width: 40%;
-    background-color: #BA3F1D;
+    background-color: #585563;
     color: white;
     padding: 8px;
     border-radius: 20px;
   }
 
   .btn:hover {
-    background-color: #D19121;
+    background-color: #5b2e48;
   }
 
   .error-message {
-  color: red;
   margin-top: 5px;
   }

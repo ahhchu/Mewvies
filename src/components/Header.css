@@ -1,8 +1,6 @@
 .header {
     display:flex;   
     justify-content: space-between;
-    background-color: #BA3F1D;
-    border-bottom: 5px solid #D19121;
 }
 
 .header__left{
@@ -15,7 +13,7 @@
     display:flex;
     align-items: center;
     justify-content: center;
-    color: white;
+    color: black;
     padding-left: 20px;
     padding-right: 20px;
 }

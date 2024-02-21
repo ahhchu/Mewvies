@@ -2,24 +2,23 @@
     width: 500px;
     margin: 20px auto;
     padding: 10px;
-    background-color: #ece8db; 
-    border: 8px solid #D19121;
+    background-color: #ceb992; 
+    border: 8px solid #73937e;
     }
     
     .btn {
       margin: 5px;
       width: 40%;
-      background-color: #BA3F1D;
       color: white;
       padding: 3px;
+      background-color: #585563;
       border-radius: 20px;
     }
   
     .btn:hover {
-      background-color: #D19121;
+      background-color: #5b2e48;
     }
   
     .error-message {
-      color: red;
       margin-top: 5px;
     }
