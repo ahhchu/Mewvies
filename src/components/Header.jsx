@@ -5,6 +5,7 @@ import "./Button.css";
 import Login from "./Login";
 import Signup from "./Signup";
 import Button from "./Button";
+import Search from "./Search";
 
 function Header({ token, updateToken }) {
     const [signupSeen, setSignupSeen] = useState(false);
@@ -33,16 +34,7 @@ function Header({ token, updateToken }) {
                 <Link className="button" to="/">
                     Home
                 </Link>
-                {token ? (
-                    <>
-                        <Link className="button" to="add-painting">
-                            + Add
-                        </Link>
-                        <Link className="button" to="edit">
-                            Edit
-                        </Link>
-                    </>
-                ) : null}
+               <Search /> {/*search bar */}
             </div>
 
             <div className="header__center">
