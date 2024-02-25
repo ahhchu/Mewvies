@@ -4,6 +4,7 @@
     padding: 10px;
     background-color: #ceb992; 
     border: 8px solid #73937e;
+    z-index: 1000;
     }
     
     .btn {

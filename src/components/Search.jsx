@@ -8,11 +8,9 @@ function Search() {
   const movies = [
     { name: "KungFuPanda4", 
       type: "Coming Soon",
-      img: "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcShXRgSAV3GrlVrpvGcLLaEmue2hAvF1BH3YP3BRyX6m1L1MIxjjWH0EkfHn7XTMqidJG_c_g",
     },
     { name: "Cats",
       type: "Currently Showing",
-      img: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn0.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcTlhjCq92hLSM8SQ8LQY-T36pohncVV7Fhsjx3X69pEarYVe_hO&psig=AOvVaw33QSEZ0Qk-usIcW6z1GWfB&ust=1708628352705000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCNDYw-GOvYQDFQAAAAAdAAAAABAE",
      },
   ];
 
@@ -28,25 +26,34 @@ function Search() {
   };
 
   return (
-    <div>
+    <div className="search-container">
       <input
         type="text"
         placeholder="Search for movies..."
         onChange={handleChange}
         value={searchInput}
       />
-      <button onClick={handleSearch}>Search</button>
 
-      {searchResults.length > 0 && (
-        <ul>
-          {searchResults.map((result, index) => (
-            <li key={index}>
-              <Link to={`/movies/${result.name}`}>{result.name}</Link>
-            </li>
-          ))}
-        </ul>
+      <button className = "search-button" onClick={handleSearch}>Search</button>
+
+      {/* Shows the link to view cat movie details */}
+      {searchResults.length > 0 && searchResults[0].name === "Cats" && (
+        <div>
+          <Link to="/cat-movie-details">
+            <p>Cats</p>
+          </Link>
+        </div>
       )}
-    </div>
+
+      {/* Prompts user that we do not have the movie!! does not work */}
+      {searchResults.length > 0 && searchResults[0].name !== "Cats" && (
+        <div>
+          <p>Sorry, we do not have that movie yet!</p>
+        </div>
+      )}
+
+</div>
+
   );
 }
 

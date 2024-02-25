@@ -14,9 +14,12 @@
     align-items: center;
     justify-content: center;
     color: black;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-right: 50px;
+   font-family: 'Times New Roman', Times, serif;
+   font-size: 40px;
 }
+
+
 
 .header__right {
     display:flex;

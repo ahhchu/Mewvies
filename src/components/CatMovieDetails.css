@@ -1,34 +1,13 @@
-  h1 {
+h1 {
     font-family: 'Times New Roman', Times, serif;
-  }
-.Movie {
-    justify-content: space-between;
-  }
-  
-  .MovieCard img {
-    margin: 3px;
-    width: 350px;
-    height: 500px;;
-    border-radius: 8px;
-  }
+}
 
-  .Currently-Running {
-    display: flex;
-    justify-content: space-between;
-    flex-direction: row;
-  }
-  
-  .Coming-Soon {
-    display: flex;
-    justify-content: space-between;
-    flex-direction: row;
-  }
-  
-  .MovieCard {
-    text-align: center;
-  }
+h3 {
+    font-family: "Times New Roman', Times, serif;"
+}
 
-  .trailer-button {
+.trailer-button {
+    width: 200px;
     margin: 3px;
     align-items: center;
     appearance: none;

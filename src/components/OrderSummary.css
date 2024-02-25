@@ -1,35 +1,5 @@
-  h1 {
-    font-family: 'Times New Roman', Times, serif;
-  }
-.Movie {
-    justify-content: space-between;
-  }
-  
-  .MovieCard img {
-    margin: 3px;
-    width: 350px;
-    height: 500px;;
-    border-radius: 8px;
-  }
-
-  .Currently-Running {
-    display: flex;
-    justify-content: space-between;
-    flex-direction: row;
-  }
-  
-  .Coming-Soon {
-    display: flex;
-    justify-content: space-between;
-    flex-direction: row;
-  }
-  
-  .MovieCard {
-    text-align: center;
-  }
-
-  .trailer-button {
-    margin: 3px;
+.checkout-button {
+    margin: 5px;
     align-items: center;
     appearance: none;
     background-color: #FCFCFD;
@@ -60,16 +30,16 @@
     font-size: 18px;
    }
    
-   .trailer-button:focus {
+   .checkout-button:focus {
     box-shadow: #D6D6E7 0 0 0 1.5px inset, rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
    }
    
-   .trailer-button:hover {
+   .checkout-button:hover {
     box-shadow: rgba(45, 35, 66, 0.3) 0 4px 8px, rgba(45, 35, 66, 0.2) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
     transform: translateY(-2px);
    }
    
-   .trailer-button:active {
+   .checkout-button:active {
     box-shadow: #D6D6E7 0 3px 7px inset;
     transform: translateY(2px);
    }

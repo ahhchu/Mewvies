@@ -38,7 +38,7 @@ function Header({ token, updateToken }) {
             </div>
 
             <div className="header__center">
-                <h2>Mew Mew Mewvies</h2>
+                <h2>Mewvies</h2>
             </div>
 
             <div className="header__right">
