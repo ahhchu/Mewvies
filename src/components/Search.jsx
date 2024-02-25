@@ -5,13 +5,14 @@ import { Link } from "react-router-dom";
 function Search() {
   const [searchInput, setSearchInput] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [searched, setSearched] = useState(false); 
+
   const movies = [
-    { name: "KungFuPanda4", 
-      type: "Coming Soon",
-    },
-    { name: "Cats",
-      type: "Currently Showing",
-     },
+    { name: "Cats" },
+    { name: "Mean Girls" },
+    { name: "Everything Everywhere All At Once" },
+    { name: "Saltburn" },
+    { name: "Dilwale" },
   ];
 
   const handleChange = (e) => {
@@ -23,6 +24,7 @@ function Search() {
       movie.name.toLowerCase().includes(searchInput.toLowerCase())
     );
     setSearchResults(results);
+    setSearched(true);
   };
 
   return (
@@ -34,26 +36,20 @@ function Search() {
         value={searchInput}
       />
 
-      <button className = "search-button" onClick={handleSearch}>Search</button>
+      <button className="search-button" onClick={handleSearch}>
+        Search
+      </button>
 
-      {/* Shows the link to view cat movie details */}
-      {searchResults.length > 0 && searchResults[0].name === "Cats" && (
+     {searched && searchResults.length > 0 && (
         <div>
-          <Link to="/cat-movie-details">
-            <p>Cats</p>
-          </Link>
+          {searchResults.map((movie) => (
+            <Link key={movie.name} to={`${movie.name}-movie-details`}>
+              {movie.name}
+            </Link>
+          ))}
         </div>
       )}
-
-      {/* Prompts user that we do not have the movie!! does not work */}
-      {searchResults.length > 0 && searchResults[0].name !== "Cats" && (
-        <div>
-          <p>Sorry, we do not have that movie yet!</p>
-        </div>
-      )}
-
-</div>
-
+    </div>
   );
 }
 

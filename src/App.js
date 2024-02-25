@@ -47,13 +47,13 @@ function App() {
             <Route exact path="/" element={<Movie />} />
             <Route path="/seats" element={<Seats />} />
             <Route path="/movie-details" element={<MovieDetails />} />
-            <Route path="/cat-movie-details" element={<CatMovieDetails />} />
+            <Route path="/cats-movie-details" element={<CatMovieDetails />} />
             <Route path="/ordersumm" element={<OrderSummary />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/confirmation" element={<Confirmation />} />
             <Route path="/coming-soon" element={<ComingSoon />} />
-            <Route path="/eeaao-movie-details" element={<Eeaao />} />
-            <Route path="/meanGirls-movie-details" element={<MeanGirls />} />
+            <Route path="/Everything Everywhere All At Once-movie-details" element={<Eeaao />} />
+            <Route path="/mean girls-movie-details" element={<MeanGirls />} />
             <Route path="/dilwale-movie-details" element={<Dilwale />} />
             <Route path="/saltburn-movie-details" element={<Saltburn />} />
           </Routes>

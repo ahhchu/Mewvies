@@ -29,19 +29,19 @@ function Movie() {
       name: "Cats",
       imageUrl: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fencrypted-tbn0.gstatic.com%2Fimages%3Fq%3Dtbn%3AANd9GcTlhjCq92hLSM8SQ8LQY-T36pohncVV7Fhsjx3X69pEarYVe_hO&psig=AOvVaw33QSEZ0Qk-usIcW6z1GWfB&ust=1708628352705000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCNDYw-GOvYQDFQAAAAAdAAAAABAE",
       trailerUrl: "https://www.youtube.com/embed/gNTDoOmc1OQ",
-      link: "./cat-movie-details"
+      link: "./cats-movie-details"
     },
     {
       name: "Everything Everywhere All At Once",
       imageUrl: "https://upload.wikimedia.org/wikipedia/en/1/1e/Everything_Everywhere_All_at_Once.jpg",
       trailerUrl: "https://www.youtube.com/embed/wxN1T1uxQ2g",
-      link: "./eeaao-movie-details",
+      link: "Everything Everywhere All At Once-movie-details",
     },
     {
       name: "Mean Girls",
       imageUrl: "https://m.media-amazon.com/images/M/MV5BNDExMGMyN2QtYjRkZC00Yzk1LTkzMDktMTliZTI5NjQ0NTNkXkEyXkFqcGdeQXVyMTEyMjM2NDc2._V1_.jpg",
       trailerUrl: "https://www.youtube.com/embed/fFtdbEgnUOk",
-      link: "./meanGirls-movie-details",
+      link: "./mean Girls-movie-details",
     },
     {
       name: "Dilwale",
