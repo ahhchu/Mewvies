@@ -35,7 +35,7 @@ function Movie() {
       name: "Everything Everywhere All At Once",
       imageUrl: "https://upload.wikimedia.org/wikipedia/en/1/1e/Everything_Everywhere_All_at_Once.jpg",
       trailerUrl: "https://www.youtube.com/embed/wxN1T1uxQ2g",
-      link: "Everything Everywhere All At Once-movie-details",
+      link: "./Everything Everywhere All At Once-movie-details",
     },
     {
       name: "Mean Girls",

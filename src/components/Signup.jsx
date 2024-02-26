@@ -70,8 +70,8 @@ function Signup({ toggle, updateToken }) {
                 <h2>Signup</h2>
                 {error && <p className="error-message">{error}</p>}
                 <form onSubmit={handleSignup}>
-                    <label>
-                        Username:
+                <label>
+                        Full Name:
                         <input
                             required
                             type="text"
@@ -79,6 +79,25 @@ function Signup({ toggle, updateToken }) {
                             onChange={(e) => setUsername(e.target.value)}
                         />
                     </label>
+                    <label>
+                        Phone Number:
+                        <input
+                            required
+                            type="text"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                        />
+                    </label>
+                    <label>
+                        Email:
+                        <input
+                            required
+                            type="text"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                        />
+                    </label>
+                    
                     <label>
                         Password:
                         <input
@@ -89,13 +108,14 @@ function Signup({ toggle, updateToken }) {
                         />
                     </label>
                     <label>
-                        Confirm password:
+                       <br /> Confirm password:
                         <input
                             required
                             type="password"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                         />
+                        <br />
                     </label>
                     <button className="btn" type="submit">
                         Signup
