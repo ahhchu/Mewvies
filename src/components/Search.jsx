@@ -9,6 +9,15 @@ function Search() {
   const [searchResults, setSearchResults] = useState([]);
   const [searched, setSearched] = useState(false); 
 
+  const movies2 = [
+    { name: "Kung Fu Panda 4" },
+    { name: "Desciple Me 4" },
+    { name: "Inside Out 2" },
+    { name: "Sonic the Hedgehog 3" },
+    { name: "Imaginary" },
+  ];
+
+
   const movies = [
     { name: "Cats" },
     { name: "Mean Girls" },
@@ -16,7 +25,6 @@ function Search() {
     { name: "Saltburn" },
     { name: "Dilwale" },
   ];
-
   const handleChange = (e) => {
     setSearchInput(e.target.value);
   };
@@ -47,7 +55,7 @@ function Search() {
         <div>
           {searchResults.map((movie) => (
             <Link key={movie.name} to={`${movie.name}-movie-details`}>
-              {movie.name}
+              {"Currently Running: " + movie.name}
             </Link>
           ))}
         </div>
