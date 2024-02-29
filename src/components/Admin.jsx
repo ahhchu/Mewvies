@@ -12,15 +12,15 @@ function Admin() {
                 <h2 className="text">Admin Dashboard</h2>
             </div>
             <div>
-            <Button type="button" className="manage">
-             Manage Movies
-            </Button>
-            <Button type="button" className="manage">
-            Manage Users
-            </Button>
-            <Button type="button" className="manage">
-            Manage Promotions
-            </Button>
+            <Link to ="/managemovies">
+             <button className="manage">Manage Movies</button> 
+            </Link>
+            <Link to ="/manageusers">
+             <button className="manage">Manage Users</button> 
+            </Link>
+            <Link to ="/managepromotions">
+             <button className="manage">Manage Promotions</button> 
+            </Link>
             </div>
         </div>
     );
