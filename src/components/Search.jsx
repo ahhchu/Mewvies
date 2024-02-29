@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import "./Search.css";
+import "./Button.css";
+import Button from "./Button";
 import { Link } from "react-router-dom";
 
 function Search() {
@@ -34,11 +36,12 @@ function Search() {
         placeholder="Search for movies..."
         onChange={handleChange}
         value={searchInput}
+        className="search-bar"
       />
 
-      <button className="search-button" onClick={handleSearch}>
+      <Button className="search-button" onClick={handleSearch}>
         Search
-      </button>
+      </Button>
 
      {searched && searchResults.length > 0 && (
         <div>

@@ -75,6 +75,9 @@ return (
                         Login
                     </button>
                 </form>
+                <button className="btn" onClick= {toggle}>
+                    Admin Login
+                </button>
                 <button className="btn" onClick={toggle}>
                     Close
                 </button>

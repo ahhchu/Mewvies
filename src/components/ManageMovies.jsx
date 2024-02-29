@@ -1,8 +1,13 @@
-import React, { useState } from "react";
-import "./Movie.css";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import "./Header.css";
+import "./Button.css";
+import "./Movie.css";
+import Movie from "./Movie";
+import Button from "./Button";
+import Search from "./Search";
 
-function Movie() {
+function ManageMovies() {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [currentIndex2, setCurrentIndex2] = useState(0);
 
@@ -87,6 +92,9 @@ function Movie() {
 
   return (
     <div className="Movie">
+    <Button>
+        Add Movie
+    </Button>
       <h1>Currently Running</h1>
       <div className="Currently-Running">
         {currentlyRunningShows.map((show, index) => (
@@ -99,25 +107,13 @@ function Movie() {
                 width="300"
               />
             </Link>
+            <Button>Change Theater</Button>
+            <Button>Update Details</Button>
+            <Button>Delete Movie</Button>
           </div>
         ))}
       </div>
-      {currentlyRunningShows[currentIndex].trailerUrl && (
-        <div className="TrailerContainer">
-          <iframe
-            width="560"
-            height="315"
-            src={currentlyRunningShows[currentIndex].trailerUrl}
-            title="YouTube Trailer"
-            frameBorder="0"
-            allowFullScreen
-          ></iframe>
-        </div>
-      )}
-      <button className="trailer-button" onClick={handlePrev}>Prev</button>
-      <button className="trailer-button" onClick={handleNext}>Next</button>
-
-
+    
       <h1>Coming Soon</h1>
       <div className="Coming-Soon">
         {comingSoonShows.map((show, index) => (
@@ -130,27 +126,16 @@ function Movie() {
                 width="300"
               />
             </Link>
+            <Button>Change Theater</Button>
+            <Button>Update Details</Button>
+            <Button>Delete Movie</Button>
           </div>
         ))}
       </div>
-      {comingSoonShows[currentIndex2].trailerUrl && (
-        <div className="TrailerContainer">
-          <iframe
-            width="560"
-            height="315"
-            src={comingSoonShows[currentIndex2].trailerUrl}
-            title="YouTube Trailer"
-            frameBorder="0"
-            allowFullScreen
-          ></iframe>
-        </div>
-      )}
-      <button className="trailer-button"onClick={handlePrev2}>Prev</button>
-      <button className="trailer-button" onClick={handleNext2}>Next</button>
-    </div>
+       </div>
 
     
   );
 }
 
-export default Movie;
+export default ManageMovies;

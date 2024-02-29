@@ -1,0 +1,14 @@
+.header_right {
+    display: flex;
+    flex-direction: column;
+    padding-top: 60px;
+    padding-right: 10px;
+}
+
+.welcome_msg {
+    color: #e07a5f;
+    text-shadow: 1px 1px 0 #c76144, -1px -1px 0 #c76144, 1px -1px 0 #c76144, -1px 1px 0 #c76144;
+    padding-right: 50px;
+    font-family: "JetBrains Mono",monospace;
+    font-size: 20px;
+}

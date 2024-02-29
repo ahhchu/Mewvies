@@ -5,17 +5,20 @@
 
 .header__left{
     display:flex;
+    flex: 1;
     align-items: center;
     justify-content: left;
 }
 
 .header__center{
     display:flex;
+    flex: 1;
     align-items: center;
     justify-content: center;
-    color: black;
+    color: #e07a5f;
+    text-shadow: 1px 1px 0 #c76144, -1px -1px 0 #c76144, 1px -1px 0 #c76144, -1px 1px 0 #c76144;
     padding-right: 50px;
-   font-family: 'Times New Roman', Times, serif;
+    font-family: "JetBrains Mono",monospace;
    font-size: 40px;
 }
 
@@ -23,6 +26,7 @@
 
 .header__right {
     display:flex;
+    flex: 1;
     align-items: center;
     justify-content: right;
 }

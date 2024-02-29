@@ -3,7 +3,7 @@
 }
 
 body {
-  background-color: #D0ECE7; /* Replace with your desired color code */
+  background-color: #f4f1de; /* Replace with your desired color code */
 }
 
 .App-logo {
@@ -18,7 +18,7 @@ body {
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #f2cc8f;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -29,7 +29,7 @@ body {
 }
 
 .App-link {
-  color: #61dafb;
+  color: #3d405b;
 }
 
 @keyframes App-logo-spin {

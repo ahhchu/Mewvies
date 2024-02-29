@@ -19,6 +19,10 @@ import Eeaao from "./components/Eeaao";
 import MeanGirls from './components/MeanGirls';
 import Dilwale from './components/Dilwale';
 import Saltburn from './components/Saltburn';
+import Admin from "./components/Admin";
+import ManageMovies from './components/ManageMovies';
+import ManagePromotions from './components/ManagePromotions';
+import ManageUsers from './components/ManageUsers';
 
 function App() {
   const [userData, setUserData] = useState({
@@ -37,6 +41,7 @@ function App() {
   }, []);
 
   return (
+  
     <Router> 
       <div className="App">
         <Header token={token} updateToken={setTokenFromLocalStorage} />
@@ -56,6 +61,11 @@ function App() {
             <Route path="/mean girls-movie-details" element={<MeanGirls />} />
             <Route path="/dilwale-movie-details" element={<Dilwale />} />
             <Route path="/saltburn-movie-details" element={<Saltburn />} />
+
+            <Route path = "/admin/" element = {<Admin/>} />
+            <Route path = "/managemovies/" element = {<ManageMovies/>} />
+            <Route path = "/managepromotions/" element = {<ManagePromotions/>} />
+            <Route path = "/manageusers/" element = {<ManageUsers/>} />
           </Routes>
         </main>
       </div>
