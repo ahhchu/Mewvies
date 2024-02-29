@@ -8,8 +8,16 @@ import Search from "./Search";
 function ManagePromotions() {
     return (
         <div className="page-wrapper">
+         <div>
+            <Link to ="/managemovies">
+             <Button className="manage">Manage Movies</Button> 
+            </Link>
+            <Link to ="/manageusers">
+             <Button className="manage">Manage Users</Button> 
+            </Link>
+            </div>
             <div>
-                <h2>Manage Promotions</h2>
+                <h1>Manage Promotions</h1>
             </div>
             <Button>
                 Ongoing Promotions

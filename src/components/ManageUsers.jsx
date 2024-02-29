@@ -10,20 +10,17 @@ function ManageUsers() {
         <div className="page-wrapper">
             <div className="header1">
             <Link to ="/managemovies">
-             <button className="manage">Manage Movies</button> 
-            </Link>
-            <Link to ="/manageusers">
-             <button className="manage">Manage Users</button> 
+             <Button className="manage">Manage Movies</Button> 
             </Link>
             <Link to ="/managepromotions">
-             <button className="manage">Manage Promotions</button> 
+             <Button className="manage">Manage Promotions</Button> 
             </Link>
-            <h2>Manage Users</h2>
+            <h1>Manage Users</h1>
 
 
                 <div className="header_middle">
                         <Button type="button" className="manage">
-                            Manage Users
+                            Find User
                         </Button>
                 </div>
             </div>

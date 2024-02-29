@@ -13,13 +13,13 @@ function Admin() {
             </div>
             <div>
             <Link to ="/managemovies">
-             <button className="manage">Manage Movies</button> 
+             <Button className="manage">Manage Movies</Button> 
             </Link>
             <Link to ="/manageusers">
-             <button className="manage">Manage Users</button> 
+             <Button className="manage">Manage Users</Button> 
             </Link>
             <Link to ="/managepromotions">
-             <button className="manage">Manage Promotions</button> 
+             <Button className="manage">Manage Promotions</Button> 
             </Link>
             </div>
         </div>

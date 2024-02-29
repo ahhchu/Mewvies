@@ -1,6 +1,8 @@
 //import React from 'react';
 import React, { useState, useContext } from "react";
 import "./Signup.css";
+import "./Button.css";
+import Button from "./Button";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import UserContext from "../context/UserContext";
@@ -117,13 +119,13 @@ function Signup({ toggle, updateToken }) {
                         />
                         <br />
                     </label>
-                    <button className="btn" type="submit">
+                    <Button className="btn" type="submit">
                         Signup
-                    </button>
+                    </Button>
                 </form>
-                <button className="btn" onClick={toggle}>
+                <Button className="btn" onClick={toggle}>
                     Close
-                </button>
+                </Button>
             </div>
         </div>
     );

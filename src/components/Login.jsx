@@ -1,6 +1,8 @@
 //import React from 'react';
 import React, { useContext, useState } from "react";
 import "./Login.css";
+import "./Button.css";
+import Button from "./Button";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import UserContext from "../context/UserContext"
@@ -9,6 +11,8 @@ function Login({ toggle, updateToken }) {
     // used https://dev.to/afromatt6288/create-a-popup-form-for-login-and-then-style-it-37jl
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [usernameadmin, setUsernameAdmin] = useState("");
+    const [passwordadmin, setPasswordAdmin] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -71,16 +75,38 @@ return (
                             onChange={(e) => setPassword(e.target.value)}
                         />
                     </label>
-                    <button className="btn" type="submit">
+                    <Button className="btn" type="submit">
                         Login
-                    </button>
+                    </Button>
                 </form>
-                <button className="btn" onClick= {toggle}>
+                <form onSubmit={handleLogin}>
+                    <label>
+                        Username:
+                        <input
+                            required
+                            type="text"
+                            value={usernameadmin}
+                            onChange={(e) => setUsernameAdmin(e.target.value)}
+                        />
+                    </label>
+                    <label>
+                        Password:
+                        <input
+                            required
+                            type="password"
+                            value={passwordadmin}
+                            onChange={(e) => setPasswordAdmin(e.target.value)}
+                        />
+                    </label>
+                    <Link to={"/admin"}>
+                <Button className="btn" type = "submit">
                     Admin Login
-                </button>
-                <button className="btn" onClick={toggle}>
+                </Button>
+                </Link>
+                </form>
+                <Button className="btn" onClick={toggle}>
                     Close
-                </button>
+                </Button>
             </div>
         </div>
     );
