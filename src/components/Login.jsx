@@ -99,7 +99,7 @@ return (
                         />
                     </label>
                     <Link to={"/admin"}>
-                <Button className="btn" type = "submit">
+                <Button className="btn" type = "submit" onClick={toggle}>
                     Admin Login
                 </Button>
                 </Link>
