@@ -6,6 +6,7 @@ import Login from "./Login";
 import Signup from "./Signup";
 import Button from "./Button";
 import Search from "./Search";
+import EditProfile from "./EditProfile";
 
 function Header({ token, updateToken }) {
     const [signupSeen, setSignupSeen] = useState(false);
@@ -42,6 +43,9 @@ function Header({ token, updateToken }) {
             </div>
 
             <div className="header__right">
+            <Link to ="/edit-profile">
+             <button className="profile-button">Edit Profile</button> 
+             </Link>
                 {token ? (
                     <Button onClick={() => handleLogout()}>Logout</Button>
                 ) : (
