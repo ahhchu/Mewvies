@@ -57,7 +57,7 @@ return (
                 <h2>Login</h2>
                 {error && <p className="error-message">{error}</p>}
                 <form onSubmit={handleLogin}>
-                    <label>
+                    <label className="field">
                         Username:
                         <input
                             required
@@ -66,7 +66,7 @@ return (
                             onChange={(e) => setUsername(e.target.value)}
                         />
                     </label>
-                    <label>
+                    <label className="field">
                         Password:
                         <input
                             required
@@ -78,31 +78,6 @@ return (
                     <Button className="btn" type="submit">
                         Login
                     </Button>
-                </form>
-                <form onSubmit={handleLogin}>
-                    <label>
-                        Username:
-                        <input
-                            required
-                            type="text"
-                            value={usernameadmin}
-                            onChange={(e) => setUsernameAdmin(e.target.value)}
-                        />
-                    </label>
-                    <label>
-                        Password:
-                        <input
-                            required
-                            type="password"
-                            value={passwordadmin}
-                            onChange={(e) => setPasswordAdmin(e.target.value)}
-                        />
-                    </label>
-                    <Link to={"/admin"}>
-                <Button className="btn" type = "submit" onClick={toggle}>
-                    Admin Login
-                </Button>
-                </Link>
                 </form>
                 <Button className="btn" onClick={toggle}>
                     Close
