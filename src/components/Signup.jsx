@@ -6,6 +6,7 @@ import Button from "./Button";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import UserContext from "../context/UserContext";
+import { Link } from "react-router-dom";
 
 function Signup({ toggle, updateToken }) {
     const [username, setUsername] = useState("");
@@ -112,20 +113,20 @@ function Signup({ toggle, updateToken }) {
                     <label>
                        <br /> Confirm password:
                         <input
-                            required
                             type="password"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                         />
                         <br />
                     </label>
-                    <Button className="btn" type="submit">
-                        Signup
-                    </Button>
+                    <Link to="/registration">
+              <button className = "checkout-button">Signup</button>
+             </Link>
                 </form>
                 <Button className="btn" onClick={toggle}>
                     Close
                 </Button>
+    
             </div>
         </div>
     );
