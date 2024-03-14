@@ -9,6 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.3"
+    "express": "^4.18.3",
+    "gh": "^2.8.9",
+    "git": "^0.1.5",
+    "github": "^14.0.0"
   }
 }
