@@ -3,7 +3,7 @@
 }
 
 body {
-  background-color: #f4f1de; /* Replace with your desired color code */
+  background-color: #FFE4E1; /* Replace with your desired color code */
 }
 
 .App-logo {
@@ -41,5 +41,8 @@ body {
   }
 }
 
+html {
+  cursor: url("../src/img/hover.png"), auto;
+}
 
 /* credits to https://uiverse.io/Custyyyy/short-lizard-47 for buttons */

@@ -43,8 +43,8 @@ function Header({ token, updateToken }) {
             </div>
 
             <div className="header__right">
-            <Link to ="/edit-profile">
-             <button className="profile-button">Edit Profile</button> 
+            <Link className="button" to ="/edit-profile">
+                Edit Profile
              </Link>
                 {token ? (
                     <Button onClick={() => handleLogout()}>Logout</Button>
