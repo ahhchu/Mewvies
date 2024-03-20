@@ -27,7 +27,7 @@ app.get('/register/', (req, res) => {
 
 app.get("/verifylogin/", (req, res) => {
 	if (req.query.test == 'success') {
-        res.send('0');
+        res.send('[{"user_id":1,"email":"test@test.com","passwd":"pw","fname":"fname","lname":"lname","admin":0,"phone":"nophone","address_line_one":"","address_line_two":"","address_city":"","address_state":"","address_zip":"","user_state":0}]');
 	} else if (req.query.test == 'failure') {
                 res.send('1');
         } else {
@@ -37,7 +37,7 @@ app.get("/verifylogin/", (req, res) => {
 
 app.get("/updateprofile/", (req, res) => {
 	if (req.query.test == 'success') {
-        res.send('0');
+        res.send('[{"user_id":1,"email":"test@test.com","passwd":"pw","fname":"fname","lname":"lname","admin":0,"phone":"nophone","address_line_one":"","address_line_two":"","address_city":"","address_state":"","address_zip":"","user_state":0}]');
         } else if (req.query.test == 'failure') {
                 res.send('1');
         } else {
