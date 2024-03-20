@@ -1,9 +1,10 @@
 const express = require('express')
 const app = express()
-const port = 3000
+const port = 2999
 
 app.get('/', (req, res) => {
-  res.send('Hello World!')
+    let sampleObj = {connection:"test ping successful", requestQuery:req.query};
+    res.send(sampleObj);
 })
 
 app.get('/getMewvies/', (req, res) => {
