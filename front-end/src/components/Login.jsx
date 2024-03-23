@@ -58,12 +58,12 @@ return (
                 {error && <p className="error-message">{error}</p>}
                 <form onSubmit={handleLogin}>
                     <label className="field">
-                        Username:
+                        Email:
                         <input
                             required
                             type="text"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
+//                            value={username}
+//                            onChange={(e) => setUsername(e.target.value)}
                         />
                     </label>
                     <label className="field">
@@ -81,6 +81,10 @@ return (
                 </form>
                 <Button className="btn" onClick={toggle}>
                     Close
+                </Button>
+                <br />
+                <Button className="btn" onClick={toggle}>
+                    Forgot your password?
                 </Button>
             </div>
         </div>

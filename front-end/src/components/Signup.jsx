@@ -73,34 +73,45 @@ function Signup({ toggle, updateToken }) {
                 <h2>Signup</h2>
                 {error && <p className="error-message">{error}</p>}
                 <form onSubmit={handleSignup}>
+                    <h3>Personal Details</h3>
                 <label>
-                        Full Name:
+                        First Name:
                         <input
                             required
                             type="text"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
+                           // value={username}
+//                            onChange={(e) => setUsername(e.target.value)}
                         />
                     </label>
+                    <br /> 
+                    <label>
+                        Last Name:
+                        <input
+                            required
+                            type="text"
+                            //value={username}
+//                            onChange={(e) => setUsername(e.target.value)}
+                        />
+                    </label>
+                    <br /> 
                     <label>
                         Phone Number:
                         <input
                             required
                             type="text"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
+//                            value={number}
                         />
                     </label>
+                    <br /> 
                     <label>
                         Email:
                         <input
                             required
                             type="text"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
+//                            value={username}
                         />
                     </label>
-                    
+                    <br /> 
                     <label>
                         Password:
                         <input
@@ -113,9 +124,52 @@ function Signup({ toggle, updateToken }) {
                     <label>
                        <br /> Confirm password:
                         <input
+                            required
                             type="password"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
+                        />
+                        <br />
+                    </label>
+                    <label>
+                        <input
+                            type="checkbox"
+                        />
+                        Opt in to recieve promotional emails. 
+                        <br />
+                    </label>
+                    <br />
+                    <h3>Financial Details</h3>
+                    <label>
+                       <br /> Card Number
+                        <input
+                            type="cardNumber"
+//                            value={confirmPassword}
+                        />
+                        <br />
+                    </label>
+                    <label>
+                       <br /> CVV
+                        <input
+                            type="CVV"
+//                            value={confirmPassword}
+                        />
+                        <br />
+                    </label>
+                    <label>
+
+                       <br /> Expiration Date
+                        <input
+                            type="expirationDate"
+//                            value={confirmPassword}
+                        />
+                        <br />
+                    </label>
+                    <label>
+                       <br /> Billing Address
+                        <input
+                            type="cardNumber"
+//                            value={confirmPassword}
                         />
                         <br />
                     </label>

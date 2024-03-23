@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@babel/eslint-parser": "^7.24.1",
+    "chalk": "^5.3.0"
+  }
+}
