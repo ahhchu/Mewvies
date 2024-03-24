@@ -1,28 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Checkout.css"; // Import your CSS file
 
 function Checkout() {
   const [formData, setFormData] = useState({
-    name: '',
-    billingAddress: '',
-    creditCardNumber: '',
-    expirationDate: '',
-    cvv: ''
+    name: "",
+    billingAddress: "",
+    creditCardNumber: "",
+    expirationDate: "",
+    cvv: "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value
+      [name]: value,
     });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // You can perform further actions here, e.g., send the data to a server
-    console.log('Form submitted:', formData);
+    console.log("Form submitted:", formData);
   };
 
   return (
@@ -84,7 +84,9 @@ function Checkout() {
           />
         </label>
         <Link to="/confirmation">
-          <button type="submit" className="submit-button">Submit</button>
+          <button type="submit" className="submit-button">
+            Submit
+          </button>
         </Link>
       </form>
     </div>
