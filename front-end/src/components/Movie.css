@@ -5,6 +5,13 @@
     justify-content: space-between;
   }
   
+  .Movie img {
+    margin: 3px;
+    width: 350px;
+    height: 500px;;
+    border-radius: 8px;
+  }
+  
   .MovieCard img {
     margin: 3px;
     width: 350px;

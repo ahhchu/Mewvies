@@ -1,5 +1,4 @@
-//import React from 'react';
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import "./Signup.css";
 import "./Button.css";
 import Button from "./Button";
@@ -9,15 +8,26 @@ import UserContext from "../context/UserContext";
 import { Link } from "react-router-dom";
 
 function Signup({ toggle, updateToken }) {
-    const [username, setUsername] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [number, setNumber] = useState("");
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [cardNumber, setCardNumber] = useState("");
+    const [cvv, setCvv] = useState("");
+    const [expirationDate, setExpirationDate] = useState("");
+    const [billingAddress, setBillingAddress] = useState("");
     const [error, setError] = useState("");
-    const [loading, setLoading] = useState("");
-    const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
+
     const { setUserData } = useContext(UserContext);
 
-    async function handleSignup(e) {
+    const validateForm = () => {
+        return email !== "" && password !== "" && confirmPassword !== "";
+    };
+
+    const handleSignup = async (e) => {
         e.preventDefault();
         setLoading(true);
 
@@ -31,15 +41,13 @@ function Signup({ toggle, updateToken }) {
 
             // Check if password is too short (6)
             if (password.length < 6) {
-                setError(
-                    "Password is too short. Please use a password with at least 6 characters."
-                );
+                setError("Password is too short. Please use a password with at least 6 characters.");
                 setLoading(false);
                 return;
             }
 
             const newUser = {
-                username: username,
+                email: email,
                 password: password,
                 confirmPassword: confirmPassword,
             };
@@ -47,9 +55,10 @@ function Signup({ toggle, updateToken }) {
             await axios.post("http://localhost:8081/api/users/signup", newUser);
 
             const loginRes = await axios.post("http://localhost:8081/api/users/login", {
-                username,
+                email,
                 password,
             });
+
             setUserData({
                 token: loginRes.data.token,
                 user: loginRes.data.user,
@@ -57,15 +66,15 @@ function Signup({ toggle, updateToken }) {
 
             localStorage.setItem("auth-token", loginRes.data.token);
             updateToken();
-            setLoading(false);
 
+            setLoading(false);
             toggle();
         } catch (err) {
             setLoading(false);
-            err && setError(err.response.data.msg); // Assuming the error response contains a 'msg' property
+            setError(err.response?.data?.msg || "An error occurred while signing up.");
             console.log(err);
         }
-    }
+    };
 
     return (
         <div className="popup">
@@ -74,44 +83,46 @@ function Signup({ toggle, updateToken }) {
                 {error && <p className="error-message">{error}</p>}
                 <form onSubmit={handleSignup}>
                     <h3>Personal Details</h3>
-                <label>
+                    <label>
                         First Name:
                         <input
                             required
                             type="text"
-                           // value={username}
-//                            onChange={(e) => setUsername(e.target.value)}
+                            value={firstName}
+                            onChange={(e) => setFirstName(e.target.value)}
                         />
                     </label>
-                    <br /> 
+                    <br />
                     <label>
                         Last Name:
                         <input
                             required
                             type="text"
-                            //value={username}
-//                            onChange={(e) => setUsername(e.target.value)}
+                            value={lastName}
+                            onChange={(e) => setLastName(e.target.value)}
                         />
                     </label>
-                    <br /> 
+                    <br />
                     <label>
                         Phone Number:
                         <input
                             required
                             type="text"
-//                            value={number}
+                            value={number}
+                            onChange={(e) => setNumber(e.target.value)}
                         />
                     </label>
-                    <br /> 
+                    <br />
                     <label>
                         Email:
                         <input
                             required
-                            type="text"
-//                            value={username}
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                         />
                     </label>
-                    <br /> 
+                    <br />
                     <label>
                         Password:
                         <input
@@ -122,7 +133,7 @@ function Signup({ toggle, updateToken }) {
                         />
                     </label>
                     <label>
-                       <br /> Confirm password:
+                        <br /> Confirm password:
                         <input
                             required
                             type="password"
@@ -135,52 +146,54 @@ function Signup({ toggle, updateToken }) {
                         <input
                             type="checkbox"
                         />
-                        Opt in to recieve promotional emails. 
+                        Opt in to receive promotional emails.
                         <br />
                     </label>
                     <br />
                     <h3>Financial Details</h3>
                     <label>
-                       <br /> Card Number
+                        <br /> Card Number
                         <input
-                            type="cardNumber"
-//                            value={confirmPassword}
+                            type="text"
+                            value={cardNumber}
+                            onChange={(e) => setCardNumber(e.target.value)}
                         />
                         <br />
                     </label>
                     <label>
-                       <br /> CVV
+                        <br /> CVV
                         <input
-                            type="CVV"
-//                            value={confirmPassword}
+                            type="text"
+                            value={cvv}
+                            onChange={(e) => setCvv(e.target.value)}
                         />
                         <br />
                     </label>
                     <label>
+                        <br /> Expiration Date
+                        <input
+                            type="text"
+                            value={expirationDate}
+                            onChange={(e) => setExpirationDate(e.target.value)}
+                        />
+                        <br />
+                    </label>
+                    <label>
+                        <br /> Billing Address
+                        <input
+                            type="text"
+                            value={billingAddress}
+                            onChange={(e) => setBillingAddress(e.target.value)}
+                        />
+                        <br />
+                    </label>
 
-                       <br /> Expiration Date
-                        <input
-                            type="expirationDate"
-//                            value={confirmPassword}
-                        />
-                        <br />
-                    </label>
-                    <label>
-                       <br /> Billing Address
-                        <input
-                            type="cardNumber"
-//                            value={confirmPassword}
-                        />
-                        <br />
-                    </label>
-                    <Link to="/registration">
-              <button className = "checkout-button">Signup</button>
-             </Link>
+                    <button className="checkout-button" type="submit">Signup</button>
                 </form>
                 <Button className="btn" onClick={toggle}>
                     Close
                 </Button>
-    
+
             </div>
         </div>
     );

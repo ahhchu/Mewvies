@@ -9,13 +9,15 @@ import UserContext from "../context/UserContext"
 
 function Login({ toggle, updateToken }) {
     // used https://dev.to/afromatt6288/create-a-popup-form-for-login-and-then-style-it-37jl
-    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
     const [usernameadmin, setUsernameAdmin] = useState("");
     const [passwordadmin, setPasswordAdmin] = useState("");
+
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
-    const navigate = useNavigate();
+    //const navigate = useNavigate();
     const { setUserData } = useContext(UserContext);
     async function handleLogin(e) {
         e.preventDefault();
@@ -62,10 +64,11 @@ return (
                         <input
                             required
                             type="text"
-//                            value={username}
-//                            onChange={(e) => setUsername(e.target.value)}
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                         />
                     </label>
+
                     <label className="field">
                         Password:
                         <input
