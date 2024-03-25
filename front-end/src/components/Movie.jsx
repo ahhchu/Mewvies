@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./Movie.css";
 import { Link } from "react-router-dom";
-import MovieCard from "./MovieCard";
+import MovieDetails from "./MovieDetails";
 
 function Movie() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -108,9 +108,7 @@ function Movie() {
       <h1>Currently Running</h1>
       <div className="Currently-Running">
         {currentlyRunningShows.map((show, index) => (
-          <Link to={show.link} key={index}>
-            {" "}
-            {/* Wrap the image URL in a Link component */}
+          <Link to="/movie-details">
             <img src={show.imageUrl} alt={show.name} />
           </Link>
         ))}

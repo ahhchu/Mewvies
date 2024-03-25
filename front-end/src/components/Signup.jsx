@@ -119,7 +119,7 @@ function Signup({ toggle, updateToken }) {
                             required
                             type="email"
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={(e) => validateEmail(e.target.value)}
                         />
                     </label>
                     <br />

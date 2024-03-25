@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom"; // Import Link from react-router-dom
 import "./MovieDetails.css";
+import MovieCard from "./MovieCard";
 
 function MovieDetails() {
     return (
