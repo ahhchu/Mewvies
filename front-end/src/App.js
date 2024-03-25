@@ -25,6 +25,7 @@ import ManagePromotions from './components/ManagePromotions';
 import ManageUsers from './components/ManageUsers';
 import Registration  from './components/Registration';
 import EditProfile from './components/EditProfile';
+import ForgotPassword from './components/ForgotPassword';
 
 function App() {
 
@@ -68,6 +69,7 @@ function App() {
             <Route path="/saltburn-movie-details" element={<Saltburn />} />
             <Route path = "/registration" element = {<Registration/>} />
             <Route path ="/edit-profile" element = {<EditProfile/>} />
+            <Route path = "/forgot-password" element = {<ForgotPassword/>} />
 
             <Route path = "/admin/" element = {<Admin/>} />
             <Route path = "/managemovies/" element = {<ManageMovies/>} />

@@ -2,10 +2,13 @@
 import React, { useContext, useState } from "react";
 import "./Login.css";
 import "./Button.css";
+import ForgotPassword from "./ForgotPassword";
 import Button from "./Button";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import UserContext from "../context/UserContext"
+import Signup from "./Signup";
+import Header from "./Header";
 
 function Login({ toggle, updateToken }) {
     // used https://dev.to/afromatt6288/create-a-popup-form-for-login-and-then-style-it-37jl
@@ -17,6 +20,11 @@ function Login({ toggle, updateToken }) {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const { setUserData } = useContext(UserContext);
+    const [forgotPasswordSeen, setForgotPasswordSeen] = useState(false);
+
+    const toggleForgotPassword = () => {
+        setForgotPasswordSeen(!forgotPasswordSeen);
+    };
     async function handleLogin(e) {
         e.preventDefault();
         setLoading(true);
@@ -83,9 +91,10 @@ return (
                     Close
                 </Button>
                 <br />
-                <Button className="btn" onClick={toggle}>
-                    Forgot your password?
-                </Button>
+             <Button onClick={toggleForgotPassword}>Forgot your password?</Button>
+                {forgotPasswordSeen ? (
+                    <ForgotPassword updateToken={updateToken} toggle={toggleForgotPassword} />
+                ) : null}
             </div>
         </div>
     );
