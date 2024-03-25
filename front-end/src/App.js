@@ -25,7 +25,11 @@ import ManagePromotions from './components/ManagePromotions';
 import ManageUsers from './components/ManageUsers';
 import Registration  from './components/Registration';
 import EditProfile from './components/EditProfile';
+<<<<<<< HEAD
 import MovieCard from './components/MovieCard';
+=======
+import ForgotPassword from './components/ForgotPassword';
+>>>>>>> 546773c71b64a6e4fd7c821ec4dee946fc36447e
 
 function App() {
 
@@ -72,6 +76,7 @@ function App() {
 
             <Route path = "/registration" element = {<Registration/>} />
             <Route path ="/edit-profile" element = {<EditProfile/>} />
+            <Route path = "/forgot-password" element = {<ForgotPassword/>} />
 
             <Route path = "/admin/" element = {<Admin/>} />
             <Route path = "/managemovies/" element = {<ManageMovies/>} />
