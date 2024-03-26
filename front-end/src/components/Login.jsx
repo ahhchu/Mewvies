@@ -26,8 +26,8 @@ function Login({ toggle, updateToken }) {
 
     try {
       const userData = await loginUser(email, password);
-      setUserData(userData);
-      localStorage.setItem("auth-token", userData.token);
+      setUserData(userData[0]); // Access user object from array
+      localStorage.setItem("auth-token", userData[0].token); // Assuming token is in user object
       updateToken();
       setLoading(false);
       toggle();
@@ -35,9 +35,11 @@ function Login({ toggle, updateToken }) {
       setLoading(false);
       console.error("Login error:", err.response);
       if (err.response && err.response.status === 400) {
-        setError(
-          "Invalid credentials. Please check your username and password."
-        );
+        // Handle 400 status for invalid credentials
+        setError("Invalid email or password.");
+      } else {
+        // Handle other errors (e.g., network issues)
+        setError("An error occurred. Please try again later.");
       }
     }
   };

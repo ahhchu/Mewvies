@@ -47,7 +47,6 @@ function Signup({ toggle, updateToken }) {
   const handleSignup = async (e) => {
     e.preventDefault();
     setLoading(true);
-
     try {
       // Check if first and second passwords match
       if (password !== confirmPassword) {
@@ -92,7 +91,6 @@ function Signup({ toggle, updateToken }) {
           userData = data;
         }
       );
-
       console.log(response.data); // Log response data
 
       setLoading(false);
@@ -216,7 +214,6 @@ function Signup({ toggle, updateToken }) {
             />
             <br />
           </label>
-
           <button className="checkout-button" type="submit">
             Signup
           </button>
