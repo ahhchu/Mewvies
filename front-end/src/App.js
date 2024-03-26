@@ -25,11 +25,8 @@ import ManagePromotions from './components/ManagePromotions';
 import ManageUsers from './components/ManageUsers';
 import Registration  from './components/Registration';
 import EditProfile from './components/EditProfile';
-<<<<<<< HEAD
 import MovieCard from './components/MovieCard';
-=======
 import ForgotPassword from './components/ForgotPassword';
->>>>>>> 546773c71b64a6e4fd7c821ec4dee946fc36447e
 
 function App() {
 
