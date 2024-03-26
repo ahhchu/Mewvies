@@ -25,6 +25,7 @@ import ManagePromotions from './components/ManagePromotions';
 import ManageUsers from './components/ManageUsers';
 import Registration  from './components/Registration';
 import EditProfile from './components/EditProfile';
+import MovieCard from './components/MovieCard';
 import ForgotPassword from './components/ForgotPassword';
 
 function App() {
@@ -63,10 +64,13 @@ function App() {
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/confirmation" element={<Confirmation />} />
             <Route path="/coming-soon" element={<ComingSoon />} />
+
+            <Route path="/movie-details" element={<MovieDetails />} />
             <Route path="/Everything Everywhere All At Once-movie-details" element={<Eeaao />} />
             <Route path="/mean girls-movie-details" element={<MeanGirls />} />
             <Route path="/dilwale-movie-details" element={<Dilwale />} />
             <Route path="/saltburn-movie-details" element={<Saltburn />} />
+
             <Route path = "/registration" element = {<Registration/>} />
             <Route path ="/edit-profile" element = {<EditProfile/>} />
             <Route path = "/forgot-password" element = {<ForgotPassword/>} />

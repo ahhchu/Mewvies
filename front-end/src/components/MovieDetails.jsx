@@ -1,25 +1,32 @@
 import React from "react";
 import { Link } from "react-router-dom"; // Import Link from react-router-dom
 import "./MovieDetails.css";
+import MovieCard from "./MovieCard";
 
-function MovieDetails() {
+const MovieDetails= (props) => {
+  const [movies, setMovies] = useState([]);
+
+  useEffect(() => {
+    axios
+        .get("http://localhost:8081/api/paintings")
+        .then((result) => setMovies(result.data));
+  }, []);
+
     return (
       <div>
-        <image of the movie selected></image>
-        <div className="showtimes">
-          <Link to="/seats">
-            <button>12:00pm</button>
-          </Link>
-          <Link to="/seats">
-            <button>2:00pm</button>
-          </Link>
-          <Link to="/seats">
-            <button>5:30pm</button>
-          </Link>
-        </div>
+
+       <MovieCard
+          key={index}
+          imageUrl={movie.imageUrl} 
+          altText={movie.name}
+          title={movie.name}
+          trailerUrl={movie.trailerUrl}
+          link={movie.link}
+          isSelected={index === currentIndex} 
+         />
       </div>
     );
-  }
+  };
   
   export default MovieDetails;
   

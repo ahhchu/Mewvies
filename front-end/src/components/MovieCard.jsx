@@ -1,5 +1,4 @@
-import React from "react";
-import "./CatMovieDetails.css";
+import React, { useState } from "react";
 
 function MovieCard({
   imageUrl,
@@ -16,16 +15,22 @@ function MovieCard({
   rating,
   bookMovieLink,
 }) {
+  const [detailsVisible, setDetailsVisible] = useState(false);
+
   return (
     <div>
-      <img src={imageUrl} alt={altText} width="300" />
+      <img src={imageUrl} alt={altText} width="300" onClick={() => setDetailsVisible(!detailsVisible)} />
       <h1>{title}</h1>
-      <h3>Category: {category}</h3>
-      <h3>Cast: {cast}</h3>
-      <h3>Director: {director}</h3>
-      <h3>Producer: {producer}</h3>
-      <h3>Synopsis: {synopsis}</h3>
-      <h3>Reviews: {reviews}</h3>
+      {detailsVisible && (
+        <>
+          <h3>Category: {category}</h3>
+          <h3>Cast: {cast}</h3>
+          <h3>Director: {director}</h3>
+          <h3>Producer: {producer}</h3>
+          <h3>Synopsis: {synopsis}</h3>
+          <h3>Reviews: {reviews}</h3>
+        </>
+      )}
       <div className="TrailerContainer">
         <iframe
           width="560"

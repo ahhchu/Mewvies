@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@babel/eslint-parser": "^7.24.1"
-
+    "@babel/eslint-parser": "^7.24.1",
+    "cors": "^2.8.5"
   }
 }
