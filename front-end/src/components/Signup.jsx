@@ -41,18 +41,18 @@ function Signup({ toggle, updateToken }) {
             const newUser = {
                 username: username,
                 password: password,
-                confirmPassword: confirmPassword,
+                confirmPassword: confirmPassword
             };
 
             await axios.post("http://localhost:8081/api/users/signup", newUser);
 
             const loginRes = await axios.post("http://localhost:8081/api/users/login", {
                 username,
-                password,
+                password
             });
             setUserData({
                 token: loginRes.data.token,
-                user: loginRes.data.user,
+                user: loginRes.data.user
             });
 
             localStorage.setItem("auth-token", loginRes.data.token);
