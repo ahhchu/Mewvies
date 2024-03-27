@@ -10,23 +10,23 @@ import MovieDetails from  './components/MovieDetails'
 //import UserContext from './context/UserContext';
 import Seats from './components/Seats';
 import Search from './components/Search';
-import CatMovieDetails from './components/CatMovieDetails';
+import CatMovieDetails from './components/moviesTemp/CatMovieDetails';
 import Checkout from './components/Checkout';
 import OrderSummary from './components/OrderSummary';
 import Confirmation from "./components/Confirmation";
 import ComingSoon from "./components/ComingSoon";
-import Eeaao from "./components/Eeaao";
-import MeanGirls from './components/MeanGirls';
-import Dilwale from './components/Dilwale';
-import Saltburn from './components/Saltburn';
+import Eeaao from "./components/moviesTemp/Eeaao";
+import MeanGirls from './components/moviesTemp/MeanGirls';
+import Dilwale from './components/moviesTemp/Dilwale';
+import Saltburn from './components/moviesTemp/Saltburn';
 import Admin from "./components/Admin";
 import ManageMovies from './components/ManageMovies';
 import ManagePromotions from './components/ManagePromotions';
 import ManageUsers from './components/ManageUsers';
 import Registration  from './components/Registration';
-import EditProfile from './components/EditProfile';
+import EditProfile from  './components/userTools/EditProfile';
 import MovieCard from './components/MovieCard';
-import ForgotPassword from './components/ForgotPassword';
+import ForgotPassword from './components/userTools/ForgotPassword';
 
 function App() {
 

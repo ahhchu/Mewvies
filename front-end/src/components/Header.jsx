@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./Header.css";
 import "./Button.css";
-import Login from "./Login";
-import Signup from "./Signup";
+import Login from "./userTools/Login";
+import Signup from "./userTools/Signup";
 import Button from "./Button";
 import Search from "./Search";
-import EditProfile from "./EditProfile";
+import EditProfile from "./userTools/EditProfile";
 
 function Header({ token, updateToken }) {
     const [signupSeen, setSignupSeen] = useState(false);
