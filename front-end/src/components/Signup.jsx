@@ -2,11 +2,11 @@ import React, { useState, useContext } from "react";
 import "./Signup.css";
 import "./Button.css";
 import Button from "./Button";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import UserContext from "../context/UserContext";
-import { Link } from "react-router-dom";
-import {collection, addDoc} from "firebase/firestore";
+//import { useNavigate } from "react-router-dom";
+//import axios from "axios";
+//import UserContext from "../context/UserContext";
+//import { Link } from "react-router-dom";
+import { collection, addDoc, getDocs } from "firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { db } from "../config/firestore";
 
@@ -22,9 +22,9 @@ function Signup({ toggle, updateToken }) {
   const [expirationDate, setExpirationDate] = useState("");
   const [billingAddress, setBillingAddress] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  //  const [loading, setLoading] = useState(false);
 
-  const { setUserData } = useContext(UserContext);
+  //  const { setUserData } = useContext(UserContext);
 
   const validateEmail = (email) => {
     const validRegex =
@@ -32,6 +32,26 @@ function Signup({ toggle, updateToken }) {
     return validRegex.test(email);
   };
 
+  const checkEmailAvailability = async (email) => {
+    try {
+      const snapshot = await getDocs(collection(db, "user"));
+      const existingUser = snapshot.docs.find(
+        (doc) => doc.data().email === email
+      );
+      if (existingUser) {
+        setError("This email is already in use.");
+        return false;
+      }
+      return true;
+    } catch (error) {
+      // catch other error
+      console.error("Error checking email availability:", error);
+      setError(
+        "There was a problem checking email availability. Please try again."
+      );
+      return false;
+    }
+  };
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -61,7 +81,13 @@ function Signup({ toggle, updateToken }) {
         setLoading(false);
         return;
       }
-      var userData;
+
+      if (await checkEmailAvailability(email)) {
+        // continue with signup
+      } else {
+        setLoading(false);
+        return;
+      }
 
       // Define new user
       const newUser = {
@@ -72,19 +98,20 @@ function Signup({ toggle, updateToken }) {
         phone: number,
       };
 
-      // Register user as authenticated user
-      try{
+      // resgiter as authenticated user
+      try {
         const auth = getAuth();
         await createUserWithEmailAndPassword(auth, email, password); //autheticated user
 
-        const docRef = await addDoc(collection(db, "user"), { //create user entry in firestore
-          ...newUser
+        const docRef = await addDoc(collection(db, "user"), {
+          //create user entry in firestore
+          ...newUser,
         });
         console.log("Document written with ID: ", docRef.id);
       } catch (error) {
         console.log(error);
       }
-  
+
       setLoading(false);
       toggle();
     } catch (err) {
