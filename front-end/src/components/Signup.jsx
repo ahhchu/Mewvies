@@ -6,6 +6,9 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import UserContext from "../context/UserContext";
 import { Link } from "react-router-dom";
+import {collection, addDoc} from "firebase/firestore";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { db } from "../config/firestore";
 
 function Signup({ toggle, updateToken }) {
   const [firstName, setFirstName] = useState("");
@@ -29,20 +32,6 @@ function Signup({ toggle, updateToken }) {
     return validRegex.test(email);
   };
 
-  function httpGetSync(theUrl, callback) {
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.onreadystatechange = function () {
-      if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
-        callback(xmlHttp.responseText);
-    };
-    xmlHttp.open("GET", theUrl, false); // true for asynchronous
-    xmlHttp.setRequestHeader(
-      "Access-Control-Allow-Origin",
-      "http://csci4050.heliumyang.com:3000/mewmewmewvies/"
-    );
-    xmlHttp.setRequestHeader("Access-Control-Allow-Methods", "GET, POST, PUT");
-    xmlHttp.send(null);
-  } // httpGetAsync
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -74,6 +63,7 @@ function Signup({ toggle, updateToken }) {
       }
       var userData;
 
+      // Define new user
       const newUser = {
         fname: firstName,
         lname: lastName,
@@ -82,26 +72,24 @@ function Signup({ toggle, updateToken }) {
         phone: number,
       };
 
-      const queryString = Object.keys(newUser)
-        .map((key) => key + "=" + newUser[key])
-        .join("&");
-      httpGetSync(
-        `http://csci4050.heliumyang.com:2999/register/?${queryString}`,
-        function (data) {
-          userData = data;
-        }
-      );
-      console.log(response.data); // Log response data
+      // Register user as authenticated user
+      try{
+        const auth = getAuth();
+        await createUserWithEmailAndPassword(auth, email, password); //autheticated user
 
+        const docRef = await addDoc(collection(db, "user"), { //create user entry in firestore
+          ...newUser
+        });
+        console.log("Document written with ID: ", docRef.id);
+      } catch (error) {
+        console.log(error);
+      }
+  
       setLoading(false);
       toggle();
     } catch (err) {
       setLoading(false);
       console.error("Signup error:", err);
-
-      const errorMessage =
-        err.response?.data?.msg || "An error occurred while signing up.";
-      setError(errorMessage);
     }
   };
 
