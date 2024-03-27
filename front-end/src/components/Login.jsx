@@ -6,8 +6,10 @@ import Button from "./Button";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import UserContext from "../context/UserContext";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 function Login({ toggle, updateToken }) {
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -24,34 +26,20 @@ function Login({ toggle, updateToken }) {
     e.preventDefault();
     setLoading(true);
 
+    //check for authenticated user
     try {
-      const userData = await loginUser(email, password);
-      setUserData(userData[0]); // Access user object from array
-      localStorage.setItem("auth-token", userData[0].token); // Assuming token is in user object
-      updateToken();
-      setLoading(false);
-      toggle();
-    } catch (err) {
-      setLoading(false);
-      console.error("Login error:", err.response);
-      if (err.response && err.response.status === 400) {
-        // Handle 400 status for invalid credentials
-        setError("Invalid email or password.");
-      } else {
-        // Handle other errors (e.g., network issues)
-        setError("An error occurred. Please try again later.");
-      }
-    }
-  };
-
-  const loginUser = async (email, password) => {
-    const loginRes = await axios.get(
-      "http://csci4050.heliumyang.com:2999/verifylogin",
-      { params: { email, passwd: password } }
-    );
-    console.log(loginRes.data);
-    return loginRes.data;
-  };
+    const auth = getAuth();
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in 
+        const user = userCredential.user;
+        // ...
+      }) 
+      console.log("LOGIN SUCCESS");
+    } catch(error) {
+        console.log(error);
+      };
+    };
 
   return (
     <div className="popup">
