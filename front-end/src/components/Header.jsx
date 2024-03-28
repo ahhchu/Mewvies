@@ -11,6 +11,7 @@ import EditProfile from "./userTools/EditProfile";
 function Header({ token, updateToken }) {
     const [signupSeen, setSignupSeen] = useState(false);
     const [loginSeen, setLoginSeen] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     useEffect(() => {
         updateToken();
@@ -24,7 +25,12 @@ function Header({ token, updateToken }) {
         setLoginSeen(!loginSeen);
     };
 
+    function  handleLoginSuccess() {
+        setIsLoggedIn(true);
+    }
+
     function handleLogout() {
+        setIsLoggedIn(false);
         localStorage.clear();
         updateToken();
     }
@@ -35,7 +41,7 @@ function Header({ token, updateToken }) {
                 <Link className="button" to="/">
                     Home
                 </Link>
-               <Search /> {/*search bar */}
+                <Search /> {/*search bar */}
             </div>
 
             <div className="header__center">
@@ -43,22 +49,32 @@ function Header({ token, updateToken }) {
             </div>
 
             <div className="header__right">
-            <Link className="button" to ="/edit-profile">
-                Edit Profile
-             </Link>
-                {token ? (
-                    <Button onClick={() => handleLogout()}>Logout</Button>
+                {isLoggedIn ? (
+                    <Link className="button" to="/edit-profile">
+                        Edit Profile
+                    </Link>
                 ) : (
                     <>
                         <Button onClick={toggleSignup}>Signup</Button>
                         <Button onClick={toggleLogin}>Login</Button>
                         {signupSeen ? (
-                            <Signup updateToken={updateToken} toggle={toggleSignup} />
+                            <Signup
+                                updateToken={updateToken}
+                                toggle={toggleSignup}
+                                //setIsLoggedIn={setIsLoggedIn} // Pass setIsLoggedIn to Signup component
+                            />
                         ) : null}
                         {loginSeen ? (
-                            <Login updateToken={updateToken} toggle={toggleLogin} />
+                            <Login
+                                updateToken={updateToken}
+                                toggle={toggleLogin}
+                                handleLoginSuccess={handleLoginSuccess} // Pass handleLoginSuccess to Login
+                            />
                         ) : null}
                     </>
+                )}
+                {isLoggedIn && (
+                    <Button onClick={() => handleLogout()}>Logout</Button>
                 )}
             </div>
         </div>

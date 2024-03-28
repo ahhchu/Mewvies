@@ -6,7 +6,7 @@ import Button from "../Button";
 import { useNavigate } from "react-router-dom";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
-function Login({ toggle, updateToken, setIsAuthenticated }) {
+function Login({ toggle, updateToken, handleLoginSuccess }) {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,6 +28,8 @@ function Login({ toggle, updateToken, setIsAuthenticated }) {
     const auth = getAuth();
     signInWithEmailAndPassword(auth, email, password)
       console.log("LOGIN SUCCESS");
+      handleLoginSuccess();
+    
     } catch(error) {
         console.log(error);
       };
