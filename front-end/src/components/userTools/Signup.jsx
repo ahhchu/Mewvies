@@ -105,7 +105,7 @@ function Signup({ toggle, updateToken }) {
         fname: firstName,
         lname: lastName,
         email: email,
-        passwd: password,
+//        passwd: password,
         phone: number,
         promo: promo,
 

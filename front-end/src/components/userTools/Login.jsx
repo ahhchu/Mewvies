@@ -5,9 +5,10 @@ import ForgotPassword from "./ForgotPassword";
 import Button from "../Button";
 import { useNavigate } from "react-router-dom";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "../../config/firestore";
 
 function Login({ toggle, updateToken, handleLoginSuccess }) {
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -23,17 +24,25 @@ function Login({ toggle, updateToken, handleLoginSuccess }) {
     e.preventDefault();
     setLoading(true);
 
+    const auth = getAuth();
     //check for authenticated user
     try {
-    const auth = getAuth();
-    signInWithEmailAndPassword(auth, email, password)
+      await signInWithEmailAndPassword(auth, email, password);
       console.log("LOGIN SUCCESS");
       handleLoginSuccess();
-    
-    } catch(error) {
-        console.log(error);
-      };
-    };
+      const userRef = doc(db, "users", auth.currentUser.uid);
+      await updateDoc(userRef, {
+        lastLogin: new Date(), // Update with the current date and time
+      });
+
+      // Redirect or perform other actions after login
+    } catch (error) {
+      console.error(error);
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="popup">

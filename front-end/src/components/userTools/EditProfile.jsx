@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from "react";
 import "./EditProfile.css";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc, collection, setDoc } from "firebase/firestore";
 import { db } from "../../config/firestore";
-import { getAuth } from "firebase/auth";
+import {
+  getAuth,
+  updatePassword,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+} from "firebase/auth";
 
 function EditProfile() {
   const auth = getAuth();
@@ -21,41 +26,53 @@ function EditProfile() {
   const [promo, setPromo] = useState(false);
   const [editMode, setEditMode] = useState(false); // To toggle between edit and view modes
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      if (currentUser) {
-        const userRef = doc(db, "user", currentUser.uid);
-        const userSnap = await getDoc(userRef);
-        if (userSnap.exists()) {
-          const userData = userSnap.data();
-          setFirstName(userData.fname);
-          setLastName(userData.lname);
-          setEmail(userData.email); // Email is not editable
-          setPassword(userData.passwd);
-          setPromo(userData.promo);
-          setCardNumber(userData.cardNumber);
-          setCVV(userData.cvv);
-          setExpirationDate(userData.expirationDate);
-          setBillingAddress(userData.billingAddress);
-        } else {
-          console.log("No such user!");
-        }
+  const fetchUserData = async () => {
+    if (currentUser) {
+      const userRef = doc(db, "user", currentUser.uid);
+      const userSnap = await getDoc(userRef);
+      if (userSnap.exists()) {
+        const userData = userSnap.data();
+        setFirstName(userData.fname);
+        setLastName(userData.lname);
+        setEmail(userData.email); // Email is not editable
+        setPromo(userData.promo);
+        setCardNumber(userData.cardNumber);
+        setCVV(userData.cvv);
+        setExpirationDate(userData.expirationDate);
+        setBillingAddress(userData.billingAddress);
+      } else {
+        console.log("No such user!");
       }
-    };
+    }
+  };
+
+  useEffect(() => {
     fetchUserData();
   }, [currentUser]);
 
   const handleSave = async () => {
     if (currentUser) {
-      if (passwordChangeRequested && currentPassword !== password) {
-        alert("Current password is incorrect. Please try again.");
-        return;
+      if (passwordChangeRequested) {
+        const credential = EmailAuthProvider.credential(
+          currentUser.email,
+          currentPassword
+        );
+        try {
+          await reauthenticateWithCredential(currentUser, credential);
+          await updatePassword(currentUser, password);
+          console.log("Password updated successfully");
+        } catch (error) {
+          console.error("Error updating password:", error);
+          alert(
+            "Error updating password. Please make sure your current password is correct and try again."
+          );
+          return;
+        }
       }
 
       const updatedData = {
         fname: firstName,
         lname: lastName,
-        passwd: password,
         promo: promo || false,
         cardNumber: cardNumber,
         cvv: cvv,
@@ -67,6 +84,7 @@ function EditProfile() {
       await updateDoc(userRef, updatedData);
       console.log("Profile updated successfully");
       setEditMode(false); // Exit edit mode after saving
+      await fetchUserData();
     }
   };
 
@@ -142,7 +160,7 @@ function EditProfile() {
             <p>First Name: {firstName}</p>
             <p>Last Name: {lastName}</p>
             <p>Email: {email}</p>
-            <p>Password: {password}</p>
+            <p>Password: ###</p>
             <p>Promotional Emails: {promo ? "Yes" : "No"}</p>
           </>
         )}
@@ -170,7 +188,7 @@ function EditProfile() {
             </label>
             <br />
             <label>
-              Expiration Date
+              Expiration Date:
               <input
                 type="text"
                 value={expirationDate}
