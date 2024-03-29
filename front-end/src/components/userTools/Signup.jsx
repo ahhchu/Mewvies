@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import "./Signup.css";
 import "../Button.css";
 import Button from "../Button";
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import { collection, addDoc, getDocs, doc, setDoc } from "firebase/firestore";
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -24,6 +24,7 @@ function Signup({ toggle, updateToken }) {
   const [expirationDate, setExpirationDate] = useState("");
   const [billingAddress, setBillingAddress] = useState("");
   const [error, setError] = useState("");
+  const [promo, setPromo] = useState(false);
   const [loading, setLoading] = useState(false);
 
   //  const { setUserData } = useContext(UserContext);
@@ -59,7 +60,6 @@ function Signup({ toggle, updateToken }) {
     e.preventDefault();
     setLoading(true);
     try {
-      // Check if first and second passwords match
       if (password !== confirmPassword) {
         setError(
           "Passwords do not match. Please make sure both passwords are the same."
@@ -68,7 +68,6 @@ function Signup({ toggle, updateToken }) {
         return;
       }
 
-      // Check if password is too short (6)
       if (password.length < 6) {
         setError(
           "Password is too short. Please use a password with at least 6 characters."
@@ -77,57 +76,56 @@ function Signup({ toggle, updateToken }) {
         return;
       }
 
-      // Validate email
       if (!validateEmail(email)) {
         setError("Invalid email address.");
         setLoading(false);
         return;
       }
 
-      if (await checkEmailAvailability(email)) {
-        // continue with signup
-      } else {
+      if (!(await checkEmailAvailability(email))) {
         setLoading(false);
         return;
       }
 
+      // Register as authenticated user
+      const auth = getAuth();
+      const userCred = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      // Send email verification
+      await sendEmailVerification(userCred.user);
+      console.log("Email verification sent.");
+
       // Define new user
       const newUser = {
+        uid: userCred.user.uid,
         fname: firstName,
         lname: lastName,
         email: email,
         passwd: password,
         phone: number,
+        promo: promo,
+
+        cardNumber: cardNumber,
+        billingAddress: billingAddress,
+        cvv: cvv,
+        expirationDate: expirationDate,
       };
 
-      // resgiter as authenticated user
-      try {
-        const auth = getAuth();
-        const userCred = await createUserWithEmailAndPassword(
-          auth,
-          email,
-          password
-        ); //autheticated user
-
-        await sendEmailVerification(userCred.user);
-        console.log("Email verification sent.");
-
-        const docRef = await addDoc(collection(db, "user"), {
-          //create user entry in firestore
-          ...newUser,
-        });
-        console.log("Document written with ID: ", docRef.id);
-      } catch (error) {
-        console.log(error);
-        console.log("Error signingup user: ".error);
-        setError("Failed to signup, please try again later.");
-      }
+      // Create user entry in Firestore with the user's UID as the document ID
+      const userRef = doc(db, "user", userCred.user.uid);
+      await setDoc(userRef, newUser);
+      console.log("Document written with ID: ", userCred.user.uid);
 
       setLoading(false);
       toggle();
-    } catch (err) {
+    } catch (error) {
+      console.error("Signup error:", error);
+      setError("Failed to sign up, please try again later.");
       setLoading(false);
-      console.error("Signup error:", err);
     }
   };
 
@@ -198,7 +196,11 @@ function Signup({ toggle, updateToken }) {
             <br />
           </label>
           <label>
-            <input type="checkbox" />
+            <input
+              type="checkbox"
+              checked={promo}
+              onChange={(e) => setPromo(e.target.value)}
+            />
             Opt in to receive promotional emails.
             <br />
           </label>
