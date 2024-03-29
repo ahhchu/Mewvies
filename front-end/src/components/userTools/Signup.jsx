@@ -3,8 +3,14 @@ import "./Signup.css";
 import "../Button.css";
 import Button from "../Button";
 import { collection, addDoc, getDocs } from "firebase/firestore";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  //  sendSignInLinkToEmail,
+  sendEmailVerification,
+} from "firebase/auth";
 import { db } from "../../config/firestore";
+//import { getAuth, sendSignInLinkToEmail } from "firebase/auth";
 
 function Signup({ toggle, updateToken }) {
   const [firstName, setFirstName] = useState("");
@@ -18,7 +24,7 @@ function Signup({ toggle, updateToken }) {
   const [expirationDate, setExpirationDate] = useState("");
   const [billingAddress, setBillingAddress] = useState("");
   const [error, setError] = useState("");
-  //  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   //  const { setUserData } = useContext(UserContext);
 
@@ -97,7 +103,14 @@ function Signup({ toggle, updateToken }) {
       // resgiter as authenticated user
       try {
         const auth = getAuth();
-        await createUserWithEmailAndPassword(auth, email, password); //autheticated user
+        const userCred = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        ); //autheticated user
+
+        await sendEmailVerification(userCred.user);
+        console.log("Email verification sent.");
 
         const docRef = await addDoc(collection(db, "user"), {
           //create user entry in firestore
@@ -106,6 +119,8 @@ function Signup({ toggle, updateToken }) {
         console.log("Document written with ID: ", docRef.id);
       } catch (error) {
         console.log(error);
+        console.log("Error signingup user: ".error);
+        setError("Failed to signup, please try again later.");
       }
 
       setLoading(false);
