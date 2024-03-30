@@ -27,6 +27,7 @@ import Registration  from './components/Registration';
 import EditProfile from  './components/userTools/EditProfile';
 import MovieCard from './components/MovieCard';
 import ForgotPassword from './components/userTools/ForgotPassword';
+import ProtectedRoute from './components/ProtectedRoutes';
 
 function App() {
 
@@ -75,7 +76,8 @@ function App() {
             <Route path ="/edit-profile" element = {<EditProfile/>} />
             <Route path = "/forgot-password" element = {<ForgotPassword/>} />
 
-            <Route path = "/admin/" element = {<Admin/>} />
+            <Route path = "/admin/" element = {<ProtectedRoute><Admin /> </ProtectedRoute>} />
+
             <Route path = "/managemovies/" element = {<ManageMovies/>} />
             <Route path = "/managepromotions/" element = {<ManagePromotions/>} />
             <Route path = "/manageusers/" element = {<ManageUsers/>} />

@@ -1,11 +1,11 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import "./Login.css";
 import "../Button.css";
 import ForgotPassword from "./ForgotPassword";
 import Button from "../Button";
 import { useNavigate } from "react-router-dom";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { doc, updateDoc } from "firebase/firestore";
+import { getAuth, signInWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import { getDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../config/firestore";
 
 function Login({ toggle, updateToken, handleLoginSuccess }) {
@@ -25,17 +25,34 @@ function Login({ toggle, updateToken, handleLoginSuccess }) {
     setLoading(true);
 
     const auth = getAuth();
-    //check for authenticated user
     try {
       await signInWithEmailAndPassword(auth, email, password);
       console.log("LOGIN SUCCESS");
-      handleLoginSuccess();
-      const userRef = doc(db, "users", auth.currentUser.uid);
-      await updateDoc(userRef, {
-        lastLogin: new Date(), // Update with the current date and time
-      });
 
-      // Redirect or perform other actions after login
+      if (auth.currentUser.emailVerified) {
+        // User's email is verified, update their status in Firestore
+        const userRef = doc(db, "user", auth.currentUser.uid);
+        await updateDoc(userRef, {
+          status: "Active",
+        });
+        console.log("User status updated to Active");
+      } else {
+        setError("Please verify your email address. Check your inbox for the verification email.");
+        await sendEmailVerification(auth.currentUser); // resend email option
+        console.log("Verification email sent");
+      }
+
+      // Retrieve user role
+      const userRef = doc(db, "user", auth.currentUser.uid);
+      const userDoc = await getDoc(userRef);
+      const userRole = userDoc.data().role;
+      localStorage.setItem("userRole", userRole); 
+      handleLoginSuccess(userRole); 
+
+      // Update last login time
+      await updateDoc(userRef, {
+        lastLogin: new Date(), 
+      });
     } catch (error) {
       console.error(error);
       setError(error.message);

@@ -27,6 +27,8 @@ function Signup({ toggle, updateToken }) {
   const [promo, setPromo] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const [signupDone, setSignupDone] = useState(false);
+
   //  const { setUserData } = useContext(UserContext);
 
   const validateEmail = (email) => {
@@ -98,6 +100,7 @@ function Signup({ toggle, updateToken }) {
       // Send email verification
       await sendEmailVerification(userCred.user);
       console.log("Email verification sent.");
+      setSignupDone(true);
 
       // Define new user
       const newUser = {
@@ -105,7 +108,7 @@ function Signup({ toggle, updateToken }) {
         fname: firstName,
         lname: lastName,
         email: email,
-//        passwd: password,
+        //        passwd: password,
         phone: number,
         promo: promo,
 
@@ -113,6 +116,9 @@ function Signup({ toggle, updateToken }) {
         billingAddress: billingAddress,
         cvv: cvv,
         expirationDate: expirationDate,
+
+        role: "user", // role
+        status: "inactive", // user status from verifying email address.
       };
 
       // Create user entry in Firestore with the user's UID as the document ID
@@ -134,118 +140,147 @@ function Signup({ toggle, updateToken }) {
       <div className="popup-inner">
         <h2>Signup</h2>
         {error && <p className="error-message">{error}</p>}
-        <form onSubmit={handleSignup}>
-          <h3>Personal Details</h3>
-          <label>
-            First Name:
-            <input
-              required
-              type="text"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-            />
-          </label>
-          <br />
-          <label>
-            Last Name:
-            <input
-              required
-              type="text"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-            />
-          </label>
-          <br />
-          <label>
-            Phone Number:
-            <input
-              required
-              type="text"
-              value={number}
-              onChange={(e) => setNumber(e.target.value)}
-            />
-          </label>
-          <br />
-          <label>
-            Email:
-            <input
-              required
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </label>
-          <br />
-          <label>
-            Password:
-            <input
-              required
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </label>
-          <label>
-            <br /> Confirm password:
-            <input
-              required
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
+        {signupDone ? (
+          <p className="success-message">
+            You have successfully signed up! Check your inbox to verify
+            your email address.
+          </p>
+        ) : (
+          <form onSubmit={handleSignup}>
+            <h3>Personal Details</h3>
+            <label>
+              First Name:
+              <input
+                required
+                type="text"
+                name="firstName"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                className="input-field"
+              />
+            </label>
             <br />
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              checked={promo}
-              onChange={(e) => setPromo(e.target.value)}
-            />
-            Opt in to receive promotional emails.
+            <label>
+              Last Name:
+              <input
+                required
+                type="text"
+                name="lastName"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                className="input-field"
+              />
+            </label>
             <br />
-          </label>
-          <br />
-          <h3>Financial Details</h3>
-          <label>
-            <br /> Card Number
-            <input
-              type="text"
-              value={cardNumber}
-              onChange={(e) => setCardNumber(e.target.value)}
-            />
+            <label>
+              Phone Number:
+              <input
+                required
+                type="text"
+                name="phoneNumber"
+                value={number}
+                onChange={(e) => setNumber(e.target.value)}
+                className="input-field"
+              />
+            </label>
             <br />
-          </label>
-          <label>
-            <br /> CVV
-            <input
-              type="text"
-              value={cvv}
-              onChange={(e) => setCvv(e.target.value)}
-            />
+            <label>
+              Email:
+              <input
+                required
+                type="email"
+                name="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="input-field"
+              />
+            </label>
             <br />
-          </label>
-          <label>
-            <br /> Expiration Date
-            <input
-              type="text"
-              value={expirationDate}
-              onChange={(e) => setExpirationDate(e.target.value)}
-            />
+            <label>
+              Password:
+              <input
+                required
+                type="password"
+                name="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="input-field"
+              />
+            </label>
             <br />
-          </label>
-          <label>
-            <br /> Billing Address
-            <input
-              type="text"
-              value={billingAddress}
-              onChange={(e) => setBillingAddress(e.target.value)}
-            />
+            <label>
+              Confirm Password:
+              <input
+                required
+                type="password"
+                name="confirmPassword"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="input-field"
+              />
+            </label>
             <br />
-          </label>
-          <button className="checkout-button" type="submit">
-            Signup
-          </button>
-        </form>
+            <label>
+              <input
+                type="checkbox"
+                name="promo"
+                checked={promo}
+                onChange={(e) => setPromo(e.target.checked)}
+                className="checkbox-field"
+              />
+              Opt in to receive promotional emails.
+            </label>
+            <br />
+            <h3>Financial Details</h3>
+            <label>
+              Card Number:
+              <input
+                type="text"
+                name="cardNumber"
+                value={cardNumber}
+                onChange={(e) => setCardNumber(e.target.value)}
+                className="input-field"
+              />
+            </label>
+            <br />
+            <label>
+              CVV:
+              <input
+                type="text"
+                name="cvv"
+                value={cvv}
+                onChange={(e) => setCvv(e.target.value)}
+                className="input-field"
+              />
+            </label>
+            <br />
+            <label>
+              Expiration Date:
+              <input
+                type="text"
+                name="expirationDate"
+                value={expirationDate}
+                onChange={(e) => setExpirationDate(e.target.value)}
+                className="input-field"
+              />
+            </label>
+            <br />
+            <label>
+              Billing Address:
+              <input
+                type="text"
+                name="billingAddress"
+                value={billingAddress}
+                onChange={(e) => setBillingAddress(e.target.value)}
+                className="input-field"
+              />
+            </label>
+            <br />
+            <button className="checkout-button" type="submit">
+              Signup
+            </button>
+          </form>
+        )}
         <Button className="btn" onClick={toggle}>
           Close
         </Button>
@@ -253,5 +288,4 @@ function Signup({ toggle, updateToken }) {
     </div>
   );
 }
-
 export default Signup;
