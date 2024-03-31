@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import "./Movie.css";
 import { Link } from "react-router-dom";
 import MovieDetails from "./MovieDetails";
-import CatYarn from "../components/CatYarn";
 
 function Movie() {
   const [currentIndex, setCurrentIndex] = useState(0);
