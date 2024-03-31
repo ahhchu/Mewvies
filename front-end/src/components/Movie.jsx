@@ -2,10 +2,16 @@ import React, { useState } from "react";
 import "./Movie.css";
 import { Link } from "react-router-dom";
 import MovieDetails from "./MovieDetails";
+import CatYarn from "../components/CatYarn";
 
 function Movie() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentIndex2, setCurrentIndex2] = useState(0);
+  const [selectedSection, setSelectedSection] = useState("currentlyShowing");
+
+  const changeSection = (section) => {
+    setSelectedSection(section);
+  };
 
   const handleNext = () => {
     setCurrentIndex(
@@ -105,67 +111,99 @@ function Movie() {
 
   return (
     <div className="Movie">
-      <h1>Currently Running</h1>
-      <div className="Currently-Running">
-        {currentlyRunningShows.map((show, index) => (
-          <Link to="/movie-details">
-            <img src={show.imageUrl} alt={show.name} />
-          </Link>
-        ))}
+      {/* Header section */}
+      <div className="headers">
+        <h1
+          className={selectedSection === "currentlyShowing" ? "active" : ""}
+          onClick={() => changeSection("currentlyShowing")}
+        >
+          Currently Running
+        </h1>
+        <h1
+          className={selectedSection === "comingSoon" ? "active" : ""}
+          onClick={() => changeSection("comingSoon")}
+        >
+          Coming Soon
+        </h1>
       </div>
 
-      {currentlyRunningShows[currentIndex].trailerUrl && ( // Conditionally render the trailer container
-        <div className="TrailerContainer">
-          <iframe
-            width="560"
-            height="315"
-            src={currentlyRunningShows[currentIndex].trailerUrl}
-            title="YouTube Trailer"
-            frameBorder="0"
-            allowFullScreen
-          ></iframe>
-        </div>
-      )}
-      <button className="trailer-button" onClick={handlePrev}>
-        Prev
-      </button>
-      <button className="trailer-button" onClick={handleNext}>
-        Next
-      </button>
+      <hr className="divider" />
 
-      <h1>Coming Soon</h1>
-      <div className="Coming-Soon">
-        {comingSoonShows.map((show, index) => (
-          <div
-            className="MovieCard"
-            key={index}
-            style={{ opacity: index === currentIndex2 ? 1 : 0.5 }}
-          >
-            <h3>{show.name}</h3>
-            <Link to="/coming-soon">
-              <img src={show.imageUrl} alt={show.name} width="300" />
-            </Link>
+      {/* Conditionally render the Currently Running section */}
+      {selectedSection === "currentlyShowing" && (
+        <>
+          <div className="Currently-Running">
+            {currentlyRunningShows.map((show, index) => (
+              <div
+                className="MovieCard"
+                key={index}
+                style={{ opacity: index === currentIndex ? 1 : 0.5 }}
+              >
+                <h3>{show.name}</h3>
+                <Link to="/movie-details">
+                  <img src={show.imageUrl} alt={show.name} />
+                </Link>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-      {comingSoonShows[currentIndex2].trailerUrl && (
-        <div className="TrailerContainer">
-          <iframe
-            width="560"
-            height="315"
-            src={comingSoonShows[currentIndex2].trailerUrl}
-            title="YouTube Trailer"
-            frameBorder="0"
-            allowFullScreen
-          ></iframe>
-        </div>
+          {currentlyRunningShows[currentIndex].trailerUrl && (
+            <div className="TrailerContainer">
+              <iframe
+                width="560"
+                height="315"
+                src={currentlyRunningShows[currentIndex].trailerUrl}
+                title="YouTube Trailer"
+                frameBorder="0"
+                allowFullScreen
+              ></iframe>
+            </div>
+          )}
+          <button className="btn" onClick={handlePrev}>
+           <span>Prev</span> 
+          </button>
+          <button className="btn" onClick={handleNext}>
+            <span>Next</span>
+          </button>
+        </>
       )}
-      <button className="trailer-button" onClick={handlePrev2}>
-        Prev
-      </button>
-      <button className="trailer-button" onClick={handleNext2}>
-        Next
-      </button>
+
+      {/* Conditionally render the Coming Soon section */}
+      {selectedSection === "comingSoon" && (
+        <>
+          <div className="Coming-Soon">
+            {comingSoonShows.map((show, index) => (
+              <div
+                className="MovieCard"
+                key={index}
+                style={{ opacity: index === currentIndex2 ? 1 : 0.5 }}
+              >
+                <h3>{show.name}</h3>
+                <Link to="/coming-soon">
+                  <img src={show.imageUrl} alt={show.name} width="300" />
+                </Link>
+              </div>
+            ))}
+          </div>
+          {comingSoonShows[currentIndex2].trailerUrl && (
+            <div className="TrailerContainer">
+              <iframe
+                width="560"
+                height="315"
+                src={comingSoonShows[currentIndex2].trailerUrl}
+                title="YouTube Trailer"
+                frameBorder="0"
+                allowFullScreen
+              ></iframe>
+            </div>
+          )}
+          <button className="btn" onClick={handlePrev2}>
+           <span>Prev</span> 
+          </button>
+          <button className="btn" onClick={handleNext2}>
+            <span>Next</span>
+          </button>
+        </>
+      )}
     </div>
   );
 }

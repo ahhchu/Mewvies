@@ -8,6 +8,7 @@ function Search() {
   const [searchInput, setSearchInput] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [searched, setSearched] = useState(false); 
+  const [hover, setHover] = useState(false);
 
   const movies2 = [
     { name: "Kung Fu Panda 4" },
@@ -38,18 +39,24 @@ function Search() {
   };
 
   return (
-    <div className="search-container">
-      <input
-        type="text"
-        placeholder="Search for movies..."
-        onChange={handleChange}
-        value={searchInput}
-        className="search-bar"
-      />
+    <div className={`search-container ${searchInput || hover ? "active" : ""}`}>
+    <input
+      type="text"
+      placeholder="Search for movies..."
+      onChange={(e) => setSearchInput(e.target.value)}
+      value={searchInput}
+      className="search-bar"
+    />
+    <button
+      className="search-button"
+      onClick={handleSearch}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+    >
+      Search
+    </button>
 
-      <Button className="search-button" onClick={handleSearch}>
-        Search
-      </Button>
+
 
      {searched && searchResults.length > 0 && (
         <div>

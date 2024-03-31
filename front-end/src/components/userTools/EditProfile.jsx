@@ -24,7 +24,9 @@ function EditProfile() {
   const [expirationDate, setExpirationDate] = useState("");
   const [billingAddress, setBillingAddress] = useState("");
   const [promo, setPromo] = useState(false);
-  const [editMode, setEditMode] = useState(false); // To toggle between edit and view modes
+  const [editMode, setEditMode] = useState(false); 
+  const [editProfileDone, setEditProfileDone] = useState(false);
+
 
   const fetchUserData = async () => {
     if (currentUser) {
@@ -83,6 +85,7 @@ function EditProfile() {
       const userRef = doc(db, "user", currentUser.uid);
       await updateDoc(userRef, updatedData);
       console.log("Profile updated successfully");
+      setEditProfileDone(true);
       setEditMode(false); // Exit edit mode after saving
       await fetchUserData();
     }

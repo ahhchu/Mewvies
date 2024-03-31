@@ -71,6 +71,7 @@
     cursor: pointer;
   }
 
+  /*
   button {
     padding: 10px 15px;
     margin: 5px;
@@ -81,7 +82,7 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
-  }
+  }*/
 
   .checkout-button {
     width: 250px;

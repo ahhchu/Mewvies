@@ -1,32 +1,83 @@
 .header {
     display:flex;   
     justify-content: space-between;
+
 }
 
-.header__left{
+.nav_bar{
+    position: static;
+  z-index: unset;
+  width: auto;
+  height: 3.7rem;
+  opacity: 1;
+  visibility: visible;
+  display: flex;
+  flex-direction: row;
+  border: 0;
+  margin-top: 20px;
+  margin-right: 60px; 
+}
+
+.Mewvies {
+    text-decoration: none;
+    color: black;
+}
+
+.title{
+    font-family: 'Cairo_Play';
     display:flex;
     flex: 1;
-    align-items: center;
+    align-items: left;
     justify-content: left;
+   font-size: 60px;
+   margin-left: 80px;
 }
 
-.header__center{
-    display:flex;
-    flex: 1;
-    align-items: center;
-    justify-content: center;
-    color: #e07a5f;
-    text-shadow: 1px 1px 0 #c76144, -1px -1px 0 #c76144, 1px -1px 0 #c76144, -1px 1px 0 #c76144;
-    padding-right: 50px;
-    font-family: "JetBrains Mono",monospace;
-   font-size: 40px;
-}
 
+@font-face {
+    font-family: 'Cairo_Play';
+    src: url('../style/Cairo_Play/CairoPlay-VariableFont_slnt\,wght.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  
 
 
 .header__right {
     display:flex;
     flex: 1;
-    align-items: center;
-    justify-content: right;
+}
+
+.nav {
+    background-color: white;
+    font-family: 'Cairo_Play';
+    overflow: hidden; 
+    position: relative; 
+    overflow: hidden; 
+    position: relative;
+    border: none;
+    font-size: 25px;
+    padding: 10px 20px;
+    height: auto;
+}
+
+.nav::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background-color:#e4002b;
+    transition: width 0.3s ease, left 0.3s ease;
+}
+
+.nav:hover::after, .nav.selected::after {
+    width: 100%;
+    left: 0;
+}
+
+.nav.selected::after {
+    background-color:#e4002b;
 }

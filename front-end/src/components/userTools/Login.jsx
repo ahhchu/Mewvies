@@ -15,6 +15,7 @@ function Login({ toggle, updateToken, handleLoginSuccess }) {
   const [loading, setLoading] = useState(false);
   const [forgotPasswordSeen, setForgotPasswordSeen] = useState(false);
   const navigate = useNavigate();
+  const [loginDone, setLoginDone] = useState(false);
 
   const toggleForgotPassword = () => {
     setForgotPasswordSeen(!forgotPasswordSeen);
@@ -28,6 +29,7 @@ function Login({ toggle, updateToken, handleLoginSuccess }) {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       console.log("LOGIN SUCCESS");
+      setLoginDone(true);
 
       if (auth.currentUser.emailVerified) {
         // User's email is verified, update their status in Firestore
@@ -55,7 +57,7 @@ function Login({ toggle, updateToken, handleLoginSuccess }) {
       });
     } catch (error) {
       console.error(error);
-      setError(error.message);
+      setError("Wrong credentials. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -64,8 +66,14 @@ function Login({ toggle, updateToken, handleLoginSuccess }) {
   return (
     <div className="popup">
       <div className="popup-inner">
-        <h2>Login</h2>
+        <h2>LOGIN</h2>
+        <hr className ="login-divider"></hr>
         {error && <p className="error-message">{error}</p>}
+        {loginDone ? (
+          <p className="success-message">
+            You have successfully logged in!
+          </p>
+        ) : (
         <form onSubmit={handleLogin}>
           <label className="field">
             Email:
@@ -86,15 +94,16 @@ function Login({ toggle, updateToken, handleLoginSuccess }) {
               onChange={(e) => setPassword(e.target.value)}
             />
           </label>
-          <Button className="btn" type="submit">
-            Login
-          </Button>
+          <button className="btn" type="submit">
+            LOGIN
+          </button>
         </form>
-        <Button className="btn" onClick={toggle}>
-          Close
-        </Button>
+        )}
+        <button className="btn" onClick={toggle}>
+          CLOSE
+        </button>
         <br />
-        <Button onClick={toggleForgotPassword}>Forgot your password?</Button>
+        <button className = "btn" onClick={toggleForgotPassword}>FORGOT PASSWORD</button>
         {forgotPasswordSeen && (
           <ForgotPassword
             updateToken={updateToken}

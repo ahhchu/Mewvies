@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./Header.css";
-import "./Button.css";
 import Login from "./userTools/Login";
 import Signup from "./userTools/Signup";
 import Button from "./Button";
@@ -45,26 +44,20 @@ function Header({ token, updateToken }) {
 
   return (
     <div className="header">
-      <div className="header__left">
-        <Link className="button" to="/">
-          Home
-        </Link>
+      <div className="title">
+        <Link className = "Mewvies" to="/">Mewvies</Link>
+      </div>
+
+      <div className="nav_bar">
         <Search /> {/*search bar */}
-      </div>
-
-      <div className="header__center">
-        <h2>Mewvies</h2>
-      </div>
-
-      <div className="header__right">
         {isLoggedIn ? (
-          <Link className="button" to="/edit-profile">
+          <Link className="nav" to="/edit-profile">
             Edit Profile
           </Link>
         ) : (
           <>
-            <Button onClick={toggleSignup}>Signup</Button>
-            <Button onClick={toggleLogin}>Login</Button>
+            <button className = "nav" onClick={toggleSignup}>Signup</button>
+            <button className = "nav" onClick={toggleLogin}>Login</button>
             {signupSeen ? (
               <Signup
                 updateToken={updateToken}
@@ -81,7 +74,7 @@ function Header({ token, updateToken }) {
             ) : null}
           </>
         )}
-        {isLoggedIn && <Button onClick={() => handleLogout()}>Logout</Button>}
+        {isLoggedIn && <button className = "nav" onClick={() => handleLogout()}>Logout</button>}
       </div>
     </div>
   );

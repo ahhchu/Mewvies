@@ -1,11 +1,21 @@
+
+
+@font-face {
+    font-family: 'Cairo_Play';
+    src: url('../../style/Cairo_Play/CairoPlay-VariableFont_slnt\,wght.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  
 .popup{
     width: 500px;
     margin: 20px auto;
     padding: 10px;
-    background-color: #f2cc8f; 
-    border: 8px solid #73937e;
+    background-color: white; 
+    border: 2px solid #e4002b;
     z-index: 1000;
-    }
+}
     
 .btn:hover {
     background-color: #5b2e48;
@@ -19,19 +29,25 @@
   align-items: left;
 }
   
-.button {
+h2 {
+    color: #e4002b;
+    font-family: 'Cairo_Play';
+}
+
+h3 {
+    font-family: 'Cairo_Play';
+}
+.btn {
     margin: 5px;
     align-items: center;
-    appearance: none;
-    background-color: #FCFCFD;
-    border-radius: 4px;
+    background-color: #e4002b;
+    border-radius: 0px;
     border-width: 0;
-    box-shadow: rgba(45, 35, 66, 0.2) 0 2px 4px,rgba(45, 35, 66, 0.15) 0 7px 13px -3px,#D6D6E7 0 -3px 0 inset;
     box-sizing: border-box;
-    color: #36395A;
+    color: white;
     cursor: pointer;
     display: inline-flex;
-    font-family: "JetBrains Mono",monospace;
+    font-family: 'Cairo_Play';
     height: 48px;
     justify-content: center;
     line-height: 1;
@@ -39,28 +55,42 @@
     overflow: hidden;
     padding-left: 16px;
     padding-right: 16px;
-    position: relative;
-    text-align: left;
-    text-decoration: none;
-    transition: box-shadow .15s,transform .15s;
+    transition: box-shadow .15s, transform .15s;
     user-select: none;
-    -webkit-user-select: none;
-    touch-action: manipulation;
-    white-space: nowrap;
-    will-change: box-shadow,transform;
+    will-change: box-shadow, transform;
     font-size: 18px;
-   }
-   
-   .button:focus {
-    box-shadow: #D6D6E7 0 0 0 1.5px inset, rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
-   }
-   
-   .button:hover {
-    box-shadow: rgba(45, 35, 66, 0.3) 0 4px 8px, rgba(45, 35, 66, 0.2) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
-    transform: translateY(-2px);
-   }
-   
-   .button:active {
-    box-shadow: #D6D6E7 0 3px 7px inset;
-    transform: translateY(2px);
-   }
+    border: 2px solid #e4002b;
+}
+
+.btn:hover {
+    color: red;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    transition: left 0.7s ease;
+    z-index: 0;
+}
+
+.btn:hover::before {
+    left: 0;
+}
+
+.btn span {
+    position: relative;
+    z-index: 1;
+}
+
+.signup-divider {
+    height: 2px; 
+    width: 500px;
+    background-color: #e4002b;
+    border: none; 
+
+  }
