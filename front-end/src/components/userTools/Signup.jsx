@@ -10,6 +10,7 @@ import {
   sendEmailVerification,
 } from "firebase/auth";
 import { db } from "../../config/firestore";
+import { encryptData } from "../../services/crypto";
 //import { getAuth, sendSignInLinkToEmail } from "firebase/auth";
 
 function Signup({ toggle, updateToken }) {
@@ -31,7 +32,7 @@ function Signup({ toggle, updateToken }) {
   const [state, setState] = useState("");
   const [zipCode, setZipCode] = useState("");
 
-
+  const passphrase = "webufhibejnlisuediuwe";
 
   const [error, setError] = useState("");
   const [promo, setPromo] = useState(false);
@@ -122,14 +123,14 @@ function Signup({ toggle, updateToken }) {
         phone: number,
         promo: promo,
 
-        cardNumber: cardNumber,
-        cvv: cvv,
-        expirationDate: expirationDate,
-        billingAddressOne: billingAddressOne,
-        billingAddressTwo: billingAddressTwo,
-        city: city,
-        state: state,
-        zipCode: zipCode,
+        cardNumber: encryptData(cardNumber, passphrase),
+        cvv: encryptData(cvv, passphrase),
+        expirationDate: encryptData(expirationDate, passphrase),
+        billingAddressOne: encryptData(billingAddressOne, passphrase),
+        billingAddressTwo: encryptData(billingAddressTwo, passphrase),
+        city: encryptData(city, passphrase),
+        state: encryptData(state, passphrase),
+        zipCode: encryptData(zipCode, passphrase),
 
         role: "user", // role
         status: "inactive", // user status from verifying email address.
