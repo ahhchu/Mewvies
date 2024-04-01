@@ -3,8 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 //import axios from "axios";
 import Header from './components/Header';
-//import Login from './components/Login';
-//import Signup from './components/Signup';
 import Movie from './components/Movie';
 import MovieDetails from  './components/MovieDetails'
 //import UserContext from './context/UserContext';
@@ -28,6 +26,8 @@ import EditProfile from  './components/userTools/EditProfile';
 import MovieCard from './components/MovieCard';
 import ForgotPassword from './components/userTools/ForgotPassword';
 import ProtectedRoute from './components/ProtectedRoutes';
+import Signup from './components/userTools/Signup';
+import Login from './components/userTools/Login';
 
 function App() {
 
@@ -56,7 +56,7 @@ function App() {
         <main className="App-main">
           <Routes>
             <Route exact path="/search-bar" element={<Search />} />
-            <Route exact path="/MewMewMewvies" element={<Movie />} />
+            <Route exact path="/Mewvies" element={<Movie />} />
             <Route exact path="/" element={<Movie />} />
             <Route path="/seats" element={<Seats />} />
             <Route path="/movie-details" element={<MovieDetails />} />
@@ -75,6 +75,9 @@ function App() {
             <Route path = "/registration" element = {<Registration/>} />
             <Route path ="/edit-profile" element = {<EditProfile/>} />
             <Route path = "/forgot-password" element = {<ForgotPassword/>} />
+
+            <Route path = "/signup" element = {<Signup />} />
+            <Route path = "/login" element = {<Login />} />
 
             <Route path = "/admin/" element = {<ProtectedRoute><Admin /> </ProtectedRoute>} />
 

@@ -51,13 +51,23 @@ function Header({ token, updateToken }) {
       <div className="nav_bar">
         <Search /> {/*search bar */}
         {isLoggedIn ? (
+          <button className="nav">
           <Link className="nav" to="/edit-profile">
             Edit Profile
           </Link>
+          </button>
         ) : (
           <>
-            <button className = "nav" onClick={toggleSignup}>Signup</button>
-            <button className = "nav" onClick={toggleLogin}>Login</button>
+            <button className = "nav">
+            <Link className="nav" to="/signup">
+              Signup
+              </Link>
+             </button>
+            <button className = "nav">
+            <Link className="nav" to="/login">
+              Login
+              </Link>
+             </button>
             {signupSeen ? (
               <Signup
                 updateToken={updateToken}
