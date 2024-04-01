@@ -1,5 +1,4 @@
-import React from "react";
-import { Link } from "react-router-dom"; // Import Link from react-router-dom
+import React, { useState, useEffect } from "react";
 import "./MovieDetails.css";
 import MovieCard from "./MovieCard";
 
