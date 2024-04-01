@@ -30,6 +30,7 @@ function Login({ toggle, updateToken, handleLoginSuccess }) {
       await signInWithEmailAndPassword(auth, email, password);
       console.log("LOGIN SUCCESS");
       setLoginDone(true);
+      setError("");
 
       if (auth.currentUser.emailVerified) {
         // User's email is verified, update their status in Firestore

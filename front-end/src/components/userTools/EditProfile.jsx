@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./EditProfile.css";
 import { doc, getDoc, updateDoc, collection, setDoc } from "firebase/firestore";
 import { db } from "../../config/firestore";
-import {encryptData, decryptData} from "../../services/crypto";
+import { encryptData, decryptData } from "../../services/crypto";
 import {
   getAuth,
   updatePassword,
@@ -23,13 +23,25 @@ function EditProfile() {
   const [cardNumber, setCardNumber] = useState("");
   const [cvv, setCVV] = useState("");
   const [expirationDate, setExpirationDate] = useState("");
-  const [billingAddress, setBillingAddress] = useState("");
+  //  const [billingAddress, setBillingAddress] = useState("");
+
+  const [homeAddressOne, setHomeAddressOne] = useState("");
+  const [homeAddressTwo, setHomeAddressTwo] = useState("");
+  const [homeCity, setHomeCity] = useState("");
+  const [homeState, setHomeState] = useState("");
+  const [homeZipCode, setHomeZipCode] = useState("");
+
+  const [billingAddressOne, setBillingAddressOne] = useState("");
+  const [billingAddressTwo, setBillingAddressTwo] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [zipCode, setZipCode] = useState("");
+
   const [promo, setPromo] = useState(false);
-  const [editMode, setEditMode] = useState(false); 
+  const [editMode, setEditMode] = useState(false);
   const [editProfileDone, setEditProfileDone] = useState(false);
 
   const passphrase = "sdjliwehbfib28y82huiadb";
-
 
   const fetchUserData = async () => {
     if (currentUser) {
@@ -41,17 +53,18 @@ function EditProfile() {
         setLastName(userData.lname);
         setEmail(userData.email); // Email is not editable
         setPromo(userData.promo);
-        setCardNumber( decryptData(userData.cardNumber, passphrase) );
+        setCardNumber(decryptData(userData.cardNumber, passphrase));
         setCVV(decryptData(userData.cvv, passphrase));
         setExpirationDate(decryptData(userData.expirationDate, passphrase));
-        setBillingAddress(decryptData(userData.billingAddress, passphrase));
+        setBillingAddressOne(decryptData(userData.billingAddressOne, passphrase));
+        setBillingAddressTwo(decryptData(userData.billingAddressTwo, passphrase));
+        setCity(decryptData(userData.city, passphrase));
+        setState(decryptData(userData.state, passphrase));
       } else {
         console.log("No such user!");
       }
     }
   };
-
-  
 
   useEffect(() => {
     fetchUserData();
@@ -80,16 +93,33 @@ function EditProfile() {
       const encryptedCardNum = encryptData(cardNumber, passphrase);
       const encryptedCvv = encryptData(cvv, passphrase);
       const encryptedExpirationDate = encryptData(expirationDate, passphrase);
-      const encryptedBillingAddress = encryptData(billingAddress, passphrase);
+      const encryptedBillingAddressOne = encryptData(billingAddressOne, passphrase);
+      const encryptedBillingAddressTwo = encryptData(billingAddressTwo, passphrase);
+      const encryptedCity = encryptData(city, passphrase);
+      const encryptedState = encryptData(state, passphrase);
+      const encryptedZip = encryptData(zip, passphrase);
 
       const updatedData = {
         fname: firstName,
         lname: lastName,
         promo: promo || false,
+
+
+        homeAddressOne: homeAddressOne,
+        homeAddressTwo: homeAddressTwo,
+        homeCity: homeCity,
+        homeState: homeState,
+        homeZipCode: homeZipCode,
+
         cardNumber: encryptedCardNum,
         cvv: encryptedCvv,
         expirationDate: encryptedExpirationDate,
-        billingAddress: encryptedBillingAddress,
+        billingAddressOne: encryptedBillingAddressOne,
+        billingAddressTwo: encryptedBillingAddressTwo,
+        city: encryptedCity,
+        state: encryptedState,
+        zipCode: encryptZipCode,
+
       };
 
       const userRef = doc(db, "user", currentUser.uid);
@@ -161,6 +191,67 @@ function EditProfile() {
               Change Password
             </label>
             <br />
+
+            <label>
+              Home Address:{" "}
+              <input
+                type="text"
+                name="homeAddressOne"
+                value={homeAddressOne}
+                onChange={(e) => setHomeAddressOne(e.target.value)}
+                className="input-field"
+              />
+            </label>
+            <br />
+
+            <label>
+              Address Line 2:
+              <input
+                type="text"
+                name="homeAddressTwo"
+                value={homeAddressTwo}
+                onChange={(e) => setHomeAddressTwo(e.target.value)}
+                className="input-field"
+              />
+            </label>
+            <br />
+
+            <label>
+              City:
+              <input
+                type="text"
+                name="homeCity"
+                value={homeCity}
+                onChange={(e) => setHomeCity(e.target.value)}
+                className="input-field"
+              />
+            </label>
+            <br />
+            <label>
+              State:
+              <input
+                type="text"
+                name="homeState"
+                value={homeState}
+                onChange={(e) => setHomeState(e.target.value)}
+                className="input-field"
+              />
+            </label>
+            <br />
+
+            <label>
+              Zip Code:
+              <input
+                type="text"
+                name="homeZipCode"
+                value={homeZipCode}
+                onChange={(e) => setHomeZipCode(e.target.value)}
+                className="input-field"
+              />
+              <br />
+            </label>
+            <br />
+
             <input
               type="checkbox"
               checked={promo}
@@ -217,6 +308,8 @@ function EditProfile() {
                 onChange={(e) => setBillingAddress(e.target.value)}
               />
             </label>
+
+            
           </>
         ) : (
           <>
