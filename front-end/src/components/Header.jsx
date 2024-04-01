@@ -33,8 +33,6 @@ function Header({ token, updateToken }) {
     }
   };
 
-  
-
   function handleLoginSuccess(userRole) {
     setIsLoggedIn(true);
     if (userRole === "admin") {
@@ -53,29 +51,29 @@ function Header({ token, updateToken }) {
   return (
     <div className="header">
       <div className="title">
-        <Link className = "Mewvies" to="/">Mewvies</Link>
+        <Link className="Mewvies" to="/">
+          Mewvies
+        </Link>
       </div>
 
       <div className="nav_bar">
         <Search /> {/*search bar */}
         {isLoggedIn ? (
           <button className="nav">
-          <Link className="nav" to="/edit-profile">
-            Edit Profile
-          </Link>
+            <Link className="nav" to="/edit-profile">
+              Edit Profile
+            </Link>
           </button>
         ) : (
           <>
-            <button className = "nav">
-            <Link className="nav" to="/signup">
+            <button className="nav" onClick={toggleSignup}>
               Signup
-              </Link>
-             </button>
-            <button className = "nav">
-            <Link className="nav" to="/login">
+            </button>
+            <button className="nav" onClick={toggleLogin}>
               Login
-              </Link>
-             </button>
+            </button>
+
+          
             {signupSeen ? (
               <Signup
                 updateToken={updateToken}
@@ -83,7 +81,7 @@ function Header({ token, updateToken }) {
                 //setIsLoggedIn={setIsLoggedIn} // Pass setIsLoggedIn to Signup component
               />
             ) : null}
-            {loginSeen && !signupSeen? (
+            {loginSeen && !signupSeen ? (
               <Login
                 updateToken={updateToken}
                 toggle={toggleLogin}
@@ -92,7 +90,11 @@ function Header({ token, updateToken }) {
             ) : null}
           </>
         )}
-        {isLoggedIn && <button className = "nav" onClick={() => handleLogout()}>Logout</button>}
+        {isLoggedIn && (
+          <button className="nav" onClick={() => handleLogout()}>
+            Logout
+          </button>
+        )}
       </div>
     </div>
   );

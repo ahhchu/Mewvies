@@ -151,7 +151,8 @@ function Signup({ toggle, updateToken }) {
   };
 
   return (
-    <div className="signup-page">
+    <div className="popup">
+      <div className="popup-inner">
         <h2>SIGNUP</h2>
         <hr className="signup-divider" />
         {error && <p className="error-message">{error}</p>}
@@ -378,6 +379,10 @@ function Signup({ toggle, updateToken }) {
             </button>
           </form>
         )}
+         <button className="btn" onClick={toggle}>
+          CLOSE
+        </button>
+      </div>
       </div>
   );
 }

@@ -64,7 +64,8 @@ function Login({ toggle, updateToken, handleLoginSuccess }) {
   };
 
   return (
-    <div className="login-page">
+    <div className="popup">
+      <div className="popup-inner">
         <h2>LOGIN</h2>
         <hr className ="login-divider"></hr>
         {error && <p className="error-message">{error}</p>}
@@ -98,6 +99,9 @@ function Login({ toggle, updateToken, handleLoginSuccess }) {
           </button>
         </form>
         )}
+        <button className="btn" onClick={toggle}>
+          CLOSE
+        </button>
         <br />
         <button className = "btn" onClick={toggleForgotPassword}>FORGOT PASSWORD</button>
         {forgotPasswordSeen && (
@@ -106,6 +110,7 @@ function Login({ toggle, updateToken, handleLoginSuccess }) {
             toggle={toggleForgotPassword}
           />
         )}
+        </div>
       </div>
   );
 }
