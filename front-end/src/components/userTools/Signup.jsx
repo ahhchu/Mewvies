@@ -150,7 +150,8 @@ function Signup({ toggle, updateToken }) {
           <form onSubmit={handleSignup}>
             <h3>Personal Details</h3>
             <label>
-              First Name:
+            <span style={{ color: "red" }}>*</span>
+            First Name:{' '}
               <input
                 required
                 type="text"
@@ -162,7 +163,8 @@ function Signup({ toggle, updateToken }) {
             </label>
             <br />
             <label>
-              Last Name:
+            <span style={{ color: "red" }}>*</span>
+              Last Name:{' '}
               <input
                 required
                 type="text"
@@ -174,7 +176,8 @@ function Signup({ toggle, updateToken }) {
             </label>
             <br />
             <label>
-              Phone Number:
+            <span style={{ color: "red" }}>*</span>
+              Phone Number:{' '}
               <input
                 required
                 type="text"
@@ -186,7 +189,8 @@ function Signup({ toggle, updateToken }) {
             </label>
             <br />
             <label>
-              Email:
+            <span style={{ color: "red" }}>*</span>
+              Email:{' '}
               <input
                 required
                 type="email"
@@ -198,7 +202,8 @@ function Signup({ toggle, updateToken }) {
             </label>
             <br />
             <label>
-              Password:
+            <span style={{ color: "red" }}>*</span>
+              Password:{' '}
               <input
                 required
                 type="password"
@@ -210,7 +215,8 @@ function Signup({ toggle, updateToken }) {
             </label>
             <br />
             <label>
-              Confirm Password:
+            <span style={{ color: "red" }}>*</span>
+              Confirm Password:{' '}
               <input
                 required
                 type="password"
@@ -234,18 +240,20 @@ function Signup({ toggle, updateToken }) {
             <br />
             <h3>Financial Details</h3>
             <label>
-              Card Number:
+              Card Number:{' '}
               <input
                 type="text"
                 name="cardNumber"
                 value={cardNumber}
-                onChange={(e) => setCardNumber(e.target.value)}
+                onChange={(e) => {
+                  cardNum = encrypt(e.target.value);
+                  setCardNumber(cardNum)}}
                 className="input-field"
               />
             </label>
             <br />
             <label>
-              CVV:
+              CVV:{' '}
               <input
                 type="text"
                 name="cvv"
@@ -256,7 +264,7 @@ function Signup({ toggle, updateToken }) {
             </label>
             <br />
             <label>
-              Expiration Date:
+              Expiration Date:{' '}
               <input
                 type="text"
                 name="expirationDate"
@@ -267,7 +275,7 @@ function Signup({ toggle, updateToken }) {
             </label>
             <br />
             <label>
-              Billing Address:
+              Billing Address:{' '}
               <input
                 type="text"
                 name="billingAddress"

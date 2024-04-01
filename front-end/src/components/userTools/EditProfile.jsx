@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./EditProfile.css";
 import { doc, getDoc, updateDoc, collection, setDoc } from "firebase/firestore";
 import { db } from "../../config/firestore";
+import {encryptData, decryptData} from "../../services/crypto";
 import {
   getAuth,
   updatePassword,
@@ -27,6 +28,8 @@ function EditProfile() {
   const [editMode, setEditMode] = useState(false); 
   const [editProfileDone, setEditProfileDone] = useState(false);
 
+  const passphrase = "sdjliwehbfib28y82huiadb";
+
 
   const fetchUserData = async () => {
     if (currentUser) {
@@ -38,15 +41,17 @@ function EditProfile() {
         setLastName(userData.lname);
         setEmail(userData.email); // Email is not editable
         setPromo(userData.promo);
-        setCardNumber(userData.cardNumber);
-        setCVV(userData.cvv);
-        setExpirationDate(userData.expirationDate);
-        setBillingAddress(userData.billingAddress);
+        setCardNumber( decryptData(userData.cardNumber, passphrase) );
+        setCVV(decryptData(userData.cvv, passphrase));
+        setExpirationDate(decryptData(userData.expirationDate, passphrase));
+        setBillingAddress(decryptData(userData.billingAddress, passphrase));
       } else {
         console.log("No such user!");
       }
     }
   };
+
+  
 
   useEffect(() => {
     fetchUserData();
@@ -64,7 +69,7 @@ function EditProfile() {
           await updatePassword(currentUser, password);
           console.log("Password updated successfully");
         } catch (error) {
-          console.error("Error updating password:", error);
+          consoApplicationlicationerror("Error updating password:", error);
           alert(
             "Error updating password. Please make sure your current password is correct and try again."
           );
@@ -72,14 +77,19 @@ function EditProfile() {
         }
       }
 
+      const encryptedCardNum = encryptData(cardNumber, passphrase);
+      const encryptedCvv = encryptData(cvv, passphrase);
+      const encryptedExpirationDate = encryptData(expirationDate, passphrase);
+      const encryptedBillingAddress = encryptData(billingAddress, passphrase);
+
       const updatedData = {
         fname: firstName,
         lname: lastName,
         promo: promo || false,
-        cardNumber: cardNumber,
-        cvv: cvv,
-        expirationDate: expirationDate,
-        billingAddress: billingAddress,
+        cardNumber: encryptedCardNum,
+        cvv: encryptedCvv,
+        expirationDate: encryptedExpirationDate,
+        billingAddress: encryptedBillingAddress,
       };
 
       const userRef = doc(db, "user", currentUser.uid);
@@ -211,7 +221,7 @@ function EditProfile() {
         ) : (
           <>
             <p>Card Number: {cardNumber}</p>
-            <p>CVV: {cvv}</p>
+            <p>CVV: ***</p>
             <p>Expiration Date: {expirationDate}</p>
             <p>Billing Address: {billingAddress}</p>
           </>

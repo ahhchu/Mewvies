@@ -21,11 +21,19 @@ function Header({ token, updateToken }) {
 
   const toggleSignup = () => {
     setSignupSeen(!signupSeen);
+    if (loginSeen) {
+      setLoginSeen(false); //hide login
+    }
   };
 
   const toggleLogin = () => {
     setLoginSeen(!loginSeen);
+    if (signupSeen) {
+      setSignupSeen(false); //hide signup
+    }
   };
+
+  
 
   function handleLoginSuccess(userRole) {
     setIsLoggedIn(true);
@@ -65,7 +73,7 @@ function Header({ token, updateToken }) {
                 //setIsLoggedIn={setIsLoggedIn} // Pass setIsLoggedIn to Signup component
               />
             ) : null}
-            {loginSeen ? (
+            {loginSeen && !signupSeen? (
               <Login
                 updateToken={updateToken}
                 toggle={toggleLogin}
