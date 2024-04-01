@@ -4,13 +4,14 @@ import "../Button.css";
 import ForgotPassword from "./ForgotPassword";
 import Button from "../Button";
 import { useNavigate } from "react-router-dom";
-import { getAuth, signInWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import { getAuth, setPersistence, signInWithEmailAndPassword, sendEmailVerification, browserSessionPersistence } from "firebase/auth";
 import { getDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../config/firestore";
 
 function Login({ toggle, updateToken, handleLoginSuccess }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [remember, setRem] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [forgotPasswordSeen, setForgotPasswordSeen] = useState(false);
@@ -38,12 +39,32 @@ function Login({ toggle, updateToken, handleLoginSuccess }) {
           status: "Active",
         });
         console.log("User status updated to Active");
+        //I feel the code below could be moved here, bc you can't remember user if they aren't already authenticated
       } else {
         setError("Please verify your email address. Check your inbox for the verification email.");
         await sendEmailVerification(auth.currentUser); // resend email option
         console.log("Verification email sent");
       }
 
+      //Here
+      const docRef = doc(db, "user", auth.currentUser.uid);
+      const remember = docRef.remember;
+      if (remember) {
+        // If User clicked "Remember Me"
+
+        //idk if this part below is excess
+        // const userRef = doc(db, "user", auth.currentUser.uid);
+        // await updateDoc(userRef, {
+        //   remember: "true",
+        // });
+        firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
+
+        console.log("User rememberMe updated to true");
+      } else {
+        firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+        
+      }
+      //to here should be moved into the if statement above
       // Retrieve user role
       const userRef = doc(db, "user", auth.currentUser.uid);
       const userDoc = await getDoc(userRef);
@@ -94,6 +115,17 @@ function Login({ toggle, updateToken, handleLoginSuccess }) {
               onChange={(e) => setPassword(e.target.value)}
             />
           </label>
+          <label>
+              <input
+                type="checkbox"
+                name="remember"
+                checked={remember}
+                onChange={(e) => setRem(e.target.checked)}
+                className="checkbox-field"
+              />
+              Remember Me
+            </label>
+            <br />
           <button className="btn" type="submit">
             LOGIN
           </button>

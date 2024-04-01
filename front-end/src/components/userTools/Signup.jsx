@@ -25,6 +25,7 @@ function Signup({ toggle, updateToken }) {
   const [billingAddress, setBillingAddress] = useState("");
   const [error, setError] = useState("");
   const [promo, setPromo] = useState(false);
+  const [remember, setRem] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const [signupDone, setSignupDone] = useState(false);
@@ -111,6 +112,7 @@ function Signup({ toggle, updateToken }) {
         //        passwd: password,
         phone: number,
         promo: promo,
+        remember: remember,
 
         cardNumber: cardNumber,
         billingAddress: billingAddress,
