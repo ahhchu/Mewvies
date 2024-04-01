@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import "./Movie.css";
 import { Link } from "react-router-dom";
-import MovieDetails from "./MovieDetails";
 
 function Movie() {
   const [currentIndex, setCurrentIndex] = useState(0);
