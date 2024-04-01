@@ -20,9 +20,19 @@ function Signup({ toggle, updateToken }) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [cardNumber, setCardNumber] = useState("");
+  const [cardName, setCardName] = useState("");
+  const [cardType, setCardType] = useState("");
   const [cvv, setCvv] = useState("");
   const [expirationDate, setExpirationDate] = useState("");
-  const [billingAddress, setBillingAddress] = useState("");
+
+  const [billingAddressOne, setBillingAddressOne] = useState("");
+  const [billingAddressTwo, setBillingAddressTwo] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [zipCode, setZipCode] = useState("");
+
+
+
   const [error, setError] = useState("");
   const [promo, setPromo] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -113,9 +123,13 @@ function Signup({ toggle, updateToken }) {
         promo: promo,
 
         cardNumber: cardNumber,
-        billingAddress: billingAddress,
         cvv: cvv,
         expirationDate: expirationDate,
+        billingAddressOne: billingAddressOne,
+        billingAddressTwo: billingAddressTwo,
+        city: city,
+        state: state,
+        zipCode: zipCode,
 
         role: "user", // role
         status: "inactive", // user status from verifying email address.
@@ -136,8 +150,7 @@ function Signup({ toggle, updateToken }) {
   };
 
   return (
-    <div className="popup">
-      <div className="popup-inner">
+    <div className="signup-page">
         <h2>SIGNUP</h2>
         <hr className="signup-divider" />
         {error && <p className="error-message">{error}</p>}
@@ -234,12 +247,36 @@ function Signup({ toggle, updateToken }) {
             <br />
             <h3>Financial Details</h3>
             <label>
+              Name on Card:
+              <input
+                type="text"
+                name="cardName"
+                value={cardName}
+                onChange={(e) => setCardName(e.target.value)}
+                className="input-field"
+              />
+            </label>
+            <br />
+
+            <label>
               Card Number:
               <input
                 type="text"
                 name="cardNumber"
                 value={cardNumber}
                 onChange={(e) => setCardNumber(e.target.value)}
+                className="input-field"
+              />
+            </label>
+            <br />
+
+            <label>
+              Card Type:
+              <input
+                type="text"
+                name="cardType"
+                value={cardType}
+                onChange={(e) => setCardType(e.target.value)}
                 className="input-field"
               />
             </label>
@@ -266,15 +303,65 @@ function Signup({ toggle, updateToken }) {
               />
             </label>
             <br />
+            <br />
+
             <label>
               Billing Address:
               <input
                 type="text"
-                name="billingAddress"
-                value={billingAddress}
-                onChange={(e) => setBillingAddress(e.target.value)}
+                name="billingAddressOne"
+                value={billingAddressOne}
+                onChange={(e) => setBillingAddressOne(e.target.value)}
                 className="input-field"
               />
+              </label>
+               <br />
+
+               <label>
+                Address Line 2:
+              <input
+                type="text"
+                name="billingAddressTwo"
+                value={billingAddressTwo}
+                onChange={(e) => setBillingAddressTwo(e.target.value)}
+                className="input-field"
+              />
+              </label>
+               <br />
+
+               <label>
+                City: 
+              <input
+                type="text"
+                name="city"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                className="input-field"
+              />
+              </label>
+              <br />
+              <label>
+                State: 
+              <input
+                type="text"
+                name="state"
+                value={state}
+                onChange={(e) => setState(e.target.value)}
+                className="input-field"
+              />
+              </label>
+               <br />
+
+               <label>
+                Zip Code: 
+              <input
+                type="text"
+                name="zipCode"
+                value={zipCode}
+                onChange={(e) => setZipCode(e.target.value)}
+                className="input-field"
+              />
+               <br />
             </label>
             <br />
             <button className="btn" type="submit">
@@ -282,11 +369,7 @@ function Signup({ toggle, updateToken }) {
             </button>
           </form>
         )}
-        <button className="btn" onClick={toggle}>
-          CLOSE
-        </button>
       </div>
-    </div>
   );
 }
 export default Signup;

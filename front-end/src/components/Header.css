@@ -50,6 +50,8 @@
 }
 
 .nav {
+    text-decoration: none;
+    color: black;
     background-color: white;
     font-family: 'Cairo_Play';
     overflow: hidden; 

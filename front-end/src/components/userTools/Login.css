@@ -11,6 +11,7 @@
     
 
   .btn {
+    width: 100px;
     margin: 5px;
     align-items: center;
     background-color: #e4002b;
