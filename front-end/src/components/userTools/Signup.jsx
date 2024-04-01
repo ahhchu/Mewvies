@@ -346,7 +346,7 @@ function Signup({ toggle, updateToken }) {
                 type="text"
                 name="cardNumber"
                 value={cardNumber}
-                onChange={(e) => setCardNum(e.target.value)}
+                onChange={(e) => setCardNumber(e.target.value)}
                 className="input-field"
               />
             </label>

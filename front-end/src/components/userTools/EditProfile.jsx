@@ -60,6 +60,7 @@ function EditProfile() {
         setBillingAddressTwo(decryptData(userData.billingAddressTwo, passphrase));
         setCity(decryptData(userData.city, passphrase));
         setState(decryptData(userData.state, passphrase));
+        setZipCode(decryptData(userData.zipCode, passphrase));
       } else {
         console.log("No such user!");
       }
@@ -97,13 +98,12 @@ function EditProfile() {
       const encryptedBillingAddressTwo = encryptData(billingAddressTwo, passphrase);
       const encryptedCity = encryptData(city, passphrase);
       const encryptedState = encryptData(state, passphrase);
-      const encryptedZip = encryptData(zip, passphrase);
+      const encryptedZipCode = encryptData(zipCode, passphrase);
 
       const updatedData = {
         fname: firstName,
         lname: lastName,
         promo: promo || false,
-
 
         homeAddressOne: homeAddressOne,
         homeAddressTwo: homeAddressTwo,
@@ -118,7 +118,7 @@ function EditProfile() {
         billingAddressTwo: encryptedBillingAddressTwo,
         city: encryptedCity,
         state: encryptedState,
-        zipCode: encryptZipCode,
+        zipCode: encryptedZipCode,
 
       };
 
@@ -196,10 +196,8 @@ function EditProfile() {
               Home Address:{" "}
               <input
                 type="text"
-                name="homeAddressOne"
                 value={homeAddressOne}
                 onChange={(e) => setHomeAddressOne(e.target.value)}
-                className="input-field"
               />
             </label>
             <br />
@@ -208,10 +206,8 @@ function EditProfile() {
               Address Line 2:
               <input
                 type="text"
-                name="homeAddressTwo"
                 value={homeAddressTwo}
                 onChange={(e) => setHomeAddressTwo(e.target.value)}
-                className="input-field"
               />
             </label>
             <br />
@@ -220,10 +216,8 @@ function EditProfile() {
               City:
               <input
                 type="text"
-                name="homeCity"
                 value={homeCity}
                 onChange={(e) => setHomeCity(e.target.value)}
-                className="input-field"
               />
             </label>
             <br />
@@ -231,10 +225,8 @@ function EditProfile() {
               State:
               <input
                 type="text"
-                name="homeState"
                 value={homeState}
                 onChange={(e) => setHomeState(e.target.value)}
-                className="input-field"
               />
             </label>
             <br />
@@ -243,10 +235,8 @@ function EditProfile() {
               Zip Code:
               <input
                 type="text"
-                name="homeZipCode"
                 value={homeZipCode}
                 onChange={(e) => setHomeZipCode(e.target.value)}
-                className="input-field"
               />
               <br />
             </label>
@@ -265,6 +255,13 @@ function EditProfile() {
             <p>Last Name: {lastName}</p>
             <p>Email: {email}</p>
             <p>Password: ###</p>
+
+            <p>Home Address Line One : {homeAddressOne}</p>
+            <p>Line Two: {homeAddressTwo}</p>
+            <p>City: {homeCity}</p>
+            <p>State: {homeState}</p>
+            <p>Zip Code: {homeZipCode}</p>
+
             <p>Promotional Emails: {promo ? "Yes" : "No"}</p>
           </>
         )}
@@ -301,11 +298,47 @@ function EditProfile() {
             </label>
             <br />
             <label>
-              Billing Address:
+              Billing Address Line One:
               <input
                 type="text"
-                value={billingAddress}
-                onChange={(e) => setBillingAddress(e.target.value)}
+                value={billingAddressOne}
+                onChange={(e) => setBillingAddressOne(e.target.value)}
+              />
+            </label>
+            <br />
+            <label>
+              Line two:
+              <input
+                type="text"
+                value={billingAddressTwo}
+                onChange={(e) => setBillingAddressTwo(e.target.value)}
+              />
+            </label>
+            <br />
+            <label>
+              City:
+              <input
+                type="text"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+              />
+            </label>
+            <br />
+            <label>
+              State:
+              <input
+                type="text"
+                value={state}
+                onChange={(e) => setState(e.target.value)}
+              />
+            </label>
+            <br />
+            <label>
+              ZipCode:
+              <input
+                type="text"
+                value={zipCode}
+                onChange={(e) => setZipCode(e.target.value)}
               />
             </label>
 
@@ -316,7 +349,11 @@ function EditProfile() {
             <p>Card Number: {cardNumber}</p>
             <p>CVV: ***</p>
             <p>Expiration Date: {expirationDate}</p>
-            <p>Billing Address: {billingAddress}</p>
+            <p>Billing Address One: {billingAddressOne}</p>
+            <p>Line Two: {billingAddressTwo}</p>
+            <p>City: {city}</p>
+            <p>State: {state}</p>
+            <p>Zip Code: {zipCode}</p>
           </>
         )}
       </div>
