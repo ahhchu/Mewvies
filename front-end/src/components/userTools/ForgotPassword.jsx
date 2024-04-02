@@ -1,8 +1,5 @@
-//import React from 'react';
 import React, { useContext, useState } from "react";
 import "./ForgotPassword.css";
-import "../Button.css";
-import Button from "../Button";
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 
 function ForgotPassword({ toggle }) {
@@ -45,13 +42,13 @@ function ForgotPassword({ toggle }) {
               onChange={(e) => setEmail(e.target.value)}
             />
           </label>
-          <Button className="btn" type="submit" disabled={loading}>
+          <button className="btn" type="submit" disabled={loading}>
             Send Reset Link
-          </Button>
+          </button>
         </form>
-        <Button className="btn" onClick={toggle}>
+        <button className="btn" onClick={toggle}>
           Close
-        </Button>
+        </button>
       </div>
     </div>
   );

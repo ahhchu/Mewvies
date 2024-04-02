@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import "./Login.css";
-import "../Button.css";
 import ForgotPassword from "./ForgotPassword";
-import Button from "../Button";
 import { useNavigate } from "react-router-dom";
 import { getAuth, signInWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import { getDoc, doc, updateDoc } from "firebase/firestore";
@@ -104,7 +102,8 @@ function Login({ toggle, updateToken, handleLoginSuccess }) {
           CLOSE
         </button>
         <br />
-        <button className = "btn" onClick={toggleForgotPassword}>FORGOT PASSWORD</button>
+        <button className = "btn" onClick={toggleForgotPassword}>
+          FORGOT PASSWORD</button>
         {forgotPasswordSeen && (
           <ForgotPassword
             updateToken={updateToken}

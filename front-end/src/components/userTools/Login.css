@@ -12,7 +12,7 @@
 
   .btn {
     text-decoration: none;
-    width: 100px;
+    width: auto;
     margin: 5px;
     align-items: center;
     background-color: #e4002b;
