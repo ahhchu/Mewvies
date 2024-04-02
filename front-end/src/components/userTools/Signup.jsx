@@ -10,23 +10,25 @@ import { db } from "../../config/firestore";
 import { encryptData } from "../../services/crypto";
 
 function Signup({ toggle, updateToken }) {
+  /**USER */
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [number, setNumber] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [cardNumber, setCardNumber] = useState("");
-  const [cardName, setCardName] = useState("");
-  const [cardType, setCardType] = useState("");
-  const [cvv, setCvv] = useState("");
-  const [expirationDate, setExpirationDate] = useState("");
 
   const [homeAddressOne, setHomeAddressOne] = useState("");
   const [homeAddressTwo, setHomeAddressTwo] = useState("");
   const [homeCity, setHomeCity] = useState("");
   const [homeState, setHomeState] = useState("");
   const [homeZipCode, setHomeZipCode] = useState("");
+ /**CARD */
+  const [cardNumber, setCardNumber] = useState("");
+  const [cardName, setCardName] = useState("");
+  const [cardType, setCardType] = useState("");
+  const [cvv, setCvv] = useState("");
+  const [expirationDate, setExpirationDate] = useState("");
 
   const [billingAddressOne, setBillingAddressOne] = useState("");
   const [billingAddressTwo, setBillingAddressTwo] = useState("");
