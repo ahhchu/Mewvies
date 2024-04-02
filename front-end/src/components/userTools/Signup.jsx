@@ -434,6 +434,9 @@ function Signup({ toggle, updateToken }) {
                   />
                   <br />
                 </label>
+                <button className="btn" onClick={toggleNewCard}>
+                  CANCEL
+                </button>
                 </form>
 
               </>
@@ -451,7 +454,7 @@ function Signup({ toggle, updateToken }) {
               CLOSE
             </button>
           </div>
-        )
+        
       </div>
   );
 }
