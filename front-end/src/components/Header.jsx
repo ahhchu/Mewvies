@@ -24,6 +24,7 @@ function Header({ token, updateToken }) {
     if (loginSeen) {
       setLoginSeen(false); //hide login
     }
+    console.log("signup: " + signupSeen);
   };
 
   const toggleLogin = () => {
@@ -81,14 +82,13 @@ function Header({ token, updateToken }) {
               <Signup
                 updateToken={updateToken}
                 toggle={toggleSignup}
-                //setIsLoggedIn={setIsLoggedIn} // Pass setIsLoggedIn to Signup component
               />
             ) : null}
             {loginSeen && !signupSeen ? (
               <Login
                 updateToken={updateToken}
                 toggle={toggleLogin}
-                handleLoginSuccess={handleLoginSuccess} // Pass handleLoginSuccess to Login
+                handleLoginSuccess={handleLoginSuccess} 
               />
             ) : null}
           </>

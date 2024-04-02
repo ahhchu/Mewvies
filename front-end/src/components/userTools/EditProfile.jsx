@@ -43,24 +43,22 @@ function EditProfile() {
 
   const passphrase = "sdjliwehbfib28y82huiadb";
 
+  const [updateCard, setUpdateCard] = useState(false);
+
   const fetchUserData = async () => {
     if (currentUser) {
       const userRef = doc(db, "user", currentUser.uid);
       const userSnap = await getDoc(userRef);
+
+      const cardRef = doc(db, "payment_info", currentUser.uid);
+      const cardSnap = await getDoc(cardRef);
+
       if (userSnap.exists()) {
         const userData = userSnap.data();
         setFirstName(userData.fname);
         setLastName(userData.lname);
         setEmail(userData.email); // Email is not editable
         setPromo(userData.promo);
-        setCardNumber(decryptData(userData.cardNumber, passphrase));
-        setCVV(decryptData(userData.cvv, passphrase));
-        setExpirationDate(decryptData(userData.expirationDate, passphrase));
-        setBillingAddressOne(decryptData(userData.billingAddressOne, passphrase));
-        setBillingAddressTwo(decryptData(userData.billingAddressTwo, passphrase));
-        setCity(decryptData(userData.city, passphrase));
-        setState(decryptData(userData.state, passphrase));
-        setZipCode(decryptData(userData.zipCode, passphrase));
 
         setHomeAddressOne(userData.homeAddressOne);
         setHomeAddressTwo(userData.homeAddressTwo);
@@ -69,6 +67,23 @@ function EditProfile() {
         setHomeZipCode(userData.homeZipCode);
       } else {
         console.log("No such user!");
+      }
+
+      if (cardSnap.exists()) {
+        console.log("Card exists");
+        const cardData = cardSnap.data();
+        
+        setUpdateCard(true);
+        setCardNumber(decryptData(cardData.cardNumber,passphrase));
+        setCVV(decryptData(cardData.cvv, passphrase));
+        setExpirationDate(decryptData(cardData.expirationDate, passphrase));
+        setBillingAddressOne(decryptData(cardData.billingAddressOne, passphrase));
+        setBillingAddressTwo(decryptData(cardData.billingAddressTwo, passphrase));
+        setCity(decryptData(cardData.city, passphrase));
+        setState(decryptData(cardData.state, passphrase));
+        setZipCode(decryptData(cardData.zipCode, passphrase));
+      } else {
+        console.log("No card!");
       }
     }
   };
@@ -106,7 +121,7 @@ function EditProfile() {
       const encryptedState = encryptData(state, passphrase);
       const encryptedZipCode = encryptData(zipCode, passphrase);
 
-      const updatedData = {
+      const updatedUserData = {
         fname: firstName,
         lname: lastName,
         promo: promo || false,
@@ -116,7 +131,11 @@ function EditProfile() {
         homeCity: homeCity,
         homeState: homeState,
         homeZipCode: homeZipCode,
+      };
 
+
+      if (updateCard) {
+      const updatedCardData = {
         cardNumber: encryptedCardNum,
         cvv: encryptedCvv,
         expirationDate: encryptedExpirationDate,
@@ -127,10 +146,14 @@ function EditProfile() {
         zipCode: encryptedZipCode,
 
       };
+      const cardRef = doc(db, "payment_info", currentUser.uid);
+      await updateDoc(cardRef, updatedCardData);
+      }
 
       const userRef = doc(db, "user", currentUser.uid);
-      await updateDoc(userRef, updatedData);
+      await updateDoc(userRef, updatedUserData);
       console.log("Profile updated successfully");
+
       setEditProfileDone(true);
       setEditMode(false); // Exit edit mode after saving
       await fetchUserData();

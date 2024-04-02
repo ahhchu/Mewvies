@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./Header.css";
-import "./Button.css";
-import Button from "./Button";
 import Search from "./Search";
 
 function Admin() {
@@ -13,13 +11,13 @@ function Admin() {
             </div>
             <div>
             <Link to ="/managemovies">
-             <Button className="manage">Manage Movies</Button> 
+             <button className="btn">Manage Movies</button> 
             </Link>
             <Link to ="/manageusers">
-             <Button className="manage">Manage Users</Button> 
+             <button className="btn">Manage Users</button> 
             </Link>
             <Link to ="/managepromotions">
-             <Button className="manage">Manage Promotions</Button> 
+             <button className="btn">Manage Promotions</button> 
             </Link>
             </div>
         </div>

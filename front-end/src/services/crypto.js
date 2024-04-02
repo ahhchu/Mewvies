@@ -9,6 +9,11 @@ export const encryptData = (data, passphrase) => {
 
 // Define decryption function
 export const decryptData = (encryptedData, passphrase) => {
+ try { 
   const decryptedBytes = CryptoJS.AES.decrypt(encryptedData, passphrase);
-  return decryptedBytes.toString(CryptoJS.enc.Utf8);
+  return decryptedBytes.toString(CryptoJS.enc.Utf8); 
+} catch (e) {
+  console.log(e);
+ }
+  return;
 };

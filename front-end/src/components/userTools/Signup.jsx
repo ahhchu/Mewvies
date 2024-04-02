@@ -1,7 +1,5 @@
 import React, { useState, useContext } from "react";
 import "./Signup.css";
-import "../Button.css";
-import Button from "../Button";
 import { collection, addDoc, getDocs, doc, setDoc } from "firebase/firestore";
 import {
   getAuth,
@@ -71,7 +69,9 @@ function Signup({ toggle, updateToken }) {
   };
 
   const handleSignup = async (e) => {
+    console.log("Signup called");
     e.preventDefault();
+    console.log("madeit");
     setLoading(true);
     try {
       if (password !== confirmPassword) {
@@ -81,7 +81,7 @@ function Signup({ toggle, updateToken }) {
         setLoading(false);
         return;
       }
-
+      console.log("pass");
       if (password.length < 6) {
         setError(
           "Password is too short. Please use a password with at least 6 characters."
@@ -89,18 +89,18 @@ function Signup({ toggle, updateToken }) {
         setLoading(false);
         return;
       }
-
+      console.log("pass length");
       if (!validateEmail(email)) {
         setError("Invalid email address.");
         setLoading(false);
         return;
       }
-
+      console.log("email val");
       if (!(await checkEmailAvailability(email))) {
         setLoading(false);
         return;
       }
-
+      console.log("email avail");
       const auth = getAuth();
       const userCred = await createUserWithEmailAndPassword(
         auth,
@@ -127,7 +127,16 @@ function Signup({ toggle, updateToken }) {
         homeState: homeState,
         homeZipCode: homeZipCode,
 
-        cardNumber: encryptData(cardNumber, passphrase),
+        role: "user",
+        status: "inactive",
+      };
+console.log("user generated");
+
+  console.log("State after fetch:" + cardNumber );
+  let newCard = {};
+      try {
+        newCard = {
+        cardNumber: encryptData(cardNumber,passphrase),
         cvv: encryptData(cvv, passphrase),
         expirationDate: encryptData(expirationDate, passphrase),
         billingAddressOne: encryptData(billingAddressOne, passphrase),
@@ -135,14 +144,20 @@ function Signup({ toggle, updateToken }) {
         city: encryptData(city, passphrase),
         state: encryptData(state, passphrase),
         zipCode: encryptData(zipCode, passphrase),
-
-        role: "user",
-        status: "inactive",
+        uid: userCred.user.uid
       };
+    } catch (error) {
+        console.error("Error encrypting data:", error);
+      }
 
       const userRef = doc(db, "user", userCred.user.uid);
       await setDoc(userRef, newUser);
       console.log("Document written with ID: ", userCred.user.uid);
+
+      const cardRef = doc(db, "payment_info", userCred.user.uid);
+      await setDoc(cardRef, newCard);
+      console.log("Document written with ID: ", userCred.user.uid);
+
 
       setLoading(false);
       toggle();
@@ -159,17 +174,22 @@ function Signup({ toggle, updateToken }) {
 
   return (
     <div className="popup">
+    
+    <form onSubmit={handleSignup}>
       <div className="popup-inner">
         <h2>SIGNUP</h2>
-        <hr className="signup-divider" />
+        <div className="signup-divider" />
+
         {error && <p className="error-message">{error}</p>}
+
+
         {signupDone ? (
           <p className="success-message">
             You have successfully signed up! Check your inbox to verify your
             email address.
           </p>
         ) : (
-          <form onSubmit={handleSignup}>
+          <div className="personal-details">
             <h3>Personal Details</h3>
             <label>
               <span style={{ color: "red" }}>*</span>
@@ -315,13 +335,13 @@ function Signup({ toggle, updateToken }) {
               />
               Opt in to receive promotional emails.
             </label>
-              </form>
+            </div>
             )}
 
 
             {addNewCard ? (
               <>
-                <form>
+              <div className="card-details">
                 <h3>Financial Details</h3>
                 <label>
                   Name on Card:
@@ -434,10 +454,10 @@ function Signup({ toggle, updateToken }) {
                   />
                   <br />
                 </label>
+                </div>
                 <button className="btn" onClick={toggleNewCard}>
                   CANCEL
                 </button>
-                </form>
 
               </>
             ) : (
@@ -447,14 +467,17 @@ function Signup({ toggle, updateToken }) {
             )}
 
             <br />
+            <div>
             <button className="btn" type="submit">
               SIGNUP
             </button>
+        
             <button className="btn" onClick={toggle}>
               CLOSE
             </button>
+            </div>
           </div>
-        
+          </form>
       </div>
   );
 }
