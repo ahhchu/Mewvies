@@ -20,16 +20,18 @@ function EditProfile() {
   const [password, setPassword] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [passwordChangeRequested, setPasswordChangeRequested] = useState(false);
-  const [cardNumber, setCardNumber] = useState("");
-  const [cvv, setCVV] = useState("");
-  const [expirationDate, setExpirationDate] = useState("");
-  //  const [billingAddress, setBillingAddress] = useState("");
 
   const [homeAddressOne, setHomeAddressOne] = useState("");
   const [homeAddressTwo, setHomeAddressTwo] = useState("");
   const [homeCity, setHomeCity] = useState("");
   const [homeState, setHomeState] = useState("");
   const [homeZipCode, setHomeZipCode] = useState("");
+
+  const [cardNumber, setCardNumber] = useState("");
+  const [cardName, setCardName] = useState("");
+  const [cardType, setCardType] = useState("");
+  const [cvv, setCVV] = useState("");
+  const [expirationDate, setExpirationDate] = useState("");
 
   const [billingAddressOne, setBillingAddressOne] = useState("");
   const [billingAddressTwo, setBillingAddressTwo] = useState("");
@@ -75,6 +77,8 @@ function EditProfile() {
         
         setUpdateCard(true);
         setCardNumber(decryptData(cardData.cardNumber,passphrase));
+        setCardName(decryptData(cardData.cardName, passphrase));
+        setCardType(decryptData(cardData.cardType, passphrase));
         setCVV(decryptData(cardData.cvv, passphrase));
         setExpirationDate(decryptData(cardData.expirationDate, passphrase));
         setBillingAddressOne(decryptData(cardData.billingAddressOne, passphrase));
@@ -114,6 +118,8 @@ function EditProfile() {
 
       const encryptedCardNum = encryptData(cardNumber, passphrase);
       const encryptedCvv = encryptData(cvv, passphrase);
+      const encryptedCardName = encryptData(cardName, passphrase);
+      const encryptedCardType = encryptData(cardType, passphrase);
       const encryptedExpirationDate = encryptData(expirationDate, passphrase);
       const encryptedBillingAddressOne = encryptData(billingAddressOne, passphrase);
       const encryptedBillingAddressTwo = encryptData(billingAddressTwo, passphrase);
@@ -138,6 +144,8 @@ function EditProfile() {
       const updatedCardData = {
         cardNumber: encryptedCardNum,
         cvv: encryptedCvv,
+        cardName: encryptedCardName,
+        cardType: encryptedCardType,
         expirationDate: encryptedExpirationDate,
         billingAddressOne: encryptedBillingAddressOne,
         billingAddressTwo: encryptedBillingAddressTwo,
@@ -299,6 +307,24 @@ function EditProfile() {
       <div>
         {editMode ? (
           <>
+          <label>
+              Name on Card:{" "}
+              <input
+                type="text"
+                value={cardName}
+                onChange={(e) => setCardName(e.target.value)}
+              />
+            </label>
+            <br />
+            <label>
+              Card Type:{" "}
+              <input
+                type="text"
+                value={cardType}
+                onChange={(e) => setCardType(e.target.value)}
+              />
+            </label>
+            <br />
             <label>
               Card Number:{" "}
               <input
@@ -375,6 +401,8 @@ function EditProfile() {
           </>
         ) : (
           <>
+            <p>Name on Card: {cardName}</p>
+            <p>Card Type: {cardType}</p>
             <p>Card Number: {cardNumber}</p>
             <p>CVV: ***</p>
             <p>Expiration Date: {expirationDate}</p>
