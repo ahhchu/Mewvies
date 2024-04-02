@@ -327,6 +327,10 @@ function Signup({ toggle, updateToken }) {
               Opt in to receive promotional emails.
             </label>
             <br />
+
+
+
+
             <h3>Financial Details</h3>
             <label>
               Name on Card:

@@ -44,6 +44,9 @@ function Header({ token, updateToken }) {
 
   function handleLogout() {
     setIsLoggedIn(false);
+    setLoginSeen(false); 
+    setSignupSeen(false);
+    navigate("/Mewvies");
     localStorage.clear();
     updateToken();
   }

@@ -61,6 +61,12 @@ function EditProfile() {
         setCity(decryptData(userData.city, passphrase));
         setState(decryptData(userData.state, passphrase));
         setZipCode(decryptData(userData.zipCode, passphrase));
+
+        setHomeAddressOne(userData.homeAddressOne);
+        setHomeAddressTwo(userData.homeAddressTwo);
+        setHomeCity(userData.homeCity);
+        setHomeState(userData.homeState);
+        setHomeZipCode(userData.homeZipCode);
       } else {
         console.log("No such user!");
       }
@@ -354,6 +360,7 @@ function EditProfile() {
             <p>City: {city}</p>
             <p>State: {state}</p>
             <p>Zip Code: {zipCode}</p>
+
           </>
         )}
       </div>
