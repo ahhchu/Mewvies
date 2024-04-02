@@ -46,6 +46,8 @@ function Signup({ toggle, updateToken }) {
 
   const [signupDone, setSignupDone] = useState(false);
 
+  const [AddCards, setAddCards] = useState(false);
+
   //  const { setUserData } = useContext(UserContext);
 
   const validateEmail = (email) => {
@@ -327,135 +329,146 @@ function Signup({ toggle, updateToken }) {
               Opt in to receive promotional emails.
             </label>
             <br />
-            <h3>Financial Details</h3>
-            <label>
-              Name on Card:
-              <input
-                type="text"
-                name="cardName"
-                value={cardName}
-                onChange={(e) => setCardName(e.target.value)}
-                className="input-field"
-              />
-            </label>
-            <br />
 
-            <label>
-              Card Number:{" "}
-              <input
-                type="text"
-                name="cardNumber"
-                value={cardNumber}
-                onChange={(e) => setCardNum(e.target.value)}
-                className="input-field"
-              />
-            </label>
-            <br />
-
-            <label>
-              Card Type:
-              <input
-                type="text"
-                name="cardType"
-                value={cardType}
-                onChange={(e) => setCardType(e.target.value)}
-                className="input-field"
-              />
-            </label>
-            <br />
-            <label>
-              CVV:{" "}
-              <input
-                type="text"
-                name="cvv"
-                value={cvv}
-                onChange={(e) => setCvv(e.target.value)}
-                className="input-field"
-              />
-            </label>
-            <br />
-            <label>
-              Expiration Date:{" "}
-              <input
-                type="text"
-                name="expirationDate"
-                value={expirationDate}
-                onChange={(e) => setExpirationDate(e.target.value)}
-                className="input-field"
-              />
-            </label>
-            <br />
-            <br />
-
-            <label>
-              Billing Address:{" "}
-              <input
-                type="text"
-                name="billingAddressOne"
-                value={billingAddressOne}
-                onChange={(e) => setBillingAddressOne(e.target.value)}
-                className="input-field"
-              />
-            </label>
-            <br />
-
-            <label>
-              Address Line 2:
-              <input
-                type="text"
-                name="billingAddressTwo"
-                value={billingAddressTwo}
-                onChange={(e) => setBillingAddressTwo(e.target.value)}
-                className="input-field"
-              />
-            </label>
-            <br />
-
-            <label>
-              City:
-              <input
-                type="text"
-                name="city"
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                className="input-field"
-              />
-            </label>
-            <br />
-            <label>
-              State:
-              <input
-                type="text"
-                name="state"
-                value={state}
-                onChange={(e) => setState(e.target.value)}
-                className="input-field"
-              />
-            </label>
-            <br />
-
-            <label>
-              Zip Code:
-              <input
-                type="text"
-                name="zipCode"
-                value={zipCode}
-                onChange={(e) => setZipCode(e.target.value)}
-                className="input-field"
-              />
-              <br />
-            </label>
-            <br />
-            <button className="btn" type="submit">
-              SIGNUP
+            {AddCards ? (
+            <button className="btn" onClick={toggle}>
+              ADD CARD
             </button>
-          </form>
-        )}
+            ) : ( 
+              <form>
+              <h3>Financial Details</h3>
+              <label>
+                Name on Card:
+                <input
+                  type="text"
+                  name="cardName"
+                  value={cardName}
+                  onChange={(e) => setCardName(e.target.value)}
+                  className="input-field"
+                />
+              </label>
+              <br />
+
+              <label>
+                Card Number:{" "}
+                <input
+                  type="text"
+                  name="cardNumber"
+                  value={cardNumber}
+                  onChange={(e) => setCardNum(e.target.value)}
+                  className="input-field"
+                />
+              </label>
+              <br />
+
+              <label>
+                Card Type:
+                <input
+                  type="text"
+                  name="cardType"
+                  value={cardType}
+                  onChange={(e) => setCardType(e.target.value)}
+                  className="input-field"
+                />
+              </label>
+              <br />
+              <label>
+                CVV:{" "}
+                <input
+                  type="text"
+                  name="cvv"
+                  value={cvv}
+                  onChange={(e) => setCvv(e.target.value)}
+                  className="input-field"
+                />
+              </label>
+              <br />
+              <label>
+                Expiration Date:{" "}
+                <input
+                  type="text"
+                  name="expirationDate"
+                  value={expirationDate}
+                  onChange={(e) => setExpirationDate(e.target.value)}
+                  className="input-field"
+                />
+              </label>
+              <br />
+              <br />
+
+              <label>
+                Billing Address:{" "}
+                <input
+                  type="text"
+                  name="billingAddressOne"
+                  value={billingAddressOne}
+                  onChange={(e) => setBillingAddressOne(e.target.value)}
+                  className="input-field"
+                />
+              </label>
+              <br />
+
+              <label>
+                Address Line 2:
+                <input
+                  type="text"
+                  name="billingAddressTwo"
+                  value={billingAddressTwo}
+                  onChange={(e) => setBillingAddressTwo(e.target.value)}
+                  className="input-field"
+                />
+              </label>
+              <br />
+
+              <label>
+                City:
+                <input
+                  type="text"
+                  name="city"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  className="input-field"
+                />
+              </label>
+              <br />
+              <label>
+                State:
+                <input
+                  type="text"
+                  name="state"
+                  value={state}
+                  onChange={(e) => setState(e.target.value)}
+                  className="input-field"
+                />
+              </label>
+              <br />
+
+              <label>
+                Zip Code:
+                <input
+                  type="text"
+                  name="zipCode"
+                  value={zipCode}
+                  onChange={(e) => setZipCode(e.target.value)}
+                  className="input-field"
+                />
+                <br />
+              </label>
+              </form>
+              )}
+            )}
+          
+            <br />
+              <button className="btn" type="submit">
+                SIGNUP
+              </button>
+
         <button className="btn" onClick={toggle}>
           CLOSE
         </button>
-      </div>
-    </div>
+      </div> 
+    </div> 
+    
   );
 }
 export default Signup;
