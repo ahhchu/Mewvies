@@ -6,12 +6,10 @@ import { collection, addDoc, getDocs, doc, setDoc } from "firebase/firestore";
 import {
   getAuth,
   createUserWithEmailAndPassword,
-  //  sendSignInLinkToEmail,
   sendEmailVerification,
 } from "firebase/auth";
 import { db } from "../../config/firestore";
 import { encryptData } from "../../services/crypto";
-//import { getAuth, sendSignInLinkToEmail } from "firebase/auth";
 
 function Signup({ toggle, updateToken }) {
   const [firstName, setFirstName] = useState("");
@@ -43,10 +41,8 @@ function Signup({ toggle, updateToken }) {
   const [error, setError] = useState("");
   const [promo, setPromo] = useState(false);
   const [loading, setLoading] = useState(false);
-
   const [signupDone, setSignupDone] = useState(false);
-
-  //  const { setUserData } = useContext(UserContext);
+  const [addNewCard, setNewCard] = useState(false);
 
   const validateEmail = (email) => {
     const validRegex =
@@ -66,7 +62,6 @@ function Signup({ toggle, updateToken }) {
       }
       return true;
     } catch (error) {
-      // catch other error
       console.error("Error checking email availability:", error);
       setError(
         "There was a problem checking email availability. Please try again."
@@ -106,7 +101,6 @@ function Signup({ toggle, updateToken }) {
         return;
       }
 
-      // Register as authenticated user
       const auth = getAuth();
       const userCred = await createUserWithEmailAndPassword(
         auth,
@@ -114,19 +108,16 @@ function Signup({ toggle, updateToken }) {
         password
       );
 
-      // Send email verification
       await sendEmailVerification(userCred.user);
       console.log("Email verification sent.");
       setSignupDone(true);
       setError("");
 
-      // Define new user
       const newUser = {
         uid: userCred.user.uid,
         fname: firstName,
         lname: lastName,
         email: email,
-        //        passwd: password,
         phone: number,
         promo: promo,
 
@@ -145,11 +136,10 @@ function Signup({ toggle, updateToken }) {
         state: encryptData(state, passphrase),
         zipCode: encryptData(zipCode, passphrase),
 
-        role: "user", // role
-        status: "inactive", // user status from verifying email address.
+        role: "user",
+        status: "inactive",
       };
 
-      // Create user entry in Firestore with the user's UID as the document ID
       const userRef = doc(db, "user", userCred.user.uid);
       await setDoc(userRef, newUser);
       console.log("Document written with ID: ", userCred.user.uid);
@@ -161,6 +151,10 @@ function Signup({ toggle, updateToken }) {
       setError("Failed to sign up, please try again later.");
       setLoading(false);
     }
+  };
+
+  const toggleNewCard = () => {
+    setNewCard(!addNewCard);
   };
 
   return (
@@ -255,7 +249,6 @@ function Signup({ toggle, updateToken }) {
               />
             </label>
             <br />
-
             <label>
               Home Address:{" "}
               <input
@@ -267,9 +260,8 @@ function Signup({ toggle, updateToken }) {
               />
             </label>
             <br />
-
             <label>
-              Address Line 2:
+              Address Line 2: {" "}
               <input
                 type="text"
                 name="homeAddressTwo"
@@ -279,9 +271,8 @@ function Signup({ toggle, updateToken }) {
               />
             </label>
             <br />
-
             <label>
-              City:
+              City: {" "}
               <input
                 type="text"
                 name="homeCity"
@@ -292,7 +283,7 @@ function Signup({ toggle, updateToken }) {
             </label>
             <br />
             <label>
-              State:
+              State: {" "}
               <input
                 type="text"
                 name="homeState"
@@ -302,9 +293,8 @@ function Signup({ toggle, updateToken }) {
               />
             </label>
             <br />
-
             <label>
-              Zip Code:
+              Zip Code: {" "}
               <input
                 type="text"
                 name="homeZipCode"
@@ -315,7 +305,6 @@ function Signup({ toggle, updateToken }) {
               <br />
             </label>
             <br />
-
             <label>
               <input
                 type="checkbox"
@@ -326,140 +315,148 @@ function Signup({ toggle, updateToken }) {
               />
               Opt in to receive promotional emails.
             </label>
-            <br />
+              </form>
+            )}
 
 
+            {addNewCard ? (
+              <>
+                <form>
+                <h3>Financial Details</h3>
+                <label>
+                  Name on Card:
+                  <input
+                    type="text"
+                    name="cardName"
+                    value={cardName}
+                    onChange={(e) => setCardName(e.target.value)}
+                    className="input-field"
+                  />
+                </label>
+                <br />
+                <label>
+                  Card Number:{" "}
+                  <input
+                    type="text"
+                    name="cardNumber"
+                    value={cardNumber}
+                    onChange={(e) => setCardNumber(e.target.value)}
+                    className="input-field"
+                  />
+                </label>
+                <br />
+                <label>
+                  Card Type: {" "}
+                  <input
+                    type="text"
+                    name="cardType"
+                    value={cardType}
+                    onChange={(e) => setCardType(e.target.value)}
+                    className="input-field"
+                  />
+                </label>
+                <br />
+                <label>
+                  CVV:{" "}
+                  <input
+                    type="text"
+                    name="cvv"
+                    value={cvv}
+                    onChange={(e) => setCvv(e.target.value)}
+                    className="input-field"
+                  />
+                </label>
+                <br />
+                <label>
+                  Expiration Date:{" "}
+                  <input
+                    type="text"
+                    name="expirationDate"
+                    value={expirationDate}
+                    onChange={(e) => setExpirationDate(e.target.value)}
+                    className="input-field"
+                  />
+                </label>
+                <br />
+                <br />
+                <label>
+                  Billing Address:{" "}
+                  <input
+                    type="text"
+                    name="billingAddressOne"
+                    value={billingAddressOne}
+                    onChange={(e) => setBillingAddressOne(e.target.value)}
+                    className="input-field"
+                  />
+                </label>
+                <br />
+                <label>
+                  Address Line 2: {" "}
+                  <input
+                    type="text"
+                    name="billingAddressTwo"
+                    value={billingAddressTwo}
+                    onChange={(e) => setBillingAddressTwo(e.target.value)}
+                    className="input-field"
+                  />
+                </label>
+                <br />
+                <label>
+                  City: {" "}
+                  <input
+                    type="text"
+                    name="city"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                    className="input-field"
+                  />
+                </label>
+                <br />
+                <label>
+                  State: {" "}
+                  <input
+                    type="text"
+                    name="state"
+                    value={state}
+                    onChange={(e) => setState(e.target.value)}
+                    className="input-field"
+                  />
+                </label>
+                <br />
+                <label>
+                  Zip Code: {" "}
+                  <input
+                    type="text"
+                    name="zipCode"
+                    value={zipCode}
+                    onChange={(e) => setZipCode(e.target.value)}
+                    className="input-field"
+                  />
+                  <br />
+                </label>
+                <button className="btn" onClick={toggleNewCard}>
+                  CANCEL
+                </button>
+                </form>
 
+              </>
+            ) : (
+              <button className="btn" onClick={toggleNewCard}>
+                ADD CARD
+              </button>
+            )}
 
-            <h3>Financial Details</h3>
-            <label>
-              Name on Card:
-              <input
-                type="text"
-                name="cardName"
-                value={cardName}
-                onChange={(e) => setCardName(e.target.value)}
-                className="input-field"
-              />
-            </label>
-            <br />
-
-            <label>
-              Card Number:{" "}
-              <input
-                type="text"
-                name="cardNumber"
-                value={cardNumber}
-                onChange={(e) => setCardNumber(e.target.value)}
-                className="input-field"
-              />
-            </label>
-            <br />
-
-            <label>
-              Card Type:
-              <input
-                type="text"
-                name="cardType"
-                value={cardType}
-                onChange={(e) => setCardType(e.target.value)}
-                className="input-field"
-              />
-            </label>
-            <br />
-            <label>
-              CVV:{" "}
-              <input
-                type="text"
-                name="cvv"
-                value={cvv}
-                onChange={(e) => setCvv(e.target.value)}
-                className="input-field"
-              />
-            </label>
-            <br />
-            <label>
-              Expiration Date:{" "}
-              <input
-                type="text"
-                name="expirationDate"
-                value={expirationDate}
-                onChange={(e) => setExpirationDate(e.target.value)}
-                className="input-field"
-              />
-            </label>
-            <br />
-            <br />
-
-            <label>
-              Billing Address:{" "}
-              <input
-                type="text"
-                name="billingAddressOne"
-                value={billingAddressOne}
-                onChange={(e) => setBillingAddressOne(e.target.value)}
-                className="input-field"
-              />
-            </label>
-            <br />
-
-            <label>
-              Address Line 2:
-              <input
-                type="text"
-                name="billingAddressTwo"
-                value={billingAddressTwo}
-                onChange={(e) => setBillingAddressTwo(e.target.value)}
-                className="input-field"
-              />
-            </label>
-            <br />
-
-            <label>
-              City:
-              <input
-                type="text"
-                name="city"
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                className="input-field"
-              />
-            </label>
-            <br />
-            <label>
-              State:
-              <input
-                type="text"
-                name="state"
-                value={state}
-                onChange={(e) => setState(e.target.value)}
-                className="input-field"
-              />
-            </label>
-            <br />
-
-            <label>
-              Zip Code:
-              <input
-                type="text"
-                name="zipCode"
-                value={zipCode}
-                onChange={(e) => setZipCode(e.target.value)}
-                className="input-field"
-              />
-              <br />
-            </label>
             <br />
             <button className="btn" type="submit">
               SIGNUP
             </button>
-          </form>
-        )}
-        <button className="btn" onClick={toggle}>
-          CLOSE
-        </button>
+            <button className="btn" onClick={toggle}>
+              CLOSE
+            </button>
+          </div>
+        
       </div>
-    </div>
   );
 }
+
 export default Signup;
