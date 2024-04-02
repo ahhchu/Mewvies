@@ -261,7 +261,7 @@ function Signup({ toggle, updateToken }) {
             </label>
             <br />
             <label>
-              Address Line 2:
+              Address Line 2: {" "}
               <input
                 type="text"
                 name="homeAddressTwo"
@@ -272,7 +272,7 @@ function Signup({ toggle, updateToken }) {
             </label>
             <br />
             <label>
-              City:
+              City: {" "}
               <input
                 type="text"
                 name="homeCity"
@@ -283,7 +283,7 @@ function Signup({ toggle, updateToken }) {
             </label>
             <br />
             <label>
-              State:
+              State: {" "}
               <input
                 type="text"
                 name="homeState"
@@ -294,7 +294,7 @@ function Signup({ toggle, updateToken }) {
             </label>
             <br />
             <label>
-              Zip Code:
+              Zip Code: {" "}
               <input
                 type="text"
                 name="homeZipCode"
@@ -346,7 +346,7 @@ function Signup({ toggle, updateToken }) {
                 </label>
                 <br />
                 <label>
-                  Card Type:
+                  Card Type: {" "}
                   <input
                     type="text"
                     name="cardType"
@@ -391,7 +391,7 @@ function Signup({ toggle, updateToken }) {
                 </label>
                 <br />
                 <label>
-                  Address Line 2:
+                  Address Line 2: {" "}
                   <input
                     type="text"
                     name="billingAddressTwo"
@@ -402,7 +402,7 @@ function Signup({ toggle, updateToken }) {
                 </label>
                 <br />
                 <label>
-                  City:
+                  City: {" "}
                   <input
                     type="text"
                     name="city"
@@ -413,7 +413,7 @@ function Signup({ toggle, updateToken }) {
                 </label>
                 <br />
                 <label>
-                  State:
+                  State: {" "}
                   <input
                     type="text"
                     name="state"
@@ -424,7 +424,7 @@ function Signup({ toggle, updateToken }) {
                 </label>
                 <br />
                 <label>
-                  Zip Code:
+                  Zip Code: {" "}
                   <input
                     type="text"
                     name="zipCode"
