@@ -43,6 +43,8 @@ function EditProfile() {
   const [editMode, setEditMode] = useState(false);
   const [editProfileDone, setEditProfileDone] = useState(false);
 
+  const [paymentOptions, setPaymentOptions] = useState([]);
+
   const passphrase = "webufhibejnlisuediuwe";
 
   const [updateCard, setUpdateCard] = useState(false);
@@ -115,7 +117,7 @@ function EditProfile() {
           return;
         }
       }
-
+      
       const encryptedCardNum = encryptData(cardNumber, passphrase);
       const encryptedCvv = encryptData(cvv, passphrase);
       const encryptedCardName = encryptData(cardName, passphrase);
@@ -397,7 +399,7 @@ function EditProfile() {
               />
             </label>
 
-            
+
           </>
         ) : (
           <>
@@ -416,7 +418,13 @@ function EditProfile() {
         )}
       </div>
       {editMode ? (
+        <> 
+        < br/>
+        <button>Add Another Payment Option</button>
+        < br/>
+        < br/>
         <button onClick={handleSave}>Save</button>
+        </>
       ) : (
         <button onClick={() => setEditMode(true)}>Edit</button>
       )}
