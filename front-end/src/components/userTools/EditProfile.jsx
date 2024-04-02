@@ -41,7 +41,7 @@ function EditProfile() {
   const [editMode, setEditMode] = useState(false);
   const [editProfileDone, setEditProfileDone] = useState(false);
 
-  const passphrase = "sdjliwehbfib28y82huiadb";
+  const passphrase = "webufhibejnlisuediuwe";
 
   const [updateCard, setUpdateCard] = useState(false);
 
@@ -168,7 +168,7 @@ function EditProfile() {
         {editMode ? (
           <>
             <label>
-              First Name:
+              First Name: {" "}
               <input
                 type="text"
                 value={firstName}
@@ -177,18 +177,18 @@ function EditProfile() {
             </label>
             <br />
             <label>
-              Last Name:
+              Last Name:{" "}
               <input
                 type="text"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
               />
             </label>
-            <p>Email: {email}</p>
+            <p>Email:{" "} {email}</p>
             {passwordChangeRequested && (
               <>
                 <label>
-                  Current Password:
+                  Current Password:{" "}
                   <input
                     type="password"
                     placeholder="Current Password"
@@ -199,7 +199,7 @@ function EditProfile() {
                 </label>
                 <br />
                 <label>
-                  New Password:
+                  New Password:{" "}
                   <input
                     type="password"
                     placeholder="New Password"
@@ -232,7 +232,7 @@ function EditProfile() {
             <br />
 
             <label>
-              Address Line 2:
+              Address Line 2:{" "}
               <input
                 type="text"
                 value={homeAddressTwo}
@@ -242,7 +242,7 @@ function EditProfile() {
             <br />
 
             <label>
-              City:
+              City:{" "}
               <input
                 type="text"
                 value={homeCity}
@@ -251,7 +251,7 @@ function EditProfile() {
             </label>
             <br />
             <label>
-              State:
+              State:{" "}
               <input
                 type="text"
                 value={homeState}
@@ -261,7 +261,7 @@ function EditProfile() {
             <br />
 
             <label>
-              Zip Code:
+              Zip Code:{" "}
               <input
                 type="text"
                 value={homeZipCode}
@@ -300,7 +300,7 @@ function EditProfile() {
         {editMode ? (
           <>
             <label>
-              Card Number:
+              Card Number:{" "}
               <input
                 type="text"
                 value={cardNumber}
@@ -309,7 +309,7 @@ function EditProfile() {
             </label>
             <br />
             <label>
-              CVV:
+              CVV:{" "}
               <input
                 type="text"
                 value={cvv}
@@ -318,7 +318,7 @@ function EditProfile() {
             </label>
             <br />
             <label>
-              Expiration Date:
+              Expiration Date:{" "}
               <input
                 type="text"
                 value={expirationDate}
@@ -327,7 +327,7 @@ function EditProfile() {
             </label>
             <br />
             <label>
-              Billing Address Line One:
+              Billing Address Line One:{" "}
               <input
                 type="text"
                 value={billingAddressOne}
@@ -336,7 +336,7 @@ function EditProfile() {
             </label>
             <br />
             <label>
-              Line two:
+              Line two:{" "}
               <input
                 type="text"
                 value={billingAddressTwo}
@@ -345,7 +345,7 @@ function EditProfile() {
             </label>
             <br />
             <label>
-              City:
+              City:{" "}
               <input
                 type="text"
                 value={city}
@@ -354,7 +354,7 @@ function EditProfile() {
             </label>
             <br />
             <label>
-              State:
+              State:{" "}
               <input
                 type="text"
                 value={state}
@@ -363,7 +363,7 @@ function EditProfile() {
             </label>
             <br />
             <label>
-              ZipCode:
+              ZipCode:{" "}
               <input
                 type="text"
                 value={zipCode}
