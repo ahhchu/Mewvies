@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Search.css";
 import "./Button.css";
 import Button from "./Button";
 import { Link } from "react-router-dom";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { db } from "../../config/firestore";
 
 function Search() {
   const [searchInput, setSearchInput] = useState("");
@@ -10,6 +12,8 @@ function Search() {
   const [searched, setSearched] = useState(false); 
   const [hover, setHover] = useState(false);
 
+  //Hardcoded Movies
+  /** 
   const movies2 = [
     { name: "Kung Fu Panda 4" },
     { name: "Desciple Me 4" },
@@ -17,8 +21,6 @@ function Search() {
     { name: "Sonic the Hedgehog 3" },
     { name: "Imaginary" },
   ];
-
-
   const movies = [
     { name: "Cats" },
     { name: "Mean Girls" },
@@ -26,18 +28,34 @@ function Search() {
     { name: "Saltburn" },
     { name: "Dilwale" },
   ];
+  */
+
+
   const handleChange = (e) => {
     setSearchInput(e.target.value);
   };
 
   const handleSearch = () => {
-    const results = movies.filter((movie) =>
-      movie.name.toLowerCase().includes(searchInput.toLowerCase())
-    );
-    setSearchResults(results);
-    setSearched(true);
+    
+    // const results = movies.filter((movie) =>
+    //   movie.name.toLowerCase().includes(searchInput.toLowerCase())
+    // );
+    // setSearchResults(results);
+    // setSearched(true);
+
+
+
   };
 
+//Using Fetch API? - Probs won't use
+  // useEffect(() => {
+  //   if (searchInput.length > 0) { //If anything is typed in the text box
+  //     fetch()
+  //   }
+
+  // }, [searchInput])
+
+  
   return (
     <div className={`search-container ${searchInput || hover ? "active" : ""}`}>
     <input
