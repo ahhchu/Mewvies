@@ -4,13 +4,30 @@ import "./Button.css";
 import Button from "./Button";
 import { Link } from "react-router-dom";
 import { collection, query, where, getDocs } from "firebase/firestore";
-import { db } from "../../config/firestore";
+import { db } from "../config/firestore";
 
 function Search() {
   const [searchInput, setSearchInput] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [searched, setSearched] = useState(false); 
   const [hover, setHover] = useState(false);
+
+
+  // //const firestore = firebase.firestore();
+  // const movieCollection = collection(db, 'movie');
+
+  // movieCollection.where('movie_title', '==', searchInput)
+  // .get()
+  // .then(querySnapshot => {
+  //   // Handle search results
+  //   querySnapshot.forEach(doc => {
+  //     const movieName = doc.data();
+  //     console.log(movieName); // Do something with the found movie - probs change into a boolean and make it do more
+  //   });
+  // })
+  // .catch(error => {
+  //   console.error(error);
+  // });
 
   //Hardcoded Movies
   /** 
@@ -35,15 +52,39 @@ function Search() {
     setSearchInput(e.target.value);
   };
 
-  const handleSearch = () => {
-    
+  const handleSearch = async () => {
     // const results = movies.filter((movie) =>
     //   movie.name.toLowerCase().includes(searchInput.toLowerCase())
     // );
     // setSearchResults(results);
     // setSearched(true);
 
+    try{
+      //Searches the DB for the Movie Title
+      const movieCollection = collection(db, 'movie');
+      const q = query(movieCollection, where('movie_title', '==', searchInput));
+      const docReturn = await getDocs(q);
+      const exists = !docReturn.empty;
+      // //Puts docs into array?
+      // const results = [];
+      // docReturn.forEach(doc => {
+      //   results.push(doc.data());
+      // });
+  
+      //Changes "searched" if found
+      //setSearchResults(results);
+      setSearched(exists);
+      
+      if (exists) {
+        //Return Link to the Movie since it exists
+        console.log("searched is: " + searched);
+      }
 
+    } catch {
+      console.error("Error fetching search results:", error);
+    }
+    
+    
 
   };
 
