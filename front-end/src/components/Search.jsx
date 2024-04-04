@@ -13,39 +13,7 @@ function Search() {
   const [hover, setHover] = useState(false);
 
 
-  // //const firestore = firebase.firestore();
-  // const movieCollection = collection(db, 'movie');
-
-  // movieCollection.where('movie_title', '==', searchInput)
-  // .get()
-  // .then(querySnapshot => {
-  //   // Handle search results
-  //   querySnapshot.forEach(doc => {
-  //     const movieName = doc.data();
-  //     console.log(movieName); // Do something with the found movie - probs change into a boolean and make it do more
-  //   });
-  // })
-  // .catch(error => {
-  //   console.error(error);
-  // });
-
-  //Hardcoded Movies
-  /** 
-  const movies2 = [
-    { name: "Kung Fu Panda 4" },
-    { name: "Desciple Me 4" },
-    { name: "Inside Out 2" },
-    { name: "Sonic the Hedgehog 3" },
-    { name: "Imaginary" },
-  ];
-  const movies = [
-    { name: "Cats" },
-    { name: "Mean Girls" },
-    { name: "Everything Everywhere All At Once" },
-    { name: "Saltburn" },
-    { name: "Dilwale" },
-  ];
-  */
+ 
 
 
   const handleChange = (e) => {
@@ -53,11 +21,7 @@ function Search() {
   };
 
   const handleSearch = async () => {
-    // const results = movies.filter((movie) =>
-    //   movie.name.toLowerCase().includes(searchInput.toLowerCase())
-    // );
-    // setSearchResults(results);
-    // setSearched(true);
+  
 
     try{
       //Searches the DB for the Movie Title
@@ -65,11 +29,6 @@ function Search() {
       const q = query(movieCollection, where('movie_title', '==', searchInput));
       const docReturn = await getDocs(q);
       const exists = !docReturn.empty;
-      // //Puts docs into array?
-      // const results = [];
-      // docReturn.forEach(doc => {
-      //   results.push(doc.data());
-      // });
   
       //Changes "searched" if found
       //setSearchResults(results);
@@ -87,14 +46,6 @@ function Search() {
     
 
   };
-
-//Using Fetch API? - Probs won't use
-  // useEffect(() => {
-  //   if (searchInput.length > 0) { //If anything is typed in the text box
-  //     fetch()
-  //   }
-
-  // }, [searchInput])
 
   
   return (
