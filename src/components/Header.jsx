@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./Header.css";
-import Login from "./userTools/Login";
-import Signup from "./userTools/Signup";
-import Button from "./Button";
+import Login from "./Login";
+import Signup from "./Signup";
 import Search from "./Search";
-import EditProfile from "./userTools/EditProfile";
+import EditProfile from "./EditProfile";
 import { useNavigate } from "react-router-dom";
 
 function Header({ token, updateToken }) {
+
+  console.log("header marker");
+  console.log(localStorage);
+
   const navigate = useNavigate();
 
   const [signupSeen, setSignupSeen] = useState(false);

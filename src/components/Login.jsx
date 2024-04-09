@@ -4,7 +4,7 @@ import ForgotPassword from "./ForgotPassword";
 import { useNavigate } from "react-router-dom";
 import { getAuth, signInWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import { getDoc, doc, updateDoc } from "firebase/firestore";
-import { db } from "../../config/firestore";
+import { db } from "../config/firestore";
 
 function Login({ toggle, updateToken, handleLoginSuccess }) {
   const [email, setEmail] = useState("");
@@ -26,7 +26,6 @@ function Login({ toggle, updateToken, handleLoginSuccess }) {
     const auth = getAuth();
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      console.log("LOGIN SUCCESS");
       setLoginDone(true);
       setError("");
 
@@ -48,7 +47,8 @@ function Login({ toggle, updateToken, handleLoginSuccess }) {
       const userDoc = await getDoc(userRef);
       const userRole = userDoc.data().role;
       localStorage.setItem("userRole", userRole); 
-      handleLoginSuccess(userRole); 
+      handleLoginSuccess(userRole);
+      console.log(localStorage);
 
       // Update last login time
       await updateDoc(userRef, {

@@ -22,12 +22,12 @@ import ManageMovies from './components/ManageMovies';
 import ManagePromotions from './components/ManagePromotions';
 import ManageUsers from './components/ManageUsers';
 import Registration  from './components/Registration';
-import EditProfile from  './components/userTools/EditProfile';
+import EditProfile from  './components/EditProfile';
 import MovieCard from './components/MovieCard';
-import ForgotPassword from './components/userTools/ForgotPassword';
+import ForgotPassword from './components/ForgotPassword';
 import ProtectedRoute from './components/ProtectedRoutes';
-import Signup from './components/userTools/Signup';
-import Login from './components/userTools/Login';
+import Signup from './components/Signup';
+import Login from './components/Login';
 
 function App() {
 

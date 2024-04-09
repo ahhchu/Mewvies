@@ -6,8 +6,9 @@ import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
 } from "firebase/auth";
-import { db } from "../../config/firestore";
-import { encryptData } from "../../services/crypto";
+import { db } from "../config/firestore";
+import { encryptData } from "../services/crypto";
+import { checkEmailAvailability, validateEmail, registerUser } from "../functionality/User";
 
 function Signup({ toggle, updateToken }) {
   /**USER */
@@ -44,38 +45,13 @@ function Signup({ toggle, updateToken }) {
   const [signupDone, setSignupDone] = useState(false);
   const [addNewCard, setNewCard] = useState(false);
 
-  const validateEmail = (email) => {
-    const validRegex =
-      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-    return validRegex.test(email);
-  };
-
-  const checkEmailAvailability = async (email) => {
-    try {
-      const snapshot = await getDocs(collection(db, "user"));
-      const existingUser = snapshot.docs.find(
-        (doc) => doc.data().email === email
-      );
-      if (existingUser) {
-        setError("This email is already in use.");
-        return false;
-      }
-      return true;
-    } catch (error) {
-      console.error("Error checking email availability:", error);
-      setError(
-        "There was a problem checking email availability. Please try again."
-      );
-      return false;
-    }
-  };
-
-  const handleSignup = async (e) => {
-    console.log("Signup called");
+  // this function validates input from the "sign up" page, then calls registerUser from User.js
+  async function handleSignup (e) {
     e.preventDefault();
-    console.log("madeit");
     setLoading(true);
     try {
+
+      // password matching
       if (password !== confirmPassword) {
         setError(
           "Passwords do not match. Please make sure both passwords are the same."
@@ -83,7 +59,8 @@ function Signup({ toggle, updateToken }) {
         setLoading(false);
         return;
       }
-      console.log("pass");
+
+      // checks password length
       if (password.length < 6) {
         setError(
           "Password is too short. Please use a password with at least 6 characters."
@@ -91,48 +68,38 @@ function Signup({ toggle, updateToken }) {
         setLoading(false);
         return;
       }
-      console.log("pass length");
+
+      // Email validation error
       if (!validateEmail(email)) {
         setError("Invalid email address.");
         setLoading(false);
         return;
       }
-      console.log("email val");
-      if (!(await checkEmailAvailability(email))) {
+      
+      // errorMsg variable to deal with async functions that returns an error
+      var errorMsg;
+      var uid;
+
+      // Email availability errors
+      await checkEmailAvailability(email).then((response) => {errorMsg = response})
+      if (!errorMsg == 0) {
+        console.log(checkEmailAvailability(email));
+        console.log(errorMsg);
+        if (errorMsg == 1) {
+          setError("This email is already in use.");
+        } else {
+          setError("There was a problem checking email availability. Please try again.");
+        }
         setLoading(false);
         return;
-      }
-      console.log("email avail");
-      const auth = getAuth();
-      const userCred = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+      } else {
 
-      await sendEmailVerification(userCred.user);
-      console.log("Email verification sent.");
-      setSignupDone(true);
-      setError("");
+        //creates the actual user
+        uid = await registerUser(firstName, lastName, email, password, number, promo, homeAddressOne, homeAddressTwo, homeCity, homeState, homeZipCode);
+        setSignupDone(true);
+        setError("");
 
-      const newUser = {
-        uid: userCred.user.uid,
-        fname: firstName,
-        lname: lastName,
-        email: email,
-        phone: number,
-        promo: promo,
-
-        homeAddressOne: homeAddressOne,
-        homeAddressTwo: homeAddressTwo,
-        homeCity: homeCity,
-        homeState: homeState,
-        homeZipCode: homeZipCode,
-
-        role: "user",
-        status: "inactive",
-      };
-console.log("user generated");
+      } // if
 
   console.log("State after fetch:" + cardNumber );
   let newCard = {};
@@ -146,26 +113,23 @@ console.log("user generated");
         city: encryptData(city, passphrase),
         state: encryptData(state, passphrase),
         zipCode: encryptData(zipCode, passphrase),
-        uid: userCred.user.uid
+        uid: uid
       };
     } catch (error) {
         console.error("Error encrypting data:", error);
       }
+      console.log("Document written with ID: ", uid);
 
-      const userRef = doc(db, "user", userCred.user.uid);
-      await setDoc(userRef, newUser);
-      console.log("Document written with ID: ", userCred.user.uid);
-
-      const cardRef = doc(db, "payment_info", userCred.user.uid);
+      const cardRef = doc(db, "payment_info", uid);
       await setDoc(cardRef, newCard);
-      console.log("Document written with ID: ", userCred.user.uid);
+      console.log("Document written with ID: ", uid);
 
 
       setLoading(false);
       toggle();
     } catch (error) {
       console.error("Signup error:", error);
-      setError("Failed to sign up, please try again later.");
+      //setError("Failed to sign up, please try again later.");
       setLoading(false);
     }
   };
