@@ -1,11 +1,15 @@
 //registerUser, loginUser, modifyUser, addPayment, editPayment, removePayment, getPayment, getForgetEmail, getUserDetails, getAdminStatus, checkActive
 
-import { collection, addDoc, getDocs, doc, setDoc } from "firebase/firestore";
+import { collection, getDocs, doc, setDoc, updateDoc, getDoc } from "firebase/firestore";
 import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  sendEmailVerification,
-  sendPasswordResetEmail
+    getAuth,
+    createUserWithEmailAndPassword,
+    sendEmailVerification,
+    sendPasswordResetEmail,
+    signInWithEmailAndPassword,
+    updatePassword,
+    EmailAuthProvider,
+    reauthenticateWithCredential,
 } from "firebase/auth";
 import { db } from "../config/firestore";
 import { encryptData } from "../services/crypto";
@@ -125,7 +129,7 @@ export async function addPayment(cardName, cardNumber, expirationDate, billingAd
         };
     } catch (error) {
         console.error("Error encrypting data:", error);
-      }
+      } // try
 
       const cardRef = doc(db, "payment_info", uid + Date.now());
       await setDoc(cardRef, newCard);
@@ -137,4 +141,61 @@ export async function addPayment(cardName, cardNumber, expirationDate, billingAd
 
 /* BEGINNING OF LOGIN */
 
+/* Tries to login, if fails, return a user object
+ *
+ *
+ */
+export async function login(email, password) {
+    var user = {error: 0, verified: true};
+    try {
+        var auth = getAuth();
+        await signInWithEmailAndPassword(auth, email, password);
+        if (auth.currentUser.emailVerified) {
+
+            // If email is verified, set to active and keep logging in
+            user.error = 0;
+            user.verified = true;
+            var userRef = doc(db, "user", auth.currentUser.uid);
+            await updateDoc(userRef, {
+                status: "Active",
+            });
+
+            var userRef = doc(db, "user", auth.currentUser.uid);
+            var userDoc = await getDoc(userRef);
+            user.role = userDoc.data().role;
+            await updateDoc(userRef, {
+                lastLogin: new Date(), 
+            });
+
+              user.uid = auth.currentUser.uid;
+        } else {
+
+            // Send verification if not verified
+            user.error = 1;
+            user.verified = false;
+            await sendEmailVerification(auth.currentUser); // resend email option
+        } // if
+    } catch (error) {
+        user.error = 1;
+        console.log(error);
+    } // try
+
+    return user;
+
+} // login
+
 /* END OF LOGIN */
+
+/*
+
+
+
+// Update last login time
+
+} catch (error) {
+console.error(error);
+setError("Wrong credentials. Please try again.");
+} finally {
+setLoading(false);
+}
+};*/

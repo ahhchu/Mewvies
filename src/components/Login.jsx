@@ -2,9 +2,7 @@ import React, { useState } from "react";
 import "./Login.css";
 import ForgotPassword from "./ForgotPassword";
 import { useNavigate } from "react-router-dom";
-import { getAuth, signInWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
-import { getDoc, doc, updateDoc } from "firebase/firestore";
-import { db } from "../config/firestore";
+import { getAuth, signInWithEmailAndPassword, login } from "../functionality/User";
 
 function Login({ toggle, updateToken, handleLoginSuccess }) {
   const [email, setEmail] = useState("");
@@ -22,44 +20,23 @@ function Login({ toggle, updateToken, handleLoginSuccess }) {
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
-
-    const auth = getAuth();
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      setLoginDone(true);
+  
+    //login(), returns either uid or returns error code
+    var user = await login(email, password);
+    if (user.error == 0) {
+      console.log("got here");
       setError("");
-
-      if (auth.currentUser.emailVerified) {
-        // User's email is verified, update their status in Firestore
-        const userRef = doc(db, "user", auth.currentUser.uid);
-        await updateDoc(userRef, {
-          status: "Active",
-        });
-        console.log("User status updated to Active");
-      } else {
-        setError("Please verify your email address. Check your inbox for the verification email.");
-        await sendEmailVerification(auth.currentUser); // resend email option
-        console.log("Verification email sent");
-      }
-
-      // Retrieve user role
-      const userRef = doc(db, "user", auth.currentUser.uid);
-      const userDoc = await getDoc(userRef);
-      const userRole = userDoc.data().role;
-      localStorage.setItem("userRole", userRole); 
-      handleLoginSuccess(userRole);
+      localStorage.setItem("userRole", user.role); 
+      handleLoginSuccess(user.role);
       console.log(localStorage);
+      setLoginDone(true);
+    } else if (user.error == 1 && !user.verified) {
+      setError("Please verify your email address. Check your inbox for the verification email.");
+    } else {
+      setError("Failed to login, please try again later.");
+    } // if
+    setLoading(false);
 
-      // Update last login time
-      await updateDoc(userRef, {
-        lastLogin: new Date(), 
-      });
-    } catch (error) {
-      console.error(error);
-      setError("Wrong credentials. Please try again.");
-    } finally {
-      setLoading(false);
-    }
   };
 
   return (
