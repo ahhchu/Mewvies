@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./EditProfile.css";
 import { doc, getDoc, updateDoc, collection, setDoc } from "firebase/firestore";
-import { db } from "../../config/firestore";
-import { encryptData, decryptData } from "../../services/crypto";
+import { db } from "../config/firestore";
+import { encryptData, decryptData } from "../services/crypto";
 import {
   getAuth,
   updatePassword,
