@@ -5,6 +5,7 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   sendEmailVerification,
+  sendPasswordResetEmail
 } from "firebase/auth";
 import { db } from "../config/firestore";
 import { encryptData } from "../services/crypto";
@@ -75,6 +76,13 @@ export async function registerUser(fname, lname, email, password, phone, promo, 
 
 /* BEGINNING OF MODIFY USER */
 
+/* Resets the password of a given email
+ */
+export async function resetPassword(email) {
+    var auth = getAuth();
+    sendPasswordResetEmail(auth, email);
+} // resetPassword
+
 /* END OF MODIFY USER */
 
 /* BEGINNING OF PAYMENT FUNCTIONS */
@@ -82,6 +90,8 @@ export async function registerUser(fname, lname, email, password, phone, promo, 
 // For encryption
 const passphrase = "webufhibejnlisuediuwe";
 
+/*returns an array of payment cards
+ */
 export async function getPaymentCards (uid) {
     try {
         var snapshot = await getDocs(collection(db, "payment_info"));
@@ -97,6 +107,8 @@ export async function getPaymentCards (uid) {
     } // try
 } // getPaymentCards
 
+/* Adds payment methods
+ */
 export async function addPayment(cardName, cardNumber, expirationDate, billingAddressOne, billingAddressTwo, city, state, zipCode, uid) {
     var newCard = {};
     try {
@@ -117,6 +129,7 @@ export async function addPayment(cardName, cardNumber, expirationDate, billingAd
 
       const cardRef = doc(db, "payment_info", uid + Date.now());
       await setDoc(cardRef, newCard);
+      return true;
 } // addPayment
 
 /* END OF PAYMENT FUNCTIONS */

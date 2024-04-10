@@ -1,13 +1,5 @@
 import React, { useState, useContext } from "react";
 import "./Signup.css";
-import { collection, addDoc, getDocs, doc, setDoc } from "firebase/firestore";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  sendEmailVerification,
-} from "firebase/auth";
-import { db } from "../config/firestore";
-import { encryptData } from "../services/crypto";
 import { checkEmailAvailability, validateEmail, registerUser, addPayment } from "../functionality/User";
 
 function Signup({ toggle, updateToken }) {

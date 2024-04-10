@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import "./ForgotPassword.css";
-import { getAuth, sendPasswordResetEmail } from "firebase/auth";
+import { resetPassword } from "../functionality/User"
 
 function ForgotPassword({ toggle }) {
   // used https://dev.to/afromatt6288/create-a-popup-form-for-login-and-then-style-it-37jl
@@ -11,9 +11,8 @@ function ForgotPassword({ toggle }) {
   async function changePassword(e) {
     e.preventDefault();
     setLoading(true);
-    const auth = getAuth();
-    sendPasswordResetEmail(auth, email)
-      .then(() => {
+
+      resetPassword(email).then(() => {
         setError("Please check your email for the password reset link.");
         setLoading(false);
         toggle(); // Close the popup or redirect as needed
