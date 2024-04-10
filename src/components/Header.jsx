@@ -9,9 +9,6 @@ import { useNavigate } from "react-router-dom";
 
 function Header({ token, updateToken }) {
 
-  console.log("header marker");
-  console.log(localStorage);
-
   const navigate = useNavigate();
 
   const [signupSeen, setSignupSeen] = useState(false);

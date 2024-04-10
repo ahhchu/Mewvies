@@ -8,7 +8,7 @@ import {
 } from "firebase/auth";
 import { db } from "../config/firestore";
 import { encryptData } from "../services/crypto";
-import { checkEmailAvailability, validateEmail, registerUser } from "../functionality/User";
+import { checkEmailAvailability, validateEmail, registerUser, addPayment } from "../functionality/User";
 
 function Signup({ toggle, updateToken }) {
   /**USER */
@@ -36,8 +36,6 @@ function Signup({ toggle, updateToken }) {
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [zipCode, setZipCode] = useState("");
-
-  const passphrase = "webufhibejnlisuediuwe";
 
   const [error, setError] = useState("");
   const [promo, setPromo] = useState(false);
@@ -83,8 +81,6 @@ function Signup({ toggle, updateToken }) {
       // Email availability errors
       await checkEmailAvailability(email).then((response) => {errorMsg = response})
       if (!errorMsg == 0) {
-        console.log(checkEmailAvailability(email));
-        console.log(errorMsg);
         if (errorMsg == 1) {
           setError("This email is already in use.");
         } else {
@@ -101,29 +97,8 @@ function Signup({ toggle, updateToken }) {
 
       } // if
 
-  console.log("State after fetch:" + cardNumber );
-  let newCard = {};
-      try {
-        newCard = {
-        cardNumber: encryptData(cardNumber,passphrase),
-        cvv: encryptData(cvv, passphrase),
-        expirationDate: encryptData(expirationDate, passphrase),
-        billingAddressOne: encryptData(billingAddressOne, passphrase),
-        billingAddressTwo: encryptData(billingAddressTwo, passphrase),
-        city: encryptData(city, passphrase),
-        state: encryptData(state, passphrase),
-        zipCode: encryptData(zipCode, passphrase),
-        uid: uid
-      };
-    } catch (error) {
-        console.error("Error encrypting data:", error);
-      }
-      console.log("Document written with ID: ", uid);
-
-      const cardRef = doc(db, "payment_info", uid);
-      await setDoc(cardRef, newCard);
-      console.log("Document written with ID: ", uid);
-
+      // adds new card to the db
+      addPayment(cardName, cardNumber, expirationDate, billingAddressOne, billingAddressTwo, city, state, zipCode, uid);
 
       setLoading(false);
       toggle();

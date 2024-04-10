@@ -9,12 +9,15 @@ import {
 import { db } from "../config/firestore";
 import { encryptData } from "../services/crypto";
 
+/* BEGINNING OF REGISTRATION */
+
 /* This function checks to see if the email is available in the database
  * 0 = Email available
  * 1 = Email exists
- * -1 = Error
+ * -1 = Error fetching
  */
 export async function checkEmailAvailability (email) {
+    getPaymentCards("H9dYbuH4jpNBaLFBqYYwVvM9y9L2");
     try {
         var snapshot = await getDocs(collection(db, "user"));
         var existingUser = snapshot.docs.find(
@@ -25,9 +28,8 @@ export async function checkEmailAvailability (email) {
         } // if
         return 0;
     } catch (error) {
-        console.error("Error checking email availability:", error);
         return -1;
-    }
+    } // try
 } // checkEmailAvailability
 
 /* This function validates the email input
@@ -43,8 +45,8 @@ export async function registerUser(fname, lname, email, password, phone, promo, 
     var auth = getAuth();
     var userCred = await createUserWithEmailAndPassword(auth, email, password);
 
+    // send verification email
     await sendEmailVerification(userCred.user);
-    console.log("Email verification sent.");
 
     var newUser = {
         uid: userCred.user.uid,
@@ -66,4 +68,60 @@ export async function registerUser(fname, lname, email, password, phone, promo, 
     var userRef = doc(db, "user", userCred.user.uid);
     await setDoc(userRef, newUser);
     return newUser.uid;
-}
+} // registerUser
+
+/* END OF REGISTRATION */
+
+
+/* BEGINNING OF MODIFY USER */
+
+/* END OF MODIFY USER */
+
+/* BEGINNING OF PAYMENT FUNCTIONS */
+
+// For encryption
+const passphrase = "webufhibejnlisuediuwe";
+
+export async function getPaymentCards (uid) {
+    try {
+        var snapshot = await getDocs(collection(db, "payment_info"));
+        var existingPayments = [];
+        snapshot.docs.forEach((element) => {
+            if (element.data().uid == uid) {
+                existingPayments.push(element.data());
+            } // if
+        });
+        return existingPayments;
+    } catch (error) {
+        return -1;
+    } // try
+} // getPaymentCards
+
+export async function addPayment(cardName, cardNumber, expirationDate, billingAddressOne, billingAddressTwo, city, state, zipCode, uid) {
+    var newCard = {};
+    try {
+        newCard = {
+            card_name: encryptData(cardName, passphrase),
+            card_number: encryptData(cardNumber,passphrase),
+            expiration: encryptData(expirationDate, passphrase),
+            billing_address_one: encryptData(billingAddressOne, passphrase),
+            billing_address_two: encryptData(billingAddressTwo, passphrase),
+            billing_city: encryptData(city, passphrase),
+            billing_state: encryptData(state, passphrase),
+            billing_zip: encryptData(zipCode, passphrase),
+            uid: uid
+        };
+    } catch (error) {
+        console.error("Error encrypting data:", error);
+      }
+
+      const cardRef = doc(db, "payment_info", uid + Date.now());
+      await setDoc(cardRef, newCard);
+} // addPayment
+
+/* END OF PAYMENT FUNCTIONS */
+
+
+/* BEGINNING OF LOGIN */
+
+/* END OF LOGIN */
