@@ -2,7 +2,7 @@
 
 @font-face {
     font-family: 'Cairo_Play';
-    src: url('../../style/Cairo_Play/CairoPlay-VariableFont_slnt\,wght.ttf') format('truetype');
+    src: url('../style/Cairo_Play/CairoPlay-VariableFont_slnt\,wght.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
   }
