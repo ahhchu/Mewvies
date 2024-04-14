@@ -1,5 +1,7 @@
 import React, { useState, useContext } from "react";
 import "./Signup.css";
+import "./Button.css";
+import Button from "./Button";
 import { checkEmailAvailability, validateEmail, registerUser, addPayment } from "../functionality/User";
 
 function Signup({ toggle, updateToken }) {
@@ -388,26 +390,26 @@ function Signup({ toggle, updateToken }) {
                   <br />
                 </label>
                 </div>
-                <button className="btn" onClick={toggleNewCard}>
+                <Button className="btn" onClick={toggleNewCard}>
                   CANCEL
-                </button>
+                </Button>
 
               </>
             ) : (
-              <button className="btn" onClick={toggleNewCard}>
+              <Button className="btn" onClick={toggleNewCard}>
                 ADD CARD
-              </button>
+              </Button>
             )}
 
             <br />
             <div>
-            <button className="btn" type="submit">
+            <Button className="btn" type="submit">
               SIGNUP
-            </button>
+            </Button>
         
-            <button className="btn" onClick={toggle}>
+            <Button className="btn" onClick={toggle}>
               CLOSE
-            </button>
+            </Button>
             </div>
           </div>
           </form>

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./EditProfile.css";
+import "./Button.css";
+import Button from "./Button";
 import { doc, getDoc, updateDoc, collection, setDoc } from "firebase/firestore";
 import { db } from "../config/firestore";
 import { encryptData, decryptData } from "../services/crypto";
@@ -420,13 +422,13 @@ function EditProfile() {
       {editMode ? (
         <> 
         < br/>
-        <button>Add Another Payment Option</button>
+        <Button>Add Another Payment Option</Button>
         < br/>
         < br/>
-        <button onClick={handleSave}>Save</button>
+        <Button onClick={handleSave}>Save</Button>
         </>
       ) : (
-        <button onClick={() => setEditMode(true)}>Edit</button>
+        <Button onClick={() => setEditMode(true)}>Edit</Button>
       )}
     </div>
   );
