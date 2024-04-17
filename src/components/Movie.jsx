@@ -12,7 +12,7 @@ function Movie() {
       try {
         const moviesRef = collection(db, "movie"); // Ensure collection name is correct
         const querySnapshot = await getDocs(moviesRef);
-        const moviesData = querySnapshot.docs.map(doc => ({
+        const moviesData = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }));
@@ -28,10 +28,10 @@ function Movie() {
   return (
     <div className="movies-container">
       {movies.length > 0 ? (
-        movies.map((movie) => ( 
+        movies.map((movie) => (
           <div key={movie.id} className="movie-card">
             <h2>{movie.movie_title}</h2>
-            <Link to={`/movie-details/${movie.id}`}> 
+            <Link to={`/movie-details/${movie.id}`}>
               <img src={movie.picture} alt={movie.movie_title} />
             </Link>
             <div className="trailer">
@@ -39,7 +39,7 @@ function Movie() {
                 width="560"
                 height="315"
                 src={movie.trailer}
-                title="YouTube video player"
+                title="YouTube Trailer"
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
