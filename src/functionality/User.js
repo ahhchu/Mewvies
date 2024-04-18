@@ -1,6 +1,6 @@
 //registerUser, loginUser, modifyUser, addPayment, editPayment, removePayment, getPayment, getForgetEmail, getUserDetails, getAdminStatus, checkActive
 
-import { collection, getDocs, doc, setDoc, updateDoc, getDoc } from "firebase/firestore";
+import { collection, getDocs, doc, setDoc, updateDoc, getDoc, deleteDoc } from "firebase/firestore";
 import {
     getAuth,
     createUserWithEmailAndPassword,
@@ -12,7 +12,7 @@ import {
     reauthenticateWithCredential,
 } from "firebase/auth";
 import { db } from "../config/firestore";
-import { encryptData } from "../services/crypto";
+import { encryptData, decryptData } from "../services/crypto";
 
 /* BEGINNING OF REGISTRATION */
 
@@ -22,7 +22,6 @@ import { encryptData } from "../services/crypto";
  * -1 = Error fetching
  */
 export async function checkEmailAvailability (email) {
-    getPaymentCards("H9dYbuH4jpNBaLFBqYYwVvM9y9L2");
     try {
         var snapshot = await getDocs(collection(db, "user"));
         var existingUser = snapshot.docs.find(
@@ -80,12 +79,66 @@ export async function registerUser(fname, lname, email, password, phone, promo, 
 
 /* BEGINNING OF MODIFY USER */
 
+/* Returns an object with user data
+ */
+export async function fetchUserData(currentUser) {
+    if (currentUser) {
+        var userRef = doc(db, "user", currentUser.uid);
+        var userSnap = await getDoc(userRef);
+        return userSnap.data();
+    }
+}
+
 /* Resets the password of a given email
  */
 export async function resetPassword(email) {
     var auth = getAuth();
     sendPasswordResetEmail(auth, email);
 } // resetPassword
+
+export async function changePassword(currentUser, currPass, newPass) {
+    try {
+        var credential = EmailAuthProvider.credential(
+            currentUser.email,
+            currPass
+          );
+        await reauthenticateWithCredential(currentUser, credential);
+        await updatePassword(currentUser, newPass);
+        console.log("Password updated successfully");
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+export async function updateUser(currentUser, user, cards) {
+    try {
+      removePaymentMethods(currentUser.uid).then(() => {
+        cards.forEach(card => {
+            addPayment(card.card_name, card.card_number, card.card_type, card.expiration, card.billing_address_one, card.billing_address_two, card.billing_city, card.billing_state, card.billing_zip, currentUser.uid);
+        });
+      });
+
+      var userRef = doc(db, "user", currentUser.uid);
+      await updateDoc(userRef, user);
+      console.log("Profile updated successfully");
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+async function removePaymentMethods(uid) {
+    var promise;
+    var snapshot = await getDocs(collection(db, "payment_info"));
+        snapshot.docs.forEach((element) => {
+            console.log("element");
+                console.log(element);
+            if (element.data().uid == uid) {
+                console.log("element");
+                console.log(element);
+                deleteDoc(element.ref, promise);
+            } // if
+        });
+}
 
 /* END OF MODIFY USER */
 
@@ -94,7 +147,7 @@ export async function resetPassword(email) {
 // For encryption
 const passphrase = "webufhibejnlisuediuwe";
 
-/*returns an array of payment cards
+/* returns an array of payment cards
  */
 export async function getPaymentCards (uid) {
     try {
@@ -107,24 +160,25 @@ export async function getPaymentCards (uid) {
         });
         return existingPayments;
     } catch (error) {
-        return -1;
+        return [];
     } // try
 } // getPaymentCards
 
 /* Adds payment methods
  */
-export async function addPayment(cardName, cardNumber, expirationDate, billingAddressOne, billingAddressTwo, city, state, zipCode, uid) {
+export async function addPayment(cardName, cardNumber, cardType, expirationDate, billingAddressOne, billingAddressTwo, city, state, zipCode, uid) {
     var newCard = {};
     try {
         newCard = {
-            card_name: encryptData(cardName, passphrase),
-            card_number: encryptData(cardNumber,passphrase),
-            expiration: encryptData(expirationDate, passphrase),
-            billing_address_one: encryptData(billingAddressOne, passphrase),
-            billing_address_two: encryptData(billingAddressTwo, passphrase),
-            billing_city: encryptData(city, passphrase),
-            billing_state: encryptData(state, passphrase),
-            billing_zip: encryptData(zipCode, passphrase),
+            card_name: cardName,
+            card_number: cardNumber,
+            card_type: cardType,
+            expiration: expirationDate,
+            billing_address_one: billingAddressOne,
+            billing_address_two: billingAddressTwo,
+            billing_city: city,
+            billing_state: state,
+            billing_zip: zipCode,
             uid: uid
         };
     } catch (error) {
@@ -141,9 +195,11 @@ export async function addPayment(cardName, cardNumber, expirationDate, billingAd
 
 /* BEGINNING OF LOGIN */
 
-/* Tries to login, if fails, return a user object
- *
- *
+/* Tries to login, return a user object
+ * user.error = int, if 0, no error
+ * user.verified = if the user is verified
+ * user.role = admin or user
+ * user.uid = uid
  */
 export async function login(email, password) {
     var user = {error: 0, verified: true};
@@ -167,7 +223,7 @@ export async function login(email, password) {
                 lastLogin: new Date(), 
             });
 
-              user.uid = auth.currentUser.uid;
+            user.uid = auth.currentUser.uid;
         } else {
 
             // Send verification if not verified
@@ -185,17 +241,3 @@ export async function login(email, password) {
 } // login
 
 /* END OF LOGIN */
-
-/*
-
-
-
-// Update last login time
-
-} catch (error) {
-console.error(error);
-setError("Wrong credentials. Please try again.");
-} finally {
-setLoading(false);
-}
-};*/
