@@ -92,7 +92,7 @@ function Signup({ toggle, updateToken }) {
       } // if
 
       // adds new card to the db
-      addPayment(cardName, cardNumber, expirationDate, billingAddressOne, billingAddressTwo, city, state, zipCode, uid);
+      addPayment(cardName, cardNumber, cardType, expirationDate, billingAddressOne, billingAddressTwo, city, state, zipCode, uid);
 
       setLoading(false);
       toggle();

@@ -4,13 +4,14 @@ import "./Button.css";
 import Button from "./Button";
 import { doc, getDoc, updateDoc, collection, setDoc } from "firebase/firestore";
 import { db } from "../config/firestore";
-import { encryptData, decryptData } from "../services/crypto";
+import { decryptData, encryptData } from "../services/crypto";
 import {
   getAuth,
   updatePassword,
   EmailAuthProvider,
   reauthenticateWithCredential,
 } from "firebase/auth";
+import { fetchUserData, getPaymentCards, passphrase, changePassword, updateUser } from "../functionality/User";
 
 function EditProfile() {
   const auth = getAuth();
@@ -51,87 +52,55 @@ function EditProfile() {
 
   const [updateCard, setUpdateCard] = useState(false);
 
-  const fetchUserData = async () => {
-    if (currentUser) {
-      const userRef = doc(db, "user", currentUser.uid);
-      const userSnap = await getDoc(userRef);
-
-      const cardRef = doc(db, "payment_info", currentUser.uid);
-      const cardSnap = await getDoc(cardRef);
-
-      if (userSnap.exists()) {
-        const userData = userSnap.data();
+  var cards;
+  var editedCards;
+if (!editMode){
+  try {
+    //user data, fetch and set to fields
+  fetchUserData(currentUser).then((userData) => {
         setFirstName(userData.fname);
         setLastName(userData.lname);
         setEmail(userData.email); // Email is not editable
         setPromo(userData.promo);
-
-        setHomeAddressOne(userData.homeAddressOne);
-        setHomeAddressTwo(userData.homeAddressTwo);
-        setHomeCity(userData.homeCity);
-        setHomeState(userData.homeState);
-        setHomeZipCode(userData.homeZipCode);
-      } else {
-        console.log("No such user!");
-      }
-
-      if (cardSnap.exists()) {
-        console.log("Card exists");
-        const cardData = cardSnap.data();
-        
-        setUpdateCard(true);
-        setCardNumber(decryptData(cardData.cardNumber,passphrase));
-        setCardName(decryptData(cardData.cardName, passphrase));
-        setCardType(decryptData(cardData.cardType, passphrase));
-        setCVV(decryptData(cardData.cvv, passphrase));
-        setExpirationDate(decryptData(cardData.expirationDate, passphrase));
-        setBillingAddressOne(decryptData(cardData.billingAddressOne, passphrase));
-        setBillingAddressTwo(decryptData(cardData.billingAddressTwo, passphrase));
-        setCity(decryptData(cardData.city, passphrase));
-        setState(decryptData(cardData.state, passphrase));
-        setZipCode(decryptData(cardData.zipCode, passphrase));
-      } else {
-        console.log("No card!");
-      }
+        setHomeAddressOne(userData.home_address_one);
+        setHomeAddressTwo(userData.home_address_two);
+        setHomeCity(userData.home_city);
+        setHomeState(userData.home_state);
+        setHomeZipCode(userData.home_zip);
+  });
+//card data, fetch and set to fields
+  getPaymentCards(currentUser.uid).then((cardData) => {
+    console.log(cardData);
+    if (cardData.length > 0) {
+      setUpdateCard(true);
+      setCardNumber(decryptData(cardData[0].card_number,passphrase));
+      setCardName(decryptData(cardData[0].card_name, passphrase));
+      setCardType(decryptData(cardData[0].card_type, passphrase));
+      setExpirationDate(decryptData(cardData[0].expiration, passphrase));
+      setBillingAddressOne(decryptData(cardData[0].billing_address_one, passphrase));
+      setBillingAddressTwo(decryptData(cardData[0].billing_address_two, passphrase));
+      setCity(decryptData(cardData[0].billing_city, passphrase));
+      setState(decryptData(cardData[0].billing_state, passphrase));
+      setZipCode(decryptData(cardData[0].billing_zip, passphrase));
     }
-  };
+});
+} catch (e) {
+  console.log(e);
+}
+}
 
   useEffect(() => {
     fetchUserData();
   }, [currentUser]);
 
-  const handleSave = async () => {
+  async function handleSave() {
     if (currentUser) {
       if (passwordChangeRequested) {
-        const credential = EmailAuthProvider.credential(
-          currentUser.email,
-          currentPassword
-        );
-        try {
-          await reauthenticateWithCredential(currentUser, credential);
-          await updatePassword(currentUser, password);
-          console.log("Password updated successfully");
-        } catch (error) {
-          consoApplicationlicationerror("Error updating password:", error);
-          alert(
-            "Error updating password. Please make sure your current password is correct and try again."
-          );
-          return;
-        }
+        changePassword(currentUser, currentPassword, password);
       }
-      
-      const encryptedCardNum = encryptData(cardNumber, passphrase);
-      const encryptedCvv = encryptData(cvv, passphrase);
-      const encryptedCardName = encryptData(cardName, passphrase);
-      const encryptedCardType = encryptData(cardType, passphrase);
-      const encryptedExpirationDate = encryptData(expirationDate, passphrase);
-      const encryptedBillingAddressOne = encryptData(billingAddressOne, passphrase);
-      const encryptedBillingAddressTwo = encryptData(billingAddressTwo, passphrase);
-      const encryptedCity = encryptData(city, passphrase);
-      const encryptedState = encryptData(state, passphrase);
-      const encryptedZipCode = encryptData(zipCode, passphrase);
 
-      const updatedUserData = {
+      var updatedUserData = {
+
         fname: firstName,
         lname: lastName,
         promo: promo || false,
@@ -143,34 +112,50 @@ function EditProfile() {
         homeZipCode: homeZipCode,
       };
 
+      console.log("encrypted");
+      var cards = [
+        { // card #1
+          card_name: encryptData(cardName, passphrase),
+          card_number: encryptData(cardNumber, passphrase),
+          card_type: encryptData(cardType, passphrase),
+          expiration: encryptData(expirationDate, passphrase),
+          billing_address_one: encryptData(billingAddressOne, passphrase),
+          billing_address_two: encryptData(billingAddressTwo, passphrase),
+          billing_city: encryptData(city, passphrase),
+          billing_state: encryptData(state, passphrase),
+          billing_zip: encryptData(zipCode, passphrase)
+        },
+        { // card #2
+          card_name: encryptData(cardName, passphrase),
+          card_number: encryptData(cardNumber, passphrase),
+          card_type: encryptData(cardType, passphrase),
+          expiration: encryptData(expirationDate, passphrase),
+          billing_address_one: encryptData(billingAddressOne, passphrase),
+          billing_address_two: encryptData(billingAddressTwo, passphrase),
+          billing_city: encryptData(city, passphrase),
+          billing_state: encryptData(state, passphrase),
+          billing_zip: encryptData(zipCode, passphrase)
+        },
+        { // card #3
+          card_name: encryptData(cardName, passphrase),
+          card_number: encryptData(cardNumber, passphrase),
+          card_type: encryptData(cardType, passphrase),
+          expiration: encryptData(expirationDate, passphrase),
+          billing_address_one: encryptData(billingAddressOne, passphrase),
+          billing_address_two: encryptData(billingAddressTwo, passphrase),
+          billing_city: encryptData(city, passphrase),
+          billing_state: encryptData(state, passphrase),
+          billing_zip: encryptData(zipCode, passphrase)
+        },
+      ]
 
-      if (updateCard) {
-      const updatedCardData = {
-        cardNumber: encryptedCardNum,
-        cvv: encryptedCvv,
-        cardName: encryptedCardName,
-        cardType: encryptedCardType,
-        expirationDate: encryptedExpirationDate,
-        billingAddressOne: encryptedBillingAddressOne,
-        billingAddressTwo: encryptedBillingAddressTwo,
-        city: encryptedCity,
-        state: encryptedState,
-        zipCode: encryptedZipCode,
-
-      };
-      const cardRef = doc(db, "payment_info", currentUser.uid);
-      await updateDoc(cardRef, updatedCardData);
-      }
-
-      const userRef = doc(db, "user", currentUser.uid);
-      await updateDoc(userRef, updatedUserData);
-      console.log("Profile updated successfully");
+      updateUser(currentUser, updatedUserData, cards);
 
       setEditProfileDone(true);
       setEditMode(false); // Exit edit mode after saving
-      await fetchUserData();
+      //await fetchUserData();
     }
-  };
+  }
 
   return (
     <div className="editProfile">
