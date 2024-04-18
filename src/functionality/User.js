@@ -113,8 +113,14 @@ export async function changePassword(currentUser, currPass, newPass) {
 export async function updateUser(currentUser, user, cards) {
     try {
       removePaymentMethods(currentUser.uid).then(() => {
+        console.log("printing cards");
+        var increment = 0;
         cards.forEach(card => {
-            addPayment(card.card_name, card.card_number, card.card_type, card.expiration, card.billing_address_one, card.billing_address_two, card.billing_city, card.billing_state, card.billing_zip, currentUser.uid);
+            increment++;
+            addMultiplePayments(card.card_name, card.card_number, card.card_type, card.expiration, card.billing_address_one, card.billing_address_two, card.billing_city, card.billing_state, card.billing_zip, currentUser.uid, increment);
+            console.log("printing cards");
+            console.log(card);
+            console.log("done");
         });
       });
 
@@ -129,12 +135,11 @@ export async function updateUser(currentUser, user, cards) {
 async function removePaymentMethods(uid) {
     var promise;
     var snapshot = await getDocs(collection(db, "payment_info"));
+    if (snapshot.docs.length == 0) {
+        return;
+    }
         snapshot.docs.forEach((element) => {
-            console.log("element");
-                console.log(element);
             if (element.data().uid == uid) {
-                console.log("element");
-                console.log(element);
                 deleteDoc(element.ref, promise);
             } // if
         });
@@ -186,6 +191,30 @@ export async function addPayment(cardName, cardNumber, cardType, expirationDate,
       } // try
 
       const cardRef = doc(db, "payment_info", uid + Date.now());
+      await setDoc(cardRef, newCard);
+      return true;
+} // addPayment
+
+export async function addMultiplePayments(cardName, cardNumber, cardType, expirationDate, billingAddressOne, billingAddressTwo, city, state, zipCode, uid, num) {
+    var newCard = {};
+    try {
+        newCard = {
+            card_name: cardName,
+            card_number: cardNumber,
+            card_type: cardType,
+            expiration: expirationDate,
+            billing_address_one: billingAddressOne,
+            billing_address_two: billingAddressTwo,
+            billing_city: city,
+            billing_state: state,
+            billing_zip: zipCode,
+            uid: uid
+        };
+    } catch (error) {
+        console.error("Error encrypting data:", error);
+      } // try
+
+      const cardRef = doc(db, "payment_info", num + uid + Date.now());
       await setDoc(cardRef, newCard);
       return true;
 } // addPayment

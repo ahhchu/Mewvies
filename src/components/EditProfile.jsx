@@ -123,7 +123,7 @@ if (!editMode){
           billing_address_two: encryptData(billingAddressTwo, passphrase),
           billing_city: encryptData(city, passphrase),
           billing_state: encryptData(state, passphrase),
-          billing_zip: encryptData(zipCode, passphrase)
+          billing_zip: encryptData(zipCode, passphrase),
         },
         { // card #2
           card_name: encryptData(cardName, passphrase),
