@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import "./Login.css";
+import "./Button.css";
 import ForgotPassword from "./ForgotPassword";
+import Button from "./Button";
 import { useNavigate } from "react-router-dom";
 import { getAuth, signInWithEmailAndPassword, login } from "../functionality/User";
 
@@ -52,7 +54,7 @@ function Login({ toggle, updateToken, handleLoginSuccess }) {
         ) : (
         <form onSubmit={handleLogin}>
           <label className="field">
-            Email:
+            Email:{" "}
             <input
               required
               type="text"
@@ -60,9 +62,9 @@ function Login({ toggle, updateToken, handleLoginSuccess }) {
               onChange={(e) => setEmail(e.target.value)}
             />
           </label>
-
+          <br/>
           <label className="field">
-            Password:
+            Password:{" "}
             <input
               required
               type="password"
@@ -70,17 +72,19 @@ function Login({ toggle, updateToken, handleLoginSuccess }) {
               onChange={(e) => setPassword(e.target.value)}
             />
           </label>
-          <button className="btn" type="submit">
+          <br/>
+          <Button className="btn" type="submit">
             LOGIN
-          </button>
+          </Button>
         </form>
         )}
-        <button className="btn" onClick={toggle}>
+        <Button className="btn" onClick={toggle}>
           CLOSE
-        </button>
+        </Button>
         <br />
-        <button className = "btn" onClick={toggleForgotPassword}>
-          FORGOT PASSWORD</button>
+        <Button className = "btn" onClick={toggleForgotPassword}>
+          FORGOT PASSWORD
+        </Button>
         {forgotPasswordSeen && (
           <ForgotPassword
             updateToken={updateToken}

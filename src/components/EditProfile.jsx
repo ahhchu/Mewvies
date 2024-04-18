@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./EditProfile.css";
+import "./Button.css";
+import Button from "./Button";
 import { doc, getDoc, updateDoc, collection, setDoc } from "firebase/firestore";
 import { db } from "../config/firestore";
 import { decryptData, encryptData } from "../services/crypto";
@@ -43,6 +45,8 @@ function EditProfile() {
   const [promo, setPromo] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [editProfileDone, setEditProfileDone] = useState(false);
+
+  const [paymentOptions, setPaymentOptions] = useState([]);
 
   const passphrase = "webufhibejnlisuediuwe";
 
@@ -96,6 +100,7 @@ if (!editMode){
       }
 
       var updatedUserData = {
+
         fname: firstName,
         lname: lastName,
         promo: promo || false,
@@ -381,7 +386,7 @@ if (!editMode){
               />
             </label>
 
-            
+
           </>
         ) : (
           <>
@@ -400,9 +405,15 @@ if (!editMode){
         )}
       </div>
       {editMode ? (
-        <button onClick={handleSave}>Save</button>
+        <> 
+        < br/>
+        <Button>Add Another Payment Option</Button>
+        < br/>
+        < br/>
+        <Button onClick={handleSave}>Save</Button>
+        </>
       ) : (
-        <button onClick={() => setEditMode(true)}>Edit</button>
+        <Button onClick={() => setEditMode(true)}>Edit</Button>
       )}
     </div>
   );

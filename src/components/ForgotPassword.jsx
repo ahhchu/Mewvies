@@ -1,5 +1,7 @@
 import React, { useContext, useState } from "react";
 import "./ForgotPassword.css";
+import "./Button.css";
+import Button from "./Button";
 import { resetPassword } from "../functionality/User"
 
 function ForgotPassword({ toggle }) {
@@ -41,13 +43,13 @@ function ForgotPassword({ toggle }) {
               onChange={(e) => setEmail(e.target.value)}
             />
           </label>
-          <button className="btn" type="submit" disabled={loading}>
+          <Button className="btn" type="submit" disabled={loading}>
             Send Reset Link
-          </button>
+          </Button>
         </form>
-        <button className="btn" onClick={toggle}>
+        <Button className="btn" onClick={toggle}>
           Close
-        </button>
+        </Button>
       </div>
     </div>
   );
