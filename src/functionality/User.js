@@ -85,6 +85,7 @@ export async function fetchUserData(currentUser) {
     if (currentUser) {
         var userRef = doc(db, "user", currentUser.uid);
         var userSnap = await getDoc(userRef);
+        console.log(userSnap.data());
         return userSnap.data();
     }
 }
@@ -96,6 +97,8 @@ export async function resetPassword(email) {
     sendPasswordResetEmail(auth, email);
 } // resetPassword
 
+/* returns 0 if worked, returns 1 if failed
+*/
 export async function changePassword(currentUser, currPass, newPass) {
     try {
         var credential = EmailAuthProvider.credential(
@@ -105,9 +108,11 @@ export async function changePassword(currentUser, currPass, newPass) {
         await reauthenticateWithCredential(currentUser, credential);
         await updatePassword(currentUser, newPass);
         console.log("Password updated successfully");
+        return 0;
     } catch (e) {
         console.log(e);
     }
+    return 1;
 }
 
 export async function updateUser(currentUser, user, cards) {
