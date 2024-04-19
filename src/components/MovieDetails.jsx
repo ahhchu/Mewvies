@@ -51,7 +51,7 @@ const MovieDetails = () => {
           </Link>
         </div>
       ) : (
-        <p>Loading movie details...</p>
+        <p>Loading movie details...(from movie_details)</p>
       )}
     </div>
   );

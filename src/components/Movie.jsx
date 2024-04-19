@@ -48,7 +48,7 @@ function Movie() {
           </div>
         ))
       ) : (
-        <p>Loading movie details...</p>
+        <p>Loading movie details...(from movie)</p>
       )}
     </div>
   );
