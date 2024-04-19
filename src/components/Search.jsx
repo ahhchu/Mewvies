@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../config/firestore";
 import "./Search.css"; // Import CSS file for styling
+
 function Search() {
   const [searchInput, setSearchInput] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -19,27 +20,15 @@ function Search() {
       if (!docReturn.empty) {
         // setMovie to first matching doc
         const movieData = docReturn.docs[0].data();
+
+        //Getting the movieID
         const movieID = docReturn.docs[0].id;
-        
         setMovie({
           id: movieID,
           ...movieData
         });
         
-        // setMovie(movieData);
-        // const moviesData = docReturn.docs.map((doc) => ({
-        //   id: doc.id,
-        //   ...doc.data(),
-        // }));
-        // setMovies(moviesData);
 
-        // const movieData = docReturn.docs[0];
-        // setMovie(movieData);
-        // const movieGetID = {
-        //   id: movieData.id,
-        //   ...movieData.data()
-        // };
-        
         // Add movie into the searchResult array
         setSearchResults(docReturn.docs.map((doc) => doc.data()));
         setSearched(true);
@@ -79,17 +68,9 @@ function Search() {
       <div>
         {movie ? (
           <div>
-            {/* <Link to={`/movie-details/${movieGetID.id}`}> */}
-            {/* <Link key={movie.name} to={`/movie-details/${movie.id}`} className="search-result"> */}
             <Link to={`/movie-details/${movie.id}`} className="search-result">
               <div>
                 <h3>{movie.movie_title}</h3>
-              
-                {/* Add more movie details as needed */}
-                {/*             <Link to={`/movie-details/${movie.id}`}>
-              <img src={movie.picture} alt={movie.movie_title} />
-            </Link>  */}
-
               </div>
             </Link>
             <p>Rating: {movie.rating}</p>
