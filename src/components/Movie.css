@@ -6,23 +6,20 @@
   font-style: normal;
 }
 
-
-.Movie {
-    justify-content: space-between;
-  }
   
+.movies-container {
+  display: flex;
+  justify-content: space-around;
+  margin-left: 90px;
+  margin-right: 90px;
+}
+
   .Movie img {
     margin: 1px;
     width: 300px;
     height: 450px;
   }
   
-  .MovieCard img {
-    margin: 1px;
-    width: 300px;
-    height: 450px;
-  }
-
   .Currently-Running {
     display: flex;
     flex-direction: row;
