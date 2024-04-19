@@ -6,6 +6,9 @@ import Signup from "./Signup";
 import Search from "./Search";
 import EditProfile from "./EditProfile";
 import { useNavigate } from "react-router-dom";
+import yarnImage from '../img/yarn.jpg';
+
+
 
 function Header({ token, updateToken }) {
 
@@ -54,6 +57,7 @@ function Header({ token, updateToken }) {
 
   return (
     <div className="header">
+{/*       <img src={yarnImage} alt="Yarn" width="75" height="75" class='image' /> to add or not to add*/}
       <div className="title">
         <Link className="Mewvies" to="/">
           Mewvies

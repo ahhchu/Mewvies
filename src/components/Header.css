@@ -83,3 +83,9 @@
 .nav.selected::after {
     background-color:#e4002b;
 }
+
+.image {
+    margin-top: 30px;
+    margin-left: 100px;
+      
+}
