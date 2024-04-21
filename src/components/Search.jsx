@@ -20,6 +20,13 @@ function Search() {
         const movieData = docReturn.docs[0].data();
         setMovie(movieData);
 
+        //Getting the movieID for the page link
+        const movieID = docReturn.docs[0].id;
+        setMovie({
+          id: movieID,
+          ...movieData
+        });
+
         // Add movie into the searchResult array
         setSearchResults(docReturn.docs.map((doc) => doc.data()));
         setSearched(true);
@@ -62,10 +69,9 @@ function Search() {
       <div>
         {movie ? (
           <div>
-            <Link key={movie.name} to={`${movie.name}-movie-details`} className="search-result">
+            <Link to={`/movie-details/${movie.id}`} className="search-result">
               <div>
                 <h3>{movie.movie_title}</h3>
-                {/* Add more movie details as needed */}
               </div>
             </Link>
             <p>Rating: {movie.rating}</p>
