@@ -7,6 +7,14 @@
 }
 
   
+.movie {
+  transition: margin-top 0.3s ease;
+}
+
+.search-active {
+  margin-top: 50px;
+}
+
 .movies-container {
   display: flex;
   justify-content: space-around;
@@ -90,6 +98,9 @@
     display: flex;
     justify-content: left;
     margin-left: 60px;
+    margin-top: 20px;
+    position: relative;
+    width: 100%
   }
   
   .headers h1 {

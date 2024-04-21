@@ -1,5 +1,9 @@
 .search-container {
     position: relative;
+    background-color: white;
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-bottom: 30px;
   }
 
   .search-bar{
@@ -13,7 +17,7 @@
     padding-left: 10px;
   }
   
-  .search-button {
+  .search-button{
     background-color: white;
     font-family: 'Cairo_Play';
     overflow: hidden; 
@@ -27,6 +31,19 @@
     height: auto;
   }
 
+  .close-button {
+    background-color: white;
+    font-family: 'Cairo_Play';
+    overflow: hidden; 
+    position: relative; 
+    overflow: hidden; 
+    position: relative;
+    margin-right: 10px; 
+    border: none;
+    font-size: 25px; 
+    padding: 10px 20px; 
+    height: auto;
+  }
 
 .search-container:after {
    content: '';
@@ -49,4 +66,13 @@
   height: 2px;
   background-color:#e4002b;
   transition: width 0.3s ease, left 0.3s ease;
+}
+
+.search-result {
+  text-decoration: none;
+}
+
+.search-result h3 {
+  font-family: 'Cairo_Play';
+  color:#e4002b;
 }

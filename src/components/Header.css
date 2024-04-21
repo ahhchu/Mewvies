@@ -1,6 +1,14 @@
 .header {
     display:flex;   
     justify-content: space-between;
+    align-items: center;
+    padding: 10px 60px;
+
+}
+
+.search-results {
+    background: white;
+    box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
 
 }
 
@@ -88,4 +96,8 @@
     margin-top: 30px;
     margin-left: 100px;
       
+}
+
+.search-active {
+    margin-top: 50px;
 }

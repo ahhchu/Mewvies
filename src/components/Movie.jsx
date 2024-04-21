@@ -53,6 +53,7 @@ function Movie() {
   };
 
   return (
+    
     <div className="movie">
       <div className="headers">
         <h1 className={selectedSection === "currentlyShowing" ? "active" : ""} onClick={() => changeSection("currentlyShowing")}>

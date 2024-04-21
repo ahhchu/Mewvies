@@ -1,62 +1,56 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, getDocs } from "firebase/firestore";
 import { db } from "../config/firestore";
-import "./Search.css"; // Import CSS file for styling
+import "./Search.css"; 
+
 function Search() {
   const [searchInput, setSearchInput] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [searched, setSearched] = useState(false);
   const [hover, setHover] = useState(false);
-  const [movie, setMovie] = useState(null);
+
   const handleSearch = async () => {
     try {
       const movieCollection = collection(db, "movie");
-//      const q = query(movieCollection, where("movie_title", "==", searchInput));
       const q = query(movieCollection);
       const docReturn = await getDocs(q);
-      const filteredMovies = docReturn.docs.filter(doc => 
-        doc.data().movie_title.toLowerCase().includes(searchInput.toLowerCase())
-        );
-      
-//      if (!docReturn.empty) {
-        if (filteredMovies.length > 0) {
-        // setMovie to first matching doc
-        const movieData = docReturn.docs[0].data();
-        setMovie({
-          id: filteredMovies[0].id,
-          ...movieData
-        });
+      const searchLower = searchInput.toLowerCase();
 
-        //Getting the movieID for the page link
-       //const movieID = docReturn.docs[0].id;
-//        setMovie({
-//          id: movieID,
-//          ...movieData
-//        });
+      const filteredMovies = docReturn.docs.filter((doc) => {
+        const data = doc.data();
+        const titleMatch = data.movie_title.toLowerCase().includes(searchLower);
+        const categoryMatch = data.category
+          .toLowerCase()
+          .split(", ")
+          .some((category) => category.includes(searchLower));
+        return titleMatch || categoryMatch;
+      });
 
-        // Add movie into the searchResult array
-//        setSearchResults(docReturn.docs.map((doc) => doc.data()));
-      setSearchedResults(filteredMovies.map((doc => doc.data())));
-        setSearched(true);
-
-      } else { //Movie not found
-        setMovie(null);
-        setSearchResults([]);
-        setSearched(true);
-        console.log("Movie not found");
-      }
+      setSearchResults(
+        filteredMovies.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }))
+      );
+      setSearched(true);
     } catch (error) {
       console.error("Error fetching search results:", error);
+      setSearchResults([]);
+      setSearched(true);
     }
   };
 
-
   const handleChange = (e) => {
     setSearchInput(e.target.value);
-    setSearched(false); // Reset searched state when input changes
+    setSearched(false); 
   };
 
+  const handleClose = () => {
+    setSearchResults([]);
+    setSearched(false);
+    setSearchInput(""); 
+  };
 
   return (
     <div className={`search-container ${searchInput || hover ? "active" : ""}`}>
@@ -75,28 +69,43 @@ function Search() {
       >
         Search
       </button>
+      {searched && (
+        <button className="close-button" onClick={handleClose}>
+          Close
+        </button>
+      )}
       <div>
-        {movie ? (
-          <div>
-            <Link to={`/movie-details/${movie.id}`} className="search-result">
+        {searched && searchResults.length > 0 ? (
+          searchResults.map((movie) => (
+            <div key={movie.id}>
               <div>
-                <h3>{movie.movie_title}</h3>
+                <Link
+                  to={`/movie-details/${movie.id}`}
+                  className="search-result"
+                >
+                  <h3>{movie.movie_title}</h3>
+                </Link>
+                <p>Rating: {movie.rating}</p>
+                <p>Trailer:</p>
+                <iframe
+                  src={movie.trailer}
+                  title="Movie Trailer"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  style={{ width: "100%", height: "300px" }}
+                ></iframe>
               </div>
-            </Link>
-            <p>Rating: {movie.rating}</p>
-            <p>Trailer: 
-              <button> 
-                 {movie.trailer} 
-              </button>
-            </p>
-          </div>
+            </div>
+          ))
         ) : searched ? (
           <p>No movie found</p>
         ) : (
-          <p> </p>
+          <p></p>
         )}
       </div>
     </div>
   );
 }
+
 export default Search;

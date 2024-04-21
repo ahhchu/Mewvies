@@ -65,7 +65,9 @@ function Header({ token, updateToken }) {
       </div>
 
       <div className="nav_bar">
+        <div className="search-results">
         <Search /> {/*search bar */}
+        </div>
         {isLoggedIn ? (
           <button className="nav">
             <Link className="nav" to="/edit-profile">
