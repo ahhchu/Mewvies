@@ -12,23 +12,32 @@ function Search() {
   const handleSearch = async () => {
     try {
       const movieCollection = collection(db, "movie");
-      const q = query(movieCollection, where("movie_title", "==", searchInput));
+//      const q = query(movieCollection, where("movie_title", "==", searchInput));
+      const q = query(movieCollection);
       const docReturn = await getDocs(q);
+      const filteredMovies = docReturn.docs.filter(doc => 
+        doc.data().movie_title.toLowerCase().includes(searchInput.toLowerCase())
+        );
       
-      if (!docReturn.empty) {
+//      if (!docReturn.empty) {
+        if (filteredMovies.length > 0) {
         // setMovie to first matching doc
         const movieData = docReturn.docs[0].data();
-        setMovie(movieData);
-
-        //Getting the movieID for the page link
-        const movieID = docReturn.docs[0].id;
         setMovie({
-          id: movieID,
+          id: filteredMovies[0].id,
           ...movieData
         });
 
+        //Getting the movieID for the page link
+       //const movieID = docReturn.docs[0].id;
+//        setMovie({
+//          id: movieID,
+//          ...movieData
+//        });
+
         // Add movie into the searchResult array
-        setSearchResults(docReturn.docs.map((doc) => doc.data()));
+//        setSearchResults(docReturn.docs.map((doc) => doc.data()));
+      setSearchedResults(filteredMovies.map((doc => doc.data())));
         setSearched(true);
 
       } else { //Movie not found
