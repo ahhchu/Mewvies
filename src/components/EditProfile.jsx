@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./EditProfile.css";
 import "./Button.css";
 import Button from "./Button";
-import { doc, getDoc, updateDoc, collection, setDoc } from "firebase/firestore";
-import { db } from "../config/firestore";
+import PaymentCard from "./PaymentCard";
 import { decryptData, encryptData } from "../services/crypto";
 import {
   getAuth,
@@ -50,10 +49,12 @@ function EditProfile() {
 
   const passphrase = "webufhibejnlisuediuwe";
 
-  const [updateCard, setUpdateCard] = useState(false);
+  const [cardIndex, setCardIndex] = useState(0);
+
+  const [editedCards, setEditedCards] = useState([]);
 
   var cards;
-  var editedCards;
+
 if (!editMode){
   try {
     //user data, fetch and set to fields
@@ -72,7 +73,7 @@ if (!editMode){
   getPaymentCards(currentUser.uid).then((cardData) => {
     console.log(cardData);
     if (cardData.length > 0) {
-      setUpdateCard(true);
+      //setUpdateCard(true);
       setCardNumber(decryptData(cardData[0].card_number,passphrase));
       setCardName(decryptData(cardData[0].card_name, passphrase));
       setCardType(decryptData(cardData[0].card_type, passphrase));
@@ -149,13 +150,82 @@ if (!editMode){
         },
       ]
 
-      updateUser(currentUser, updatedUserData, cards);
+      var editedCards = [
+        { // card #1
+          card_name: encryptData(cardName, passphrase),
+          card_number: encryptData(cardNumber, passphrase),
+          card_type: encryptData(cardType, passphrase),
+          expiration: encryptData(expirationDate, passphrase),
+          billing_address_one: encryptData(billingAddressOne, passphrase),
+          billing_address_two: encryptData(billingAddressTwo, passphrase),
+          billing_city: encryptData(city, passphrase),
+          billing_state: encryptData(state, passphrase),
+          billing_zip: encryptData(zipCode, passphrase)
+        },
+        { // card #2
+          card_name: encryptData(cardName, passphrase),
+          card_number: encryptData(cardNumber, passphrase),
+          card_type: encryptData(cardType, passphrase),
+          expiration: encryptData(expirationDate, passphrase),
+          billing_address_one: encryptData(billingAddressOne, passphrase),
+          billing_address_two: encryptData(billingAddressTwo, passphrase),
+          billing_city: encryptData(city, passphrase),
+          billing_state: encryptData(state, passphrase),
+          billing_zip: encryptData(zipCode, passphrase)
+        },
+        { // card #3
+          card_name: encryptData(cardName, passphrase),
+          card_number: encryptData(cardNumber, passphrase),
+          card_type: encryptData(cardType, passphrase),
+          expiration: encryptData(expirationDate, passphrase),
+          billing_address_one: encryptData(billingAddressOne, passphrase),
+          billing_address_two: encryptData(billingAddressTwo, passphrase),
+          billing_city: encryptData(city, passphrase),
+          billing_state: encryptData(state, passphrase),
+          billing_zip: encryptData(zipCode, passphrase)
+        },
+      ]
+    }
+      updateUser(currentUser, updatedUserData, editedCards);
 
       setEditProfileDone(true);
       setEditMode(false); // Exit edit mode after saving
       //await fetchUserData();
     }
-  }
+    function addCard() {
+      if (editedCards.length < 3) {
+        setCardIndex(prevIndex => prevIndex + 1);
+        setEditedCards(prevCards => [
+          ...prevCards,
+          {
+            card_name: "",
+            card_number: "",
+            card_type: "",
+            expiration: "",
+            billing_address_one: "",
+            billing_address_two: "",
+            billing_city: "",
+            billing_state: "",
+            billing_zip: ""
+          }
+        ]);
+      }
+    }
+  
+    function updateCard(index, field, value) {
+      setEditedCards(prevCards => {
+        const updatedCards = [...prevCards];
+        updatedCards[index][field] = value;
+        return updatedCards;
+      });
+    }
+
+    function removeLastCard() {
+      if (editedCards.length > 0) {
+        setEditedCards(prevCards => prevCards.slice(0, -1));
+        setCardIndex(prevIndex => prevIndex - 1);
+      }
+    }
 
   return (
     <div className="editProfile">
@@ -295,121 +365,76 @@ if (!editMode){
       <h2>Financial Details</h2>
       <div>
         {editMode ? (
+          
           <>
-          <label>
-              Name on Card:{" "}
-              <input
-                type="text"
-                value={cardName}
-                onChange={(e) => setCardName(e.target.value)}
-              />
-            </label>
-            <br />
-            <label>
-              Card Type:{" "}
-              <input
-                type="text"
-                value={cardType}
-                onChange={(e) => setCardType(e.target.value)}
-              />
-            </label>
-            <br />
-            <label>
-              Card Number:{" "}
-              <input
-                type="text"
-                value={cardNumber}
-                onChange={(e) => setCardNumber(e.target.value)}
-              />
-            </label>
-            <br />
-            <label>
-              CVV:{" "}
-              <input
-                type="text"
-                value={cvv}
-                onChange={(e) => setCVV(e.target.value)}
-              />
-            </label>
-            <br />
-            <label>
-              Expiration Date:{" "}
-              <input
-                type="text"
-                value={expirationDate}
-                onChange={(e) => setExpirationDate(e.target.value)}
-              />
-            </label>
-            <br />
-            <label>
-              Billing Address Line One:{" "}
-              <input
-                type="text"
-                value={billingAddressOne}
-                onChange={(e) => setBillingAddressOne(e.target.value)}
-              />
-            </label>
-            <br />
-            <label>
-              Line two:{" "}
-              <input
-                type="text"
-                value={billingAddressTwo}
-                onChange={(e) => setBillingAddressTwo(e.target.value)}
-              />
-            </label>
-            <br />
-            <label>
-              City:{" "}
-              <input
-                type="text"
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-              />
-            </label>
-            <br />
-            <label>
-              State:{" "}
-              <input
-                type="text"
-                value={state}
-                onChange={(e) => setState(e.target.value)}
-              />
-            </label>
-            <br />
-            <label>
-              ZipCode:{" "}
-              <input
-                type="text"
-                value={zipCode}
-                onChange={(e) => setZipCode(e.target.value)}
-              />
-            </label>
+          {editedCards.map((card, index) => (
+           <> <h3>Card {index + 1}</h3>
+            <PaymentCard 
+            key = {index}
+            cardName={card.cardName}
+            cardType={card.cardType}
+            cardNumber={card.cardNumber}
+            cvv={card.cvv}
+            expirationDate={card.expirationDate}
+            billingAddressOne={card.billingAddressOne}
+            billingAddressTwo={card.billingAddressTwo}
+            city={card.city}
+            state={card.state}
+            zipCode={card.zipCode}
+            setCardName={value => updateCard(index, 'cardName', value)}
+    setCardType={value => updateCard(index, 'cardType', value)}
+    setCardNumber={value => updateCard(index, 'cardNumber', value)}
+    setCVV={value => updateCard(index, 'cvv', value)}
+    setExpirationDate={value => updateCard(index, 'expirationDate', value)}
+    setBillingAddressOne={value => updateCard(index, 'billingAddressOne', value)}
+    setBillingAddressTwo={value => updateCard(index, 'billingAddressTwo', value)}
+    setCity={value => updateCard(index, 'city', value)}
+    setState={value => updateCard(index, 'state', value)}
+    setZipCode={value => updateCard(index, 'zipCode', value)}
+            />
 
-
+            </>
+          ))}
+          {editedCards.length < 3 ? (
+            <>
+            <div className="button-container">
+              <div className="button-row">
+                <Button onClick={() => addCard()}>Add Another Payment Option</Button>
+                <Button onClick={removeLastCard}>Delete Card</Button>
+                </div>
+              </div>
+              </>
+            ) : (
+              <>
+              <p>Maximum of 3 cards reached</p>
+              <Button onClick={removeLastCard}>Delete Card</Button>
+              </>
+            )}
           </>
-        ) : (
+          
+                  ) : (
           <>
-            <p>Name on Card: {cardName}</p>
-            <p>Card Type: {cardType}</p>
-            <p>Card Number: {cardNumber}</p>
+          {editedCards.map((card, index) => (
+        <div key={index}>
+          <h3>Card {index + 1}</h3>
+            <p>Name on Card: {card.cardName}</p>
+            <p>Card Type: {card.cardType}</p>
+            <p>Card Number: {card.cardNumber}</p>
             <p>CVV: ***</p>
-            <p>Expiration Date: {expirationDate}</p>
-            <p>Billing Address One: {billingAddressOne}</p>
-            <p>Line Two: {billingAddressTwo}</p>
-            <p>City: {city}</p>
-            <p>State: {state}</p>
-            <p>Zip Code: {zipCode}</p>
-
+            <p>Expiration Date: {card.expirationDate}</p>
+            <p>Billing Address One: {card.billingAddressOne}</p>
+            <p>Line Two: {card.billingAddressTwo}</p>
+            <p>City: {card.city}</p>
+            <p>State: {card.state}</p>
+            <p>Zip Code: {card.zipCode}</p>
+          </div>
+                  ))}
           </>
         )}
       </div>
       {editMode ? (
-        <> 
-        < br/>
-        <Button>Add Another Payment Option</Button>
-        < br/>
-        < br/>
+        <>
+        <br/>
         <Button onClick={handleSave}>Save</Button>
         </>
       ) : (

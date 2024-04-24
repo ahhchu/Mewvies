@@ -1,3 +1,17 @@
+.button-container {
+    display: flex;
+    justify-content: center;
+}
+
+.button-row {
+    display: flex;
+    gap: 10px;
+}
+
+.button-row button {
+    width: auto;
+}
+
 .profile-button {
     margin: px;
     align-items: center;
