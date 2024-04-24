@@ -85,6 +85,7 @@ export async function fetchUserData(currentUser) {
     if (currentUser) {
         var userRef = doc(db, "user", currentUser.uid);
         var userSnap = await getDoc(userRef);
+        //console.log(userSnap.data());
         return userSnap.data();
     }
 }
@@ -113,6 +114,8 @@ export async function changePassword(currentUser, currPass, newPass) {
 export async function updateUser(currentUser, user, cards) {
     try {
       removePaymentMethods(currentUser.uid).then(() => {
+        console.log("printing cards init");
+        var increment = 0;
         cards.forEach(card => {
             addPayment(card.card_name, card.card_number, card.card_type, card.expiration, card.billing_address_one, card.billing_address_two, card.billing_city, card.billing_state, card.billing_zip, currentUser.uid);
         });

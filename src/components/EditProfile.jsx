@@ -51,9 +51,10 @@ function EditProfile() {
 
   const [cardIndex, setCardIndex] = useState(0);
 
-  const [editedCards, setEditedCards] = useState([]);
+  const [cards, setCards] = useState([]);
+  const [editedCards, setEditedCards] = useState([cards]);
 
-  var cards;
+
 
 if (!editMode){
   try {
@@ -74,26 +75,44 @@ if (!editMode){
     console.log(cardData);
     if (cardData.length > 0) {
       //setUpdateCard(true);
-      setCardNumber(decryptData(cardData[0].card_number,passphrase));
-      setCardName(decryptData(cardData[0].card_name, passphrase));
-      setCardType(decryptData(cardData[0].card_type, passphrase));
-      setExpirationDate(decryptData(cardData[0].expiration, passphrase));
-      setBillingAddressOne(decryptData(cardData[0].billing_address_one, passphrase));
-      setBillingAddressTwo(decryptData(cardData[0].billing_address_two, passphrase));
-      setCity(decryptData(cardData[0].billing_city, passphrase));
-      setState(decryptData(cardData[0].billing_state, passphrase));
-      setZipCode(decryptData(cardData[0].billing_zip, passphrase));
+      for (let i = 0; i < cardData.length; i++) {
+        setCardNumber(cardData[i].card_number);
+      setCardName(cardData[i].card_name);
+      setCardType(cardData[i].card_type);
+      setExpirationDate(cardData[i].expiration);
+      setBillingAddressOne(cardData[i].billing_address_one);
+      setBillingAddressTwo(cardData[i].billing_address_two);
+      setCity(cardData[i].billing_city);
+      setState(cardData[i].billing_state);
+      setZipCode(cardData[i].billing_zip);
+      /* setCardNumber(decryptData(cardData[i].card_number,passphrase));
+      setCardName(decryptData(cardData[i].card_name, passphrase));
+      setCardType(decryptData(cardData[i].card_type, passphrase));
+      setExpirationDate(decryptData(cardData[i].expiration, passphrase));
+      setBillingAddressOne(decryptData(cardData[i].billing_address_one, passphrase));
+      setBillingAddressTwo(decryptData(cardData[i].billing_address_two, passphrase));
+      setCity(decryptData(cardData[i].billing_city, passphrase));
+      setState(decryptData(cardData[i].billing_state, passphrase));
+      setZipCode(decryptData(cardData[i].billing_zip, passphrase)); */
     }
+  }
 });
 } catch (e) {
   console.log(e);
 }
 }
+/* useEffect(() => {
+  console.log("Card name: " + cardName);
+}, [cardName]);
 
   useEffect(() => {
     fetchUserData();
   }, [currentUser]);
-
+ */
+  async function cancelEdit() {
+    setEditMode(false);
+    setEditProfileDone(false);
+  }
   async function handleSave() {
     if (currentUser) {
       if (passwordChangeRequested) {
@@ -115,6 +134,77 @@ if (!editMode){
 
       console.log("encrypted");
       var cards = [
+        { // card #1
+          card_name:cardName,
+          card_number: cardNumber,
+          card_type: cardType,
+          expiration: expirationDate,
+          billing_address_one:billingAddressOne,
+          billing_address_two:billingAddressTwo,
+          billing_city: city,
+          billing_state: state,
+          billing_zip: zipCode
+        },
+        { // card #2
+          card_name:cardName,
+          card_number: cardNumber,
+          card_type: cardType,
+          expiration: expirationDate,
+          billing_address_one:billingAddressOne,
+          billing_address_two:billingAddressTwo,
+          billing_city: city,
+          billing_state: state,
+          billing_zip: zipCode
+        },
+        { // card #3
+          card_name:cardName,
+          card_number: cardNumber,
+          card_type: cardType,
+          expiration: expirationDate,
+          billing_address_one:billingAddressOne,
+          billing_address_two:billingAddressTwo,
+          billing_city: city,
+          billing_state: state,
+          billing_zip: zipCode
+        },
+      ]
+      var editedCards = [
+        { // card #1
+          card_name:cardName,
+          card_number: cardNumber,
+          card_type: cardType,
+          expiration: expirationDate,
+          billing_address_one:billingAddressOne,
+          billing_address_two:billingAddressTwo,
+          billing_city: city,
+          billing_state: state,
+          billing_zip: zipCode
+        },
+        { // card #2
+          card_name:cardName,
+          card_number: cardNumber,
+          card_type: cardType,
+          expiration: expirationDate,
+          billing_address_one:billingAddressOne,
+          billing_address_two:billingAddressTwo,
+          billing_city: city,
+          billing_state: state,
+          billing_zip: zipCode
+        },
+        { // card #3
+          card_name:cardName,
+          card_number: cardNumber,
+          card_type: cardType,
+          expiration: expirationDate,
+          billing_address_one:billingAddressOne,
+          billing_address_two:billingAddressTwo,
+          billing_city: city,
+          billing_state: state,
+          billing_zip: zipCode
+        },
+      ]
+
+      /* var cards = [
         { // card #1
           card_name: encryptData(cardName, passphrase),
           card_number: encryptData(cardNumber, passphrase),
@@ -149,7 +239,7 @@ if (!editMode){
           billing_zip: encryptData(zipCode, passphrase)
         },
       ]
-
+ 
       var editedCards = [
         { // card #1
           card_name: encryptData(cardName, passphrase),
@@ -185,13 +275,18 @@ if (!editMode){
           billing_zip: encryptData(zipCode, passphrase)
         },
       ]
+      */
+
     }
-      updateUser(currentUser, updatedUserData, editedCards);
+    setCards(editedCards);
+      updateUser(currentUser, updatedUserData, cards);
 
       setEditProfileDone(true);
       setEditMode(false); // Exit edit mode after saving
       //await fetchUserData();
     }
+
+
     function addCard() {
       if (editedCards.length < 3) {
         setCardIndex(prevIndex => prevIndex + 1);
@@ -213,9 +308,11 @@ if (!editMode){
     }
   
     function updateCard(index, field, value) {
+      console.log("Updating cards");
       setEditedCards(prevCards => {
         const updatedCards = [...prevCards];
         updatedCards[index][field] = value;
+        console.log("updatedCrads", updatedCards);
         return updatedCards;
       });
     }
@@ -368,7 +465,8 @@ if (!editMode){
           
           <>
           {editedCards.map((card, index) => (
-           <> <h3>Card {index + 1}</h3>
+           <> 
+           <h3>Card {index + 1}</h3>
             <PaymentCard 
             key = {index}
             cardName={card.cardName}
@@ -381,16 +479,16 @@ if (!editMode){
             city={card.city}
             state={card.state}
             zipCode={card.zipCode}
-            setCardName={value => updateCard(index, 'cardName', value)}
-    setCardType={value => updateCard(index, 'cardType', value)}
-    setCardNumber={value => updateCard(index, 'cardNumber', value)}
-    setCVV={value => updateCard(index, 'cvv', value)}
-    setExpirationDate={value => updateCard(index, 'expirationDate', value)}
-    setBillingAddressOne={value => updateCard(index, 'billingAddressOne', value)}
-    setBillingAddressTwo={value => updateCard(index, 'billingAddressTwo', value)}
-    setCity={value => updateCard(index, 'city', value)}
-    setState={value => updateCard(index, 'state', value)}
-    setZipCode={value => updateCard(index, 'zipCode', value)}
+            setCardName={value => updateCard(index, 'card_name', value)}
+            setCardType={value => updateCard(index, 'card_type', value)}
+            setCardNumber={value => updateCard(index, 'card_number', value)}
+            setCVV={value => updateCard(index, 'cvv', value)}
+            setExpirationDate={value => updateCard(index, 'expiration', value)}
+            setBillingAddressOne={value => updateCard(index, 'billing_address_one', value)}
+            setBillingAddressTwo={value => updateCard(index, 'billing_address_two', value)}
+            setCity={value => updateCard(index, 'billing_city', value)}
+            setState={value => updateCard(index, 'billing_state', value)}
+            setZipCode={value => updateCard(index, 'billing_zip', value)}
             />
 
             </>
@@ -435,6 +533,7 @@ if (!editMode){
       {editMode ? (
         <>
         <br/>
+        <Button onClick={cancelEdit}>Cancel</Button>
         <Button onClick={handleSave}>Save</Button>
         </>
       ) : (
