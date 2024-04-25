@@ -17,7 +17,7 @@ function Admin() {
              <button className="btn">Manage Users</button> 
             </Link>
             <Link to ="/managepromotions">
-             <button className="btn">Manage Promotions</button> 
+             <button className="btn">Manage Promos</button> 
             </Link>
             </div>
         </div>
