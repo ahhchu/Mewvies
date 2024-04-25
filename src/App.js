@@ -28,10 +28,11 @@ import ForgotPassword from './components/ForgotPassword';
 import ProtectedRoute from './components/ProtectedRoutes';
 import Signup from './components/Signup';
 import Login from './components/Login';
+import {test} from "./functionality/test"
 
 function App() {
 
-  
+  test();
 
   const [userData, setUserData] = useState({
     token: undefined,
