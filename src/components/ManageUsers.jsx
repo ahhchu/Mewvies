@@ -13,7 +13,7 @@ function ManageUsers() {
              <Button className="manage">Manage Movies</Button> 
             </Link>
             <Link to ="/managepromotions">
-             <Button className="manage">Manage Promotions</Button> 
+             <Button className="manage">Manage Promos</Button> 
             </Link>
             <h1>Manage Users</h1>
 
