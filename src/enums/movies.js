@@ -10,8 +10,7 @@ const movies = [
         trailer_url: "https://www.youtube.com/embed/fFtdbEgnUOk",
         rating: "PG-13",
         poster_url: "https://m.media-amazon.com/images/M/MV5BNDExMGMyN2QtYjRkZC00Yzk1LTkzMDktMTliZTI5NjQ0NTNkXkEyXkFqcGdeQXVyMTEyMjM2NDc2._V1_.jpg",
-        opening_date: new Date(),
-        closing_date: new Date()
+        opening_date: new Date()
     },
 ];
 

@@ -72,6 +72,7 @@ if (!editMode){
 //card data, fetch and set to fields
   getPaymentCards(currentUser.uid).then((cardData) => {
     console.log(cardData);
+    console.log(decryptData(cardData[0].card_number, passphrase) + " " + decryptData(cardData[1].card_number, passphrase) + " " + decryptData(cardData[2].card_number, passphrase));
     if (cardData.length > 0) {
       //setUpdateCard(true);
       setCardNumber(decryptData(cardData[0].card_number,passphrase));
@@ -186,6 +187,10 @@ if (!editMode){
         },
       ]
     }
+    console.log("testing card");
+    console.log(decryptData(editedCards[0].card_name, passphrase));
+    console.log(decryptData(editedCards[1].card_name, passphrase));
+    console.log(decryptData(editedCards[2].card_name, passphrase));
       updateUser(currentUser, updatedUserData, editedCards);
 
       setEditProfileDone(true);
