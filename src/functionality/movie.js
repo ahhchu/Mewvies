@@ -30,20 +30,46 @@ export async function addMovie(movieTitle, category, cast, director, producer, s
     } catch (error) {
         console.log(error);
       } // try
+} // addMovie
+
+/* Updates a particular movieID with the new parameters
+ */
+export async function updateMovie(movieID, movieTitle, category, cast, director, producer, synopsis, trailerUrl, rating, posterUrl, openingDate) {
+    var newMovie = {};
+    try {
+        newMovie = {
+            movie_title: movieTitle,
+            category: category,
+            cast: cast,
+            director: director,
+            producer: producer,
+            synopsis: synopsis,
+            trailer_url: trailerUrl,
+            rating: rating,
+            poster_url: posterUrl,
+            opening_date: openingDate,
+            movie_id: movieID
+        };
+            var movieRef = doc(db, "movie", newMovie.movie_id.toString());
+            await updateDoc(movieRef, newMovie);
+            return true;
+    } catch (error) {
+        console.log(error);
+      } // try
 } // addRoom
 
 export async function getMovies() {
     try {
         var snapshot = await getDocs(collection(db, "movie"));
-        var existingRooms = [];
+        var existingMovies = [];
         snapshot.docs.forEach((element) => {
-            existingRooms.push(element.data());
+            existingMovies.push(element.data());
         });
-        return existingRooms;
+        return existingMovies;
     } catch (error) {
         return [];
     } // try
-} // getRooms
+} // getMovies
 
 export async function removeMovie(movie_id) {
     var promise;
@@ -52,7 +78,7 @@ export async function removeMovie(movie_id) {
         return;
     }
         snapshot.docs.forEach((element) => {
-            if (element.data().room_id == roomID) {
+            if (element.data().movie_id == movie_id) {
                 deleteDoc(element.ref, promise);
             } // if
         });
