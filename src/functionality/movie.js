@@ -3,7 +3,7 @@
 import { collection, getDocs, doc, setDoc, updateDoc, getDoc, deleteDoc } from "firebase/firestore";
 import { db } from "../config/firestore";
 
-/* Everything is a string, openingDate should be a Date() object.
+/* Everything is a string, openingDate should be a Date().
  */
 export async function addMovie(movieTitle, category, cast, director, producer, synopsis, trailerUrl, rating, posterUrl, openingDate) {
     var newMovie = {};
@@ -32,7 +32,7 @@ export async function addMovie(movieTitle, category, cast, director, producer, s
       } // try
 } // addMovie
 
-/* Updates a particular movieID with the new parameters
+/* Updates a particular movieID with the new parameters. All parameters are required.
  */
 export async function updateMovie(movieID, movieTitle, category, cast, director, producer, synopsis, trailerUrl, rating, posterUrl, openingDate) {
     var newMovie = {};
@@ -58,6 +58,8 @@ export async function updateMovie(movieID, movieTitle, category, cast, director,
       } // try
 } // addRoom
 
+/* This returns an array of objects for all existing movies. No parameters required.
+ */
 export async function getMovies() {
     try {
         var snapshot = await getDocs(collection(db, "movie"));
@@ -71,6 +73,8 @@ export async function getMovies() {
     } // try
 } // getMovies
 
+/* This removes a specific movie by its movie_id.
+ */
 export async function removeMovie(movie_id) {
     var promise;
     var snapshot = await getDocs(collection(db, "movie"));
