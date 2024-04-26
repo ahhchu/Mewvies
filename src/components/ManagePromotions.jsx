@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Button from "./Button";
 import { addPromo, deletePromo, fetchPromotions } from "../functionality/promos";
 import "./Header.css";
+import {fetchAllUsers} from "../functionality/User";
 import "./Button.css";
 //import { sendingEmail } from "../services/sendEmail";
 import emailjs from '@emailjs/browser'
@@ -15,6 +16,9 @@ function ManagePromotions() {
         promo_amt: "",
         percentage_bool: false
     });
+    const [users, setUsers] = useState([]);
+    const [displayUsers, setDisplayUsers] = useState([]); // Added to hold the users to display
+    const [showPromoUsers, setShowPromoUsers] = useState(false);
     const [promotions, setPromotions] = useState([]);
     const [selectedPromos, setSelectedPromos] = useState([]);
 
@@ -25,7 +29,23 @@ function ManagePromotions() {
             [name]: type === "checkbox" ? checked : value
         });
     };
+    const [promoUsers, setPromoUsers] = useState([]); // State to store users who opted for promos
 
+    useEffect(() => {
+        fetchUsers();
+    }, []);
+
+    const fetchUsers = async () => {
+        const userList = await fetchAllUsers();
+        setUsers(userList);
+        filterPromoUsers(userList);
+    };
+
+    const filterPromoUsers = (userList) => {
+        // Filter users who have opted into promotions
+        const filteredUsers = userList.filter(user => user.promo === true);
+        setPromoUsers(filteredUsers); // Store the filtered users in state
+    };
     const handleFormSubmit = async (event) => {
         event.preventDefault();
         try {
@@ -36,7 +56,7 @@ function ManagePromotions() {
             fetchPromotionsData();
            
             const msg = "Here is your promotion for " + promoData.promo_amt + " as a discount with the code: " + promoData.promo_code
-            await sendingEmail(msg);
+            await sendingEmails(promoUsers, msg);
             
             
         } catch (e) {
@@ -45,10 +65,14 @@ function ManagePromotions() {
         }
     };
 
-    const sendingEmail = async (msg) => {
+    const sendingEmails = async (promoUsers, msg) => {
         try {
-            await emailjs.send('service_ld81717', 'template_tkzlco9', { message: msg }, 'wVVyNS7NMcSjFNt5s');
-            console.log("Email sent successfully");
+            // Loop through each email address
+            for (const email of emails) {
+                // Send email for each recipient
+                await emailjs.send('service_ld81717', 'template_tkzlco9', { message: msg, to: email }, 'wVVyNS7NMcSjFNt5s');
+                console.log("Email sent successfully to", email);
+            }
         } catch (error) {
             console.error("Error sending email: ", error);
         }
