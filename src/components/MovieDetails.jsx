@@ -7,6 +7,7 @@ import { getMovies } from "../functionality/movie";
 const MovieDetails = () => {
   const { movieId } = useParams();
   const [movie, setMovie] = useState(null);
+  const [hasReviews, setHasReviews] = useState(false);
 
   useEffect(() => {
     getMovies().then((data) => {
@@ -15,9 +16,13 @@ const MovieDetails = () => {
         if (element.movie_id == movieId) {
           setMovie(element);
         }
+        if (element.review1) {
+          setHasReviews(true);
+        }
       });
     })
   }, [movieId]);
+
 
   return (
     <div>
@@ -44,6 +49,16 @@ const MovieDetails = () => {
           <Link to="/seats">
             <Button>Buy Tickets here</Button>
           </Link>
+          {hasReviews ? (
+            <>
+          <h2>Reviews</h2>
+          <p>{movie.review1}</p>
+          <p>{movie.review2}</p>
+          <p>...</p>
+          </>
+          ) : (
+            <p>No reviews yet</p>
+          )}
         </div>
       ) : (
         <p>Loading movie details...</p>
