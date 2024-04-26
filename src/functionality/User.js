@@ -1,6 +1,6 @@
 //registerUser, loginUser, modifyUser, addPayment, editPayment, removePayment, getPayment, getForgetEmail, getUserDetails, getAdminStatus, checkActive
 
-import { collection, getDocs, doc, setDoc, updateDoc, getDoc, deleteDoc, getFirestore } from "firebase/firestore";
+import { collection, getDocs, doc, setDoc, updateDoc, getDoc, deleteDoc } from "firebase/firestore";
 import {
     getAuth,
     createUserWithEmailAndPassword,
@@ -90,45 +90,12 @@ export async function fetchUserData(currentUser) {
     }
 }
 
-/* Fetch ALL users
-*/
-export async function fetchAllUsers() {
-    const usersCollection = collection(db, "user"); 
-    const userData = await getDocs(usersCollection); 
-    const userList = userData.docs.map(doc => ({ id: doc.id, ...doc.data() })); 
-    return userList; 
-}
-
-export async function addUser(userData) {
-    const userRef = doc(collection(db, "user"));
-    await setDoc(userRef, userData);
-    return userRef.id;  // Returns the new user's ID after adding them to the database
-}
-
-export async function deleteUser(userId) {
-    await deleteDoc(doc(db, "user", userId));
-}
-
-
-const updateUserDetails = async (user) => {
-    const userRef = doc(db, "users", user.id); // Ensure correct document path
-    await updateDoc(userRef, {
-        fname: user.fname,
-        lname: user.lname,
-        email: user.email,
-        // Include other fields as necessary
-    });
-    fetchUsers(); // Refresh the user list
-    setIsEditing(false); // Close the edit form
-};
-
 /* Resets the password of a given email
  */
 export async function resetPassword(email) {
     var auth = getAuth();
     sendPasswordResetEmail(auth, email);
 } // resetPassword
-
 
 /* returns 0 if worked, returns 1 if failed
 */
