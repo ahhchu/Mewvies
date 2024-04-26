@@ -42,7 +42,7 @@ function AddShowing() {
       var errorMsg;
 
         //creates the actual user
-        var added = await addShowing(movie.movie_id, showroom, new Date(time));
+        var added = await addShowing(movieID, showroom, new Date(time));
         if (added) {
           setError("Showing has been added.");
         } else {

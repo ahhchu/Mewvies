@@ -1,60 +1,35 @@
-import React, { useState, useContext } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState, useContext } from "react";
+import { Link, useParams } from "react-router-dom";
 import "./AddShowing.css";
 import "./Button.css";
 import Button from "./Button";
 import { checkEmailAvailability, validateEmail, registerUser, addPayment } from "../functionality/User";
 import { getMovies } from "../functionality/movie";
-import { addShowing } from "../functionality/showing";
+import { addShowing, getShowings, getShowingsByMovie, removeShowing } from "../functionality/showing";
 import { useNavigate } from "react-router-dom";
 
 function AddShowing() {
 
   const { movieID } = useParams();
   const [movie, setMovie] = useState({movie_title: ""});
-  const [showings, setShowings] = useState([])
 
+  const [showings, setShowings] = useState([]);
+  const [reset, setReset] = useState(false);
 
-  /**USER */
-  const [time, setTime] = useState("");
-  const [showroom, setShowroom] = useState("");
-
-  const [error, setError] = useState("");
-  const [signupDone, setSignupDone] = useState(false);
-
-  /*
-  useEffect(() => {
-
-  }, [movieID]);*/
-  getMovies().then((data) => {
-    data.forEach(element => {
-      if (element.movie_id == movieID) {
-        setMovie(element);
-      }
-    });
-  })
-
-  // this function validates input from the "sign up" page, then calls registerUser from User.js
-  async function addTheShowing(e) {
-    e.preventDefault();
-    try {
-      
-      // errorMsg variable to deal with async functions that returns an error
-      var errorMsg;
-
-        //creates the actual user
-        var added = await addShowing(movie.movie_id, showroom, new Date(time));
-        if (added) {
-          setError("Showing has been added.");
-        } else {
-          setError("Showing cannot be added.");
+    getMovies().then((data) => {
+      data.forEach(element => {
+        if (element.movie_id == movieID) {
+          setMovie(element);
         }
-
-    } catch (error) {
-      console.error("error:", error);
-      //setError("Failed to sign up, please try again later.");
-    }
-  };
+      });
+    })
+    getShowings().then((data) => {
+      data.filter((show) => {
+        show.movie_id == movieID;
+      })
+      setShowings(data)
+      setReset(true)
+    })
 
   return (
     <div className="popup">
@@ -63,22 +38,25 @@ function AddShowing() {
         <h2>Showing all showings for:</h2>
         <div className="signup-divider" />
 
-        {error && <p className="error-message">{error}</p>}
-
           <div className="personal-details">
             <h3>{movie.movie_title}</h3>
+            <Link to ={"/addshowing/" + movieID}><Button>Add Showing</Button></Link>
             <table>
               <tr>
                 <th>Showroom</th>
                 <th>Time</th>
                 <th>Delete Showing</th>
               </tr>
-            {showings.map((show, index) => (
-              <tr>
-            <th><Button>Delete Showing</Button></th>
-            </tr>
-        ))}
-        </table>
+              
+              {showings.map((show) => {
+                return( <tr>
+                <th>{show.room_id}</th>
+                <th>{new Date(show.showing_time.seconds).toString()}</th>
+                <th><Button onClick={() => removeShowing(show.showing_id)}>Delete</Button></th>
+                </tr>
+                )
+              })}
+              </table>
             </div>
           </div>
       </div>
