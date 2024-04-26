@@ -1,16 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { db } from "../config/firestore";
-import { doc, getDoc } from "firebase/firestore";
 import Button from "./Button";
 import { Link } from "react-router-dom";
+import { getMovies } from "../functionality/movie";
 
 const MovieDetails = () => {
   const { movieId } = useParams();
   const [movie, setMovie] = useState(null);
 
   useEffect(() => {
-    const fetchMovie = async () => {
+    getMovies().then((data) => {
+      console.log(data);
+      data.forEach(element => {
+        if (element.movie_id == movieId) {
+          setMovie(element);
+        }
+      });
+    })
+    /*const fetchMovie = async () => {
       const docRef = doc(db, "movie", movieId); // Make sure the collection name is correctly specified
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
@@ -21,7 +28,7 @@ const MovieDetails = () => {
       }
     };
 
-    fetchMovie();
+    fetchMovie();*/
   }, [movieId]);
 
   return (
