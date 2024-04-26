@@ -72,7 +72,7 @@ if (!editMode){
 //card data, fetch and set to fields
   getPaymentCards(currentUser.uid).then((cardData) => {
     console.log(cardData);
-    console.log(decryptData(cardData[0].card_number, passphrase) + " " + decryptData(cardData[1].card_number, passphrase) + " " + decryptData(cardData[2].card_number, passphrase));
+  //  console.log(decryptData(cardData[0].card_number, passphrase) + " " + decryptData(cardData[1].card_number, passphrase) + " " + decryptData(cardData[2].card_number, passphrase));
     if (cardData.length > 0) {
       //setUpdateCard(true);
       setCardNumber(decryptData(cardData[0].card_number,passphrase));
