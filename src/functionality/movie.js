@@ -73,6 +73,36 @@ export async function getMovies() {
     } // try
 } // getMovies
 
+export async function getCurrentMovies() {
+    try {
+        var snapshot = await getDocs(collection(db, "movie"));
+        var existingMovies = [];
+        snapshot.docs.forEach((element) => {
+            if (element.opening_date < new Date()) {
+            existingMovies.push(element.data());
+            }
+        });
+        return existingMovies;
+    } catch (error) {
+        return [];
+    } // try
+}
+
+export async function getUpcomingMovies() {
+    try {
+        var snapshot = await getDocs(collection(db, "movie"));
+        var existingMovies = [];
+        snapshot.docs.forEach((element) => {
+            if (element.opening_date > new Date()) {
+            existingMovies.push(element.data());
+            }
+        });
+        return existingMovies;
+    } catch (error) {
+        return [];
+    } // try
+}
+
 /* This removes a specific movie by its movie_id.
  */
 export async function removeMovie(movie_id) {
