@@ -28,6 +28,10 @@ import ForgotPassword from './components/ForgotPassword';
 import ProtectedRoute from './components/ProtectedRoutes';
 import Signup from './components/Signup';
 import Login from './components/Login';
+import EditMovie from "./components/EditMovie"
+import ManageShowings from './components/ManageShowings';
+import AddShowing from './components/AddShowing';
+import AddMovie from './components/AddMovie';
 import {test} from "./functionality/test"
 
 function App() {
@@ -79,7 +83,10 @@ function App() {
             <Route path = "/managemovies/" element = {<ManageMovies/>} />
             <Route path = "/managepromotions/" element = {<ManagePromotions/>} />
             <Route path = "/manageusers/" element = {<ManageUsers/>} />
-            
+            <Route path='/addmovie/' element = {<AddMovie/>} />
+            <Route path='/editmovie/:movieID/' element = {<EditMovie/>} />
+            <Route path='/addshowing/:movieID/' element = {<AddShowing/>} /> 
+            <Route path='/manageshowings/:movieID/' element = {<ManageShowings/>} /> 
 
           </Routes>
         </main>
