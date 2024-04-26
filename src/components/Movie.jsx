@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { db } from "../config/firestore";
-import { collection, getDocs } from "firebase/firestore";
 import "./Movie.css";
 import { getMovies, getCurrentMovies, getUpcomingMovies } from "../functionality/movie";
 
@@ -12,14 +10,29 @@ function Movie() {
   const [trailerTimeout, setTrailerTimeout] = useState(null);
 
   const changeSection = (section) => {
-    setSelectedSection(section);
+    if (section == "currentlyShowing") {
+      getCurrentMovies().then((moviesData) => {
+        setMovies(moviesData);
+      })
+    }
+    else {
+      getUpcomingMovies().then((moviesData) => {
+        setMovies(moviesData);
+      })
+    }
   };
 
   useEffect(() => {
+    if (selectedSection == "currentlyShowing") {
     getCurrentMovies().then((moviesData) => {
-      console.log(moviesData);
       setMovies(moviesData);
     })
+  }
+  else {
+    getUpcomingMovies().then((moviesData) => {
+      setMovies(moviesData);
+    })
+  }
   }, []);
 
   const handleMouseEnter = (movieId) => {
@@ -35,11 +48,6 @@ function Movie() {
       setHoveredMovieId(null);
     }, 5000); // delay before trailer dissapears 
     setTrailerTimeout(timeoutId);
-  };
-
-  /// trying to work on this
-  const filterMoviesByStatus = (currentlyShowing) => {
-    return movies.filter(movie => movie.currently_showing === currentlyShowing);
   };
 
   return (
