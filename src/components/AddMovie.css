@@ -20,7 +20,7 @@
 
 .popup-inner {
     max-height: 550px;
-    overflow-y: auto;
+    overflow-y: overlay;
 }
  
 .error-message {
