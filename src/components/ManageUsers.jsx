@@ -12,7 +12,7 @@ function ManageUsers() {
     const [showPromoUsers, setShowPromoUsers] = useState(false);
     const [newUser, setNewUser] = useState({ email: '', fname: '', lname: '', promo: false });
     const [editingUser, setEditingUser] = useState(null); 
-    const [isEditing, setIsEditing] = useState(false);
+    const [editMode, setEditMode] = useState(false);
 
     useEffect(() => {
         fetchUsers();
