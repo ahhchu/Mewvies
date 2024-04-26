@@ -17,6 +17,7 @@ function Header({ token, updateToken }) {
   const [signupSeen, setSignupSeen] = useState(false);
   const [loginSeen, setLoginSeen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     updateToken();
@@ -40,6 +41,7 @@ function Header({ token, updateToken }) {
   function handleLoginSuccess(userRole) {
     setIsLoggedIn(true);
     if (userRole === "admin") {
+      setIsAdmin(true);
       navigate("/admin");
     } else {
       navigate("/");
@@ -48,6 +50,7 @@ function Header({ token, updateToken }) {
 
   function handleLogout() {
     setIsLoggedIn(false);
+    setIsAdmin(false);
     setLoginSeen(false); 
     setSignupSeen(false);
     navigate("/Mewvies");
@@ -69,11 +72,20 @@ function Header({ token, updateToken }) {
         <Search /> {/*search bar */}
         </div>
         {isLoggedIn ? (
+          <>
           <button className="nav">
             <Link className="nav" to="/edit-profile">
               Edit Profile
             </Link>
           </button>
+          {isAdmin ? (
+            <button className="nav">
+              <Link className="nav" to="/admin">
+                Admin
+              </Link>
+            </button>
+            ) : null}
+            </>
         ) : (
           <>
             <button className="nav" onClick={toggleSignup}>

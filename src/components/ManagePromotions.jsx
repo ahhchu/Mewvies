@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Button from "./Button";
-import { db } from '../config/firestore';
-import { collection, getDocs, addDoc, doc, deleteDoc } from "firebase/firestore";
+import { addPromo, deletePromo, fetchPromotions } from "../functionality/promos";
 import "./Header.css";
 import "./Button.css";
 
@@ -27,11 +26,10 @@ function ManagePromotions() {
     const handleFormSubmit = async (event) => {
         event.preventDefault();
         try {
-            const docRef = await addDoc(collection(db, "promo"), promoData);
-            console.log("Document written with ID: ", docRef.id);
+            await addPromo(promoData);
             alert('Promotion added successfully!');
             setPromoData({ promo_id: "", promo_code: "", promo_amt: "", percentage_bool: false });
-            fetchPromotions();
+            fetchPromotionsData();
         } catch (e) {
             console.error("Error adding document: ", e);
             alert('Error adding promotion!');
@@ -50,21 +48,24 @@ function ManagePromotions() {
 
     const handleDeleteSelected = async () => {
         for (const promoId of selectedPromos) {
-            await deleteDoc(doc(db, "promo", promoId));
+            await deletePromo(promoId);
         }
-        fetchPromotions(); // Refresh the list after deletion
+        fetchPromotionsData(); // Refresh the list after deletion
         setSelectedPromos([]); // Reset selection
         alert('Selected promotions have been ended.');
     };
 
-    const fetchPromotions = async () => {
-        const querySnapshot = await getDocs(collection(db, "promo"));
-        const promotionsList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setPromotions(promotionsList);
+    const fetchPromotionsData = async () => {
+        try {
+            const promotionsData = await fetchPromotions();
+            setPromotions(promotionsData);
+        } catch (error) {
+            alert(error.message);
+        }
     };
 
     useEffect(() => {
-        fetchPromotions();
+        fetchPromotionsData();
     }, []);
 
     return (
@@ -102,22 +103,22 @@ function ManagePromotions() {
                 <h2>Add New Promotion</h2>
                 <form onSubmit={handleFormSubmit}>
                     <label>
-                        Promotion ID:
+                        Promotion ID:{' '}
                         <input type="text" name="promo_id" value={promoData.promo_id} onChange={handleChange} required />
                     </label>
                     < br/>
                     <label>
-                        Promo Code:
+                        Promo Code:{' '}
                         <input type="text" name="promo_code" value={promoData.promo_code} onChange={handleChange} required />
                     </label>
                     < br/>
                     <label>
-                        Discount Amount or Percentage:
+                        Discount Amount or Percentage:{' '}
                         <input type="number" name="promo_amt" value={promoData.promo_amt} onChange={handleChange} required />
                     </label>
                     < br/>
                     <label>
-                        Is Percentage?:
+                        Is Percentage?:{' '}
                         <input type="checkbox" name="percentage_bool" checked={promoData.percentage_bool} onChange={handleChange} />
                     </label>
                     < br/>
