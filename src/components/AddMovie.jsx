@@ -3,8 +3,21 @@ import "./AddMovie.css";
 import "./Button.css";
 import Button from "./Button";
 import { checkEmailAvailability, validateEmail, registerUser, addPayment } from "../functionality/User";
-
 function AddMovie({ toggle, updateToken }) {
+/** MOVIE */
+  const [movieTitle, setMovieTitle] = useState("");
+  const [category, setCategory] = useState("");
+  const [cast, setCast] = useState("");
+  const [director, setDirector] = useState("");
+  const [producer, setProducer] = useState("");
+  const [synopsis, setSynopsis] = useState("");
+  const [trailerUrl, setTrailerUrl] = useState("");
+  const [rating, setRating] = useState("");
+  const [picture, setPicture] = useState("");
+  const [openingDate, setOpeningDate] = useState("");
+
+
+
   /**USER */
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -12,7 +25,6 @@ function AddMovie({ toggle, updateToken }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
   const [homeAddressOne, setHomeAddressOne] = useState("");
   const [homeAddressTwo, setHomeAddressTwo] = useState("");
   const [homeCity, setHomeCity] = useState("");
@@ -24,25 +36,21 @@ function AddMovie({ toggle, updateToken }) {
   const [cardType, setCardType] = useState("");
   const [cvv, setCvv] = useState("");
   const [expirationDate, setExpirationDate] = useState("");
-
   const [billingAddressOne, setBillingAddressOne] = useState("");
   const [billingAddressTwo, setBillingAddressTwo] = useState("");
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [zipCode, setZipCode] = useState("");
-
   const [error, setError] = useState("");
   const [promo, setPromo] = useState(false);
   const [loading, setLoading] = useState(false);
   const [signupDone, setSignupDone] = useState(false);
   const [addNewCard, setNewCard] = useState(false);
-
   // this function validates input from the "sign up" page, then calls registerUser from User.js
   async function handleSignup (e) {
     e.preventDefault();
     setLoading(true);
     try {
-
       // password matching
       if (password !== confirmPassword) {
         setError(
@@ -51,7 +59,6 @@ function AddMovie({ toggle, updateToken }) {
         setLoading(false);
         return;
       }
-
       // checks password length
       if (password.length < 6) {
         setError(
@@ -60,7 +67,6 @@ function AddMovie({ toggle, updateToken }) {
         setLoading(false);
         return;
       }
-
       // Email validation error
       if (!validateEmail(email)) {
         setError("Invalid email address.");
@@ -71,7 +77,6 @@ function AddMovie({ toggle, updateToken }) {
       // errorMsg variable to deal with async functions that returns an error
       var errorMsg;
       var uid;
-
       // Email availability errors
       await checkEmailAvailability(email).then((response) => {errorMsg = response})
       if (!errorMsg == 0) {
@@ -83,17 +88,13 @@ function AddMovie({ toggle, updateToken }) {
         setLoading(false);
         return;
       } else {
-
         //creates the actual user
         uid = await registerUser(firstName, lastName, email, password, number, promo, homeAddressOne, homeAddressTwo, homeCity, homeState, homeZipCode);
         setSignupDone(true);
         setError("");
-
       } // if
-
       // adds new card to the db
       addPayment(cardName, cardNumber, cardType, expirationDate, billingAddressOne, billingAddressTwo, city, state, zipCode, uid);
-
       setLoading(false);
       toggle();
     } catch (error) {
@@ -102,21 +103,17 @@ function AddMovie({ toggle, updateToken }) {
       setLoading(false);
     }
   };
-
   const toggleNewCard = () => {
     setNewCard(!addNewCard);
   };
-
   return (
     <div className="popup">
     
     <form onSubmit={handleSignup}>
       <div className="popup-inner">
-        <h2>SIGNUP</h2>
+        <h2>Add a Movie</h2>
         <div className="signup-divider" />
-
         {error && <p className="error-message">{error}</p>}
-
 
         {signupDone ? (
           <p className="success-message">
@@ -125,286 +122,141 @@ function AddMovie({ toggle, updateToken }) {
           </p>
         ) : (
           <div className="personal-details">
-            <h3>Personal Details</h3>
+            <h3>Movie Details</h3>
             <label>
               <span style={{ color: "red" }}>*</span>
-              First Name:{" "}
+              Movie Title:{" "}
               <input
                 required
                 type="text"
-                name="firstName"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
+                name="movieTitle"
+                value={movieTitle}
+                onChange={(e) => setMovieTitle(e.target.value)}
                 className="input-field"
               />
             </label>
             <br />
             <label>
               <span style={{ color: "red" }}>*</span>
-              Last Name:{" "}
+              Category:{" "}
               <input
                 required
                 type="text"
-                name="lastName"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
+                name="category"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
                 className="input-field"
               />
             </label>
             <br />
             <label>
               <span style={{ color: "red" }}>*</span>
-              Phone Number:{" "}
+              Cast:{" "}
               <input
                 required
                 type="text"
-                name="phoneNumber"
-                value={number}
-                onChange={(e) => setNumber(e.target.value)}
+                name="cast"
+                value={cast}
+                onChange={(e) => setCast(e.target.value)}
                 className="input-field"
               />
             </label>
             <br />
             <label>
               <span style={{ color: "red" }}>*</span>
-              Email:{" "}
+              Director:{" "}
               <input
                 required
-                type="email"
-                name="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                type="text"
+                name="director"
+                value={director}
+                onChange={(e) => setDirector(e.target.value)}
                 className="input-field"
               />
             </label>
             <br />
             <label>
               <span style={{ color: "red" }}>*</span>
-              Password:{" "}
+              Producer:{" "}
               <input
                 required
-                type="password"
-                name="password"
+                type="text"
+                name="producer"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => setProducer(e.target.value)}
                 className="input-field"
               />
             </label>
             <br />
             <label>
               <span style={{ color: "red" }}>*</span>
-              Confirm Password:{" "}
+              Synopsis:{" "}
               <input
                 required
-                type="password"
-                name="confirmPassword"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="input-field"
-              />
-            </label>
-            <br />
-            <label>
-              Home Address:{" "}
-              <input
                 type="text"
-                name="homeAddressOne"
-                value={homeAddressOne}
-                onChange={(e) => setHomeAddressOne(e.target.value)}
+                name="synopsis"
+                value={synopsis}
+                onChange={(e) => setSynopsis(e.target.value)}
                 className="input-field"
               />
             </label>
             <br />
             <label>
-              Address Line 2: {" "}
+              Trailer Url (in embed form):{" "}
               <input
+                required
                 type="text"
-                name="homeAddressTwo"
-                value={homeAddressTwo}
-                onChange={(e) => setHomeAddressTwo(e.target.value)}
+                name="trailerUrl"
+                value={trailerUrl}
+                onChange={(e) => setTrailerUrl(e.target.value)}
                 className="input-field"
               />
             </label>
             <br />
             <label>
-              City: {" "}
+              Rating: {" "}
               <input
+                required
                 type="text"
-                name="homeCity"
-                value={homeCity}
-                onChange={(e) => setHomeCity(e.target.value)}
+                name="rating"
+                value={rating}
+                onChange={(e) => setRating(e.target.value)}
                 className="input-field"
               />
             </label>
             <br />
             <label>
-              State: {" "}
+             Picture Url: {" "}
               <input
+                required
                 type="text"
-                name="homeState"
-                value={homeState}
-                onChange={(e) => setHomeState(e.target.value)}
+                name="picture"
+                value={picture}
+                onChange={(e) => setPicture(e.target.value)}
                 className="input-field"
               />
             </label>
             <br />
             <label>
-              Zip Code: {" "}
+             Opening Date: {" "}
               <input
+                required
                 type="text"
-                name="homeZipCode"
-                value={homeZipCode}
-                onChange={(e) => setHomeZipCode(e.target.value)}
+                name="openingDate"
+                value={openingDate}
+                onChange={(e) => setOpeningDate(e.target.value)}
                 className="input-field"
               />
-              <br />
             </label>
             <br />
-            <label>
-              <input
-                type="checkbox"
-                name="promo"
-                checked={promo}
-                onChange={(e) => setPromo(e.target.checked)}
-                className="checkbox-field"
-              />
-              Opt in to receive promotional emails.
-            </label>
             </div>
-            )}
+            )} 
 
-
-            {addNewCard ? (
-              <>
-              <div className="card-details">
-                <h3>Financial Details</h3>
-                <label>
-                  Name on Card:
-                  <input
-                    type="text"
-                    name="cardName"
-                    value={cardName}
-                    onChange={(e) => setCardName(e.target.value)}
-                    className="input-field"
-                  />
-                </label>
-                <br />
-                <label>
-                  Card Number:{" "}
-                  <input
-                    type="text"
-                    name="cardNumber"
-                    value={cardNumber}
-                    onChange={(e) => setCardNumber(e.target.value)}
-                    className="input-field"
-                  />
-                </label>
-                <br />
-                <label>
-                  Card Type: {" "}
-                  <input
-                    type="text"
-                    name="cardType"
-                    value={cardType}
-                    onChange={(e) => setCardType(e.target.value)}
-                    className="input-field"
-                  />
-                </label>
-                <br />
-                <label>
-                  CVV:{" "}
-                  <input
-                    type="text"
-                    name="cvv"
-                    value={cvv}
-                    onChange={(e) => setCvv(e.target.value)}
-                    className="input-field"
-                  />
-                </label>
-                <br />
-                <label>
-                  Expiration Date:{" "}
-                  <input
-                    type="text"
-                    name="expirationDate"
-                    value={expirationDate}
-                    onChange={(e) => setExpirationDate(e.target.value)}
-                    className="input-field"
-                  />
-                </label>
-                <br />
-                <br />
-                <label>
-                  Billing Address:{" "}
-                  <input
-                    type="text"
-                    name="billingAddressOne"
-                    value={billingAddressOne}
-                    onChange={(e) => setBillingAddressOne(e.target.value)}
-                    className="input-field"
-                  />
-                </label>
-                <br />
-                <label>
-                  Address Line 2: {" "}
-                  <input
-                    type="text"
-                    name="billingAddressTwo"
-                    value={billingAddressTwo}
-                    onChange={(e) => setBillingAddressTwo(e.target.value)}
-                    className="input-field"
-                  />
-                </label>
-                <br />
-                <label>
-                  City: {" "}
-                  <input
-                    type="text"
-                    name="city"
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                    className="input-field"
-                  />
-                </label>
-                <br />
-                <label>
-                  State: {" "}
-                  <input
-                    type="text"
-                    name="state"
-                    value={state}
-                    onChange={(e) => setState(e.target.value)}
-                    className="input-field"
-                  />
-                </label>
-                <br />
-                <label>
-                  Zip Code: {" "}
-                  <input
-                    type="text"
-                    name="zipCode"
-                    value={zipCode}
-                    onChange={(e) => setZipCode(e.target.value)}
-                    className="input-field"
-                  />
-                  <br />
-                </label>
-                </div>
-                <Button className="btn" onClick={toggleNewCard}>
-                  CANCEL
-                </Button>
-
-              </>
-            ) : (
-              <Button className="btn" onClick={toggleNewCard}>
-                ADD CARD
-              </Button>
-            )}
-
+        
             <br />
             <div>
             <Button className="btn" type="submit">
-              SIGNUP
+              ADD
             </Button>
         
             <Button className="btn" onClick={toggle}>
@@ -416,5 +268,5 @@ function AddMovie({ toggle, updateToken }) {
       </div>
   );
 }
-
 export default AddMovie;
+
