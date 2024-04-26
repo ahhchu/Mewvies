@@ -1,6 +1,6 @@
 //addMovie, editMovie, removeMovie, getMovies
 
-import { collection, getDocs, doc, setDoc, updateDoc, where, addDoc, deleteDoc, Timestamp, where, query } from "firebase/firestore";
+import { collection, getDocs, doc, setDoc, updateDoc, addDoc, deleteDoc, Timestamp, where, query } from "firebase/firestore";
 import { db } from "../config/firestore";
 
 /* Everything is a string, openingDate should be a Date().
