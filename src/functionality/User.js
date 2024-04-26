@@ -170,6 +170,16 @@ export async function updateUser(currentUser, user, cards) {
     }
 }
 
+export async function updateUserNoCard(uid, user) {
+    try {
+      var userRef = doc(db, "user", uid);
+      await updateDoc(userRef, user);
+      console.log("Profile updated successfully");
+    } catch (e) {
+        console.log(e);
+    }
+}
+
 async function removePaymentMethods(uid) {
     var promise;
     var snapshot = await getDocs(collection(db, "payment_info"));
