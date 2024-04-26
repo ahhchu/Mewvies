@@ -6,7 +6,7 @@ import "./Movie.css";
 import Movie from "./Movie";
 import Button from "./Button";
 import Search from "./Search";
-import { getCurrentMovies, getUpcomingMovies } from "../functionality/movie";
+import { getCurrentMovies, getUpcomingMovies, removeMovie, getMovie } from "../functionality/movie";
 
 function ManageMovies() {
     const [upcomingMovies, setUpcomingMovies] = useState([]);
@@ -22,6 +22,17 @@ function ManageMovies() {
     })
   }, []);
 
+  const fetchMovie = async() => {
+    const currentMovies = await getCurrentMovies();
+    const upcoming = await getUpcomingMovies();
+    setCurrentlyRunningShows(currentMovies);
+    setUpcomingMovies(upcoming);
+  }
+
+  const handleDeleteMovie = async (movie_id) => {
+  await removeMovie(movie_id);
+  fetchMovie();
+  }
   return (
     <div className="Movie">
      <div>
@@ -41,16 +52,16 @@ function ManageMovies() {
         {currentlyRunningShows.map((show, index) => (
           <div className="MovieCard" key={index}>
             <h3>{show.movie_title}</h3>
-            <Link to={show.movie_id}>
               <img
                 src={show.picture}
                 alt={show.movie_title}
                 width="300"
               />
-            </Link>
             <Button>Change Theater</Button>
+            <Link to ={`/editmovie/${show.movie_id}`}>
             <Button>Update Details</Button>
-            <Button>Delete Movie</Button>
+            </Link>
+            <Button onClick={() => handleDeleteMovie(show.movie_id)}>Delete Movie</Button>
           </div>
         ))}
       </div>
@@ -69,7 +80,7 @@ function ManageMovies() {
             </Link>
             <Button>Change Theater</Button>
             <Button>Update Details</Button>
-            <Button>Delete Movie</Button>
+            <Button onClick={() => handleDeleteMovie(show.movie_id)}>Delete Movie</Button>
           </div>
         ))}
       </div>
