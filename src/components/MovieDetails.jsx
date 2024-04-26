@@ -17,18 +17,6 @@ const MovieDetails = () => {
         }
       });
     })
-    /*const fetchMovie = async () => {
-      const docRef = doc(db, "movie", movieId); // Make sure the collection name is correctly specified
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        setMovie(docSnap.data());
-        console.log("Document data:", docSnap.data()); // This will log the fetched data
-      } else {
-        console.log("No such document!");
-      }
-    };
-
-    fetchMovie();*/
   }, [movieId]);
 
   return (

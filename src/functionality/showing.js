@@ -1,4 +1,5 @@
 import { collection, getDocs, doc, setDoc, updateDoc, getDoc, deleteDoc, Timestamp } from "firebase/firestore";
+import { db } from "../config/firestore";
 import { getRooms } from "./showrooms";
 
 /* Adds a showing. Everything is a string, except showingTime, which needs to be a Date()
@@ -6,19 +7,21 @@ import { getRooms } from "./showrooms";
 export async function addShowing(movieID, roomID, showingTime) {
     var newShowing = {};
     try {
-        if (checkShowingAvailability(roomID, showingTime)) {
+        var returnthing = false;
+        console.log(await checkShowingAvailability(roomID, showingTime));
+        if (await checkShowingAvailability(roomID, showingTime)) {
         newShowing = {
             movie_id: movieID,
             room_id: roomID,
             showing_time: Timestamp.fromDate(showingTime),
             showing_id: 0,
         };
-        getRooms().then(async (data) => {
+        var data = await getShowings()
             newShowing.showing_id = data.length;
             var showingRef = doc(db, "showing", newShowing.showing_id.toString());
             await setDoc(showingRef, newShowing);
-            return true;
-        })
+            returnthing = true;
+            return returnthing;
     }
     } catch (error) {
         console.log(error);
@@ -63,22 +66,29 @@ export async function getShowingsByMovie(movieID) {
 async function checkShowingAvailability(roomID, showingTime) {
     try {
         // checks if the room is available at the specified time
-        var snapshot = await getDocs(collection(db, "showing"));
-        snapshot.docs.forEach((element) => {
-            if (element.room_id == roomID && element.showing_time.getTime() == Timestamp.fromDate(showingTime)) {
-                return false;
-            }
-        });
-
         // checks if the room exists.
         var rooms = await getRooms();
-        rooms.forEach(element => {
-            if (element.room_id == roomID) {
-                return true;
+        var showings = await getShowings();
+        if (roomID < rooms.length) {
+            console.log("hi")
+            for (var i = 0; i < showings.length; i++) {
+                console.log(showings[i]);
+                if (showings[i].room_id == roomID) {
+                    if (showings[i].showing_time.seconds == Timestamp.fromDate(showingTime).seconds) {
+                        return false;
+                    }
+                }
             }
-        });
-        return false;
+        } else if (roomID > rooms.length) {
+
+            return false;
+        } else {
+
+            return true;
+        }
+        return true;
     } catch (error) {
+        console.log(error);
         return false;
     } // try
 } // checkShowingAvailability
