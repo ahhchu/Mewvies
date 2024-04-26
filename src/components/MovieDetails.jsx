@@ -31,7 +31,7 @@ const MovieDetails = () => {
           <p>Producer: {movie.producer}</p>
           <p>Cast: {movie.cast}</p>
           <p>Category: {movie.category}</p>
-          <p>Rating: {movie.rating}</p>
+          <p>MPAA-US code: {movie.rating}</p>
           <iframe
             width="560"
             height="315"

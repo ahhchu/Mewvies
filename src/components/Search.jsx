@@ -79,6 +79,7 @@ function Search() {
           searchResults.map((movie) => (
             <div key={movie.id}>
               <div>
+                
                 <Link
                   to={`/movie-details/${movie.movie_id}`}
                   className="search-result"

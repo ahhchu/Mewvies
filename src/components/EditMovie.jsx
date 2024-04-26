@@ -80,7 +80,7 @@ const EditMovie = () => {
                 <input type="text" name="trailer" value={movie.trailer} onChange={handleChange} />
               </label>< br/>
               <label>
-                Rating:
+              MPAA-US code:
                 <input type="text" name="rating" value={movie.rating} onChange={handleChange} />
               </label> < br/>
               <label>
@@ -101,7 +101,7 @@ const EditMovie = () => {
               <p>Cast: {movie.cast}</p>
               <p>Synopsis: {movie.synopsis}</p>
               <p>Category: {movie.category}</p>
-              <p>Rating: {movie.rating}</p>
+              <p>MPAA-US code: {movie.rating}</p>
               <iframe
                 width="560"
                 height="315"
