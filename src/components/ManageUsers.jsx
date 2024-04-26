@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { fetchAllUsers, addUser, deleteUser, updateUser } from "../functionality/User";
+import { fetchAllUsers, addUser, deleteUser, updateUserNoCard } from "../functionality/User";
 import Button from "./Button";
 import "./Header.css";
 import "./Button.css";
@@ -64,7 +64,7 @@ function ManageUsers() {
     };
 
     const handleSaveChanges = async () => {
-        await updateUser(editingUser.id, editingUser);
+        await updateUserNoCard(editingUser.id, editingUser);
         setEditingUser(null);
         displaySuccessMessage('User updated successfully!');
         fetchUsers();

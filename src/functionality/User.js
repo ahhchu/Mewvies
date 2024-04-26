@@ -1,6 +1,6 @@
 //registerUser, loginUser, modifyUser, addPayment, editPayment, removePayment, getPayment, getForgetEmail, getUserDetails, getAdminStatus, checkActive
 
-import { collection, getDocs, doc, setDoc, updateDoc, getDoc, deleteDoc, getFirestore } from "firebase/firestore";
+import { collection, getDocs, doc, setDoc, updateDoc, getDoc, deleteDoc } from "firebase/firestore";
 import {
     getAuth,
     createUserWithEmailAndPassword,
@@ -109,26 +109,12 @@ export async function deleteUser(userId) {
     await deleteDoc(doc(db, "user", userId));
 }
 
-
-const updateUserDetails = async (user) => {
-    const userRef = doc(db, "users", user.id); // Ensure correct document path
-    await updateDoc(userRef, {
-        fname: user.fname,
-        lname: user.lname,
-        email: user.email,
-        // Include other fields as necessary
-    });
-    fetchUsers(); // Refresh the user list
-    setIsEditing(false); // Close the edit form
-};
-
 /* Resets the password of a given email
  */
 export async function resetPassword(email) {
     var auth = getAuth();
     sendPasswordResetEmail(auth, email);
 } // resetPassword
-
 
 /* returns 0 if worked, returns 1 if failed
 */
