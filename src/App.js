@@ -85,7 +85,7 @@ function App() {
             <Route path = "/manageusers/" element = {<ManageUsers/>} />
             <Route path='/addmovie/' element = {<AddMovie/>} />
             <Route path='/editmovie/:movieId/' element = {<EditMovie/>} />
-            <Route path='/addshowing/:movieId/' element = {<AddShowing/>} /> 
+            <Route path='/addshowing/:movieID/' element = {<AddShowing/>} /> 
             <Route path='/manageshowings/:movieID/' element = {<ManageShowings/>} /> 
 
           </Routes>
