@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { collection, query, getDocs } from "firebase/firestore";
-import { db } from "../config/firestore";
+import { db, Timestamp } from "../config/firestore";
 import "./Search.css"; 
 
 function Search() {
@@ -16,6 +16,7 @@ function Search() {
       const q = query(movieCollection);
       const docReturn = await getDocs(q);
       const searchLower = searchInput.toLowerCase();
+      const currentDate = new Date();
 
       const filteredMovies = docReturn.docs.filter((doc) => {
         const data = doc.data();
@@ -25,14 +26,14 @@ function Search() {
           .split(", ")
           .some((category) => category.includes(searchLower));
         return titleMatch || categoryMatch;
-      });
+      }).map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+        // Determine if the movie is upcoming or currently showing
+        status: doc.data().opening_date.toDate() > currentDate ? "Coming Soon" : "Now Showing"
+      }));
 
-      setSearchResults(
-        filteredMovies.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }))
-      );
+      setSearchResults(filteredMovies);
       setSearched(true);
     } catch (error) {
       console.error("Error fetching search results:", error);
@@ -79,7 +80,8 @@ function Search() {
           searchResults.map((movie) => (
             <div key={movie.id}>
               <div>
-                
+                <p>{movie.status}</p>
+              <br/>
                 <Link
                   to={`/movie-details/${movie.movie_id}`}
                   className="search-result"
@@ -96,8 +98,8 @@ function Search() {
                   allowFullScreen
                   style={{ width: "100%", height: "300px" }}
                 ></iframe>
-              </div>
-            </div>
+              </div> < br/> <br/>
+            </div> 
           ))
         ) : searched ? (
           <p>No movie found</p>

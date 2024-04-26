@@ -3,6 +3,7 @@
 import { collection, getDocs, doc, setDoc, updateDoc, addDoc, deleteDoc, Timestamp, where, query } from "firebase/firestore";
 import { db } from "../config/firestore";
 
+
 /* Everything is a string, openingDate should be a Date().
  */
 export async function addMovie(movieTitle, category, cast, director, producer, synopsis, trailerUrl, rating, posterUrl, openingDate) {
