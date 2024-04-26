@@ -15,9 +15,9 @@ export async function addMovie(movieTitle, category, cast, director, producer, s
             director: director,
             producer: producer,
             synopsis: synopsis,
-            trailer_url: trailerUrl,
+            trailer: trailerUrl,
             rating: rating,
-            poster_url: posterUrl,
+            picture: posterUrl,
             opening_date: Timestamp.fromDate(openingDate),
             movie_id: 0
         };
@@ -44,9 +44,9 @@ export async function updateMovie(movieID, movieTitle, category, cast, director,
             director: director,
             producer: producer,
             synopsis: synopsis,
-            trailer_url: trailerUrl,
+            trailer: trailerUrl,
             rating: rating,
-            poster_url: posterUrl,
+            picture: posterUrl,
             opening_date: openingDate,
             movie_id: movieID
         };

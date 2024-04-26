@@ -1,3 +1,4 @@
+import { collection, getDocs, doc, setDoc, updateDoc, getDoc, deleteDoc, Timestamp } from "firebase/firestore";
 import { getRooms } from "./showrooms";
 
 /* Adds a showing. Everything is a string, except showingTime, which needs to be a Date()
@@ -9,7 +10,7 @@ export async function addShowing(movieID, roomID, showingTime) {
         newShowing = {
             movie_id: movieID,
             room_id: roomID,
-            showing_time: showingTime,
+            showing_time: Timestamp.fromDate(showingTime),
             showing_id: 0,
         };
         getRooms().then(async (data) => {
@@ -63,7 +64,7 @@ async function checkShowingAvailability(roomID, showingTime) {
         // checks if the room is available at the specified time
         var snapshot = await getDocs(collection(db, "showing"));
         snapshot.docs.forEach((element) => {
-            if (element.room_id == roomID && element.showing_time.getTime() == showingTime) {
+            if (element.room_id == roomID && element.showing_time.getTime() == Timestamp.fromDate(showingTime)) {
                 return false;
             }
         });
