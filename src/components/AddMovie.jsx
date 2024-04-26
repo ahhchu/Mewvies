@@ -3,8 +3,11 @@ import "./AddMovie.css";
 import "./Button.css";
 import Button from "./Button";
 import { checkEmailAvailability, validateEmail, registerUser, addPayment } from "../functionality/User";
+import { addMovie, updateMovie, getMovies, removeMovie } from "../functionality/movie";
+
 function AddMovie({ toggle, updateToken }) {
 /** MOVIE */
+  const [newMovie, setNewMovie] = useState("");
   const [movieTitle, setMovieTitle] = useState("");
   const [category, setCategory] = useState("");
   const [cast, setCast] = useState("");
@@ -17,105 +20,53 @@ function AddMovie({ toggle, updateToken }) {
   const [openingDate, setOpeningDate] = useState("");
 
 
-
-  /**USER */
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [number, setNumber] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [homeAddressOne, setHomeAddressOne] = useState("");
-  const [homeAddressTwo, setHomeAddressTwo] = useState("");
-  const [homeCity, setHomeCity] = useState("");
-  const [homeState, setHomeState] = useState("");
-  const [homeZipCode, setHomeZipCode] = useState("");
- /**CARD */
-  const [cardNumber, setCardNumber] = useState("");
-  const [cardName, setCardName] = useState("");
-  const [cardType, setCardType] = useState("");
-  const [cvv, setCvv] = useState("");
-  const [expirationDate, setExpirationDate] = useState("");
-  const [billingAddressOne, setBillingAddressOne] = useState("");
-  const [billingAddressTwo, setBillingAddressTwo] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [zipCode, setZipCode] = useState("");
   const [error, setError] = useState("");
-  const [promo, setPromo] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [signupDone, setSignupDone] = useState(false);
-  const [addNewCard, setNewCard] = useState(false);
+ 
+
   // this function validates input from the "sign up" page, then calls registerUser from User.js
-  async function handleSignup (e) {
+  async function handleAddMovie (e) {
     e.preventDefault();
     setLoading(true);
     try {
-      // password matching
-      if (password !== confirmPassword) {
-        setError(
-          "Passwords do not match. Please make sure both passwords are the same."
-        );
-        setLoading(false);
-        return;
-      }
-      // checks password length
-      if (password.length < 6) {
-        setError(
-          "Password is too short. Please use a password with at least 6 characters."
-        );
-        setLoading(false);
-        return;
-      }
-      // Email validation error
-      if (!validateEmail(email)) {
-        setError("Invalid email address.");
-        setLoading(false);
-        return;
-      }
+      
       
       // errorMsg variable to deal with async functions that returns an error
       var errorMsg;
       var uid;
-      // Email availability errors
-      await checkEmailAvailability(email).then((response) => {errorMsg = response})
-      if (!errorMsg == 0) {
-        if (errorMsg == 1) {
-          setError("This email is already in use.");
-        } else {
-          setError("There was a problem checking email availability. Please try again.");
-        }
-        setLoading(false);
-        return;
-      } else {
+      // Email availability errors - maybe change to duplicate movies
+      // await checkEmailAvailability(email).then((response) => {errorMsg = response})
+      // if (!errorMsg == 0) {
+      //   if (errorMsg == 1) {
+      //     setError("This email is already in use.");
+      //   } else {
+      //     setError("There was a problem checking email availability. Please try again.");
+      //   }
+      //   setLoading(false);
+      //   return;
+      // } else {
         //creates the actual user
-        uid = await registerUser(firstName, lastName, email, password, number, promo, homeAddressOne, homeAddressTwo, homeCity, homeState, homeZipCode);
-        setSignupDone(true);
+        uid = await addMovie(movieTitle, category, cast, director, producer, synopsis, trailerUrl, rating, posterUrl, openingDate);
+        setNewMovie(true);
         setError("");
-      } // if
-      // adds new card to the db
-      addPayment(cardName, cardNumber, cardType, expirationDate, billingAddressOne, billingAddressTwo, city, state, zipCode, uid);
-      setLoading(false);
-      toggle();
+      // } // if
     } catch (error) {
       console.error("Signup error:", error);
       //setError("Failed to sign up, please try again later.");
       setLoading(false);
     }
   };
-  const toggleNewCard = () => {
-    setNewCard(!addNewCard);
-  };
+
   return (
     <div className="popup">
     
-    <form onSubmit={handleSignup}>
+    <form onSubmit={handleAddMovie}>
       <div className="popup-inner">
         <h2>Add a Movie</h2>
         <div className="signup-divider" />
         {error && <p className="error-message">{error}</p>}
 
-        {signupDone ? (
+        {newMovie ? (
           <p className="success-message">
             You have successfully signed up! Check your inbox to verify your
             email address.
@@ -182,7 +133,7 @@ function AddMovie({ toggle, updateToken }) {
                 required
                 type="text"
                 name="producer"
-                value={password}
+                value={producer}
                 onChange={(e) => setProducer(e.target.value)}
                 className="input-field"
               />
@@ -202,6 +153,7 @@ function AddMovie({ toggle, updateToken }) {
             </label>
             <br />
             <label>
+              <span style={{ color: "red" }}>*</span>
               Trailer Url (in embed form):{" "}
               <input
                 required
@@ -214,6 +166,7 @@ function AddMovie({ toggle, updateToken }) {
             </label>
             <br />
             <label>
+              <span style={{ color: "red" }}>*</span>
               Rating: {" "}
               <input
                 required
@@ -226,6 +179,7 @@ function AddMovie({ toggle, updateToken }) {
             </label>
             <br />
             <label>
+            <span style={{ color: "red" }}>*</span>
              Picture Url: {" "}
               <input
                 required
@@ -238,6 +192,7 @@ function AddMovie({ toggle, updateToken }) {
             </label>
             <br />
             <label>
+            <span style={{ color: "red" }}>*</span>
              Opening Date: {" "}
               <input
                 required
