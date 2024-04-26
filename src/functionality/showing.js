@@ -48,14 +48,15 @@ export async function getShowings() {
 */
 export async function getShowingsByMovie(movieID) {
     try {
-        var snapshot = await getDocs(collection(db, "showing"));
-        var existingShowings = [];
-        snapshot.docs.forEach((element) => {
+        var sortedShowings = []
+       getShowings().then((data) => {
+        data.forEach(element => {
             if (element.movie_id == movieID) {
-                existingShowings.push(element.data());
+                sortedShowings.push(element)
             }
         });
-        return existingShowings;
+        return sortedShowings;
+       })
     } catch (error) {
         return [];
     } // try
