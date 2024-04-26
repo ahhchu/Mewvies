@@ -1,6 +1,9 @@
 import React, { useState, useContext } from "react";
 import "./AddMovie.css";
 import "./Button.css";
+import {Link} from "react-router-dom"
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import Button from "./Button";
 import { checkEmailAvailability, validateEmail, registerUser, addPayment } from "../functionality/User";
 import { addMovie, updateMovie, getMovies, removeMovie } from "../functionality/movie";
@@ -22,6 +25,7 @@ function AddMovie({ toggle, updateToken }) {
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [popup, setPopup] = useState(false)
  
 
   // this function validates input from the "sign up" page, then calls registerUser from User.js
@@ -46,8 +50,9 @@ function AddMovie({ toggle, updateToken }) {
       //   return;
       // } else {
         //creates the actual user
-        uid = await addMovie(movieTitle, category, cast, director, producer, synopsis, trailerUrl, rating, posterUrl, openingDate);
+        uid = await addMovie(movieTitle, category, cast, director, producer, synopsis, trailerUrl, rating, picture, openingDate);
         setNewMovie(true);
+        setPopup(false);
         setError("");
       // } // if
     } catch (error) {
@@ -58,7 +63,7 @@ function AddMovie({ toggle, updateToken }) {
   };
 
   return (
-    <div className="popup">
+    <div className={popup ? "popup" : "hidden"}>
     
     <form onSubmit={handleAddMovie}>
       <div className="popup-inner">
@@ -66,11 +71,13 @@ function AddMovie({ toggle, updateToken }) {
         <div className="signup-divider" />
         {error && <p className="error-message">{error}</p>}
 
+
         {newMovie ? (
+          <>
           <p className="success-message">
-            You have successfully signed up! Check your inbox to verify your
-            email address.
+            You have successfully added a new movie!
           </p>
+          </>
         ) : (
           <div className="personal-details">
             <h3>Movie Details</h3>
@@ -194,32 +201,33 @@ function AddMovie({ toggle, updateToken }) {
             <label>
             <span style={{ color: "red" }}>*</span>
              Opening Date: {" "}
-              <input
+             <DatePicker
                 required
-                type="text"
-                name="openingDate"
-                value={openingDate}
-                onChange={(e) => setOpeningDate(e.target.value)}
+                selected={openingDate}
+                onChange={(date) => setOpeningDate(date)}
+                dateFormat="yyyy-MM-dd" // Set date format
                 className="input-field"
               />
             </label>
             <br />
+            <div>
+            <Button className="btn" type="submit" >
+              ADD
+            </Button>
+            </div>
             </div>
             )} 
 
         
             <br />
-            <div>
-            <Button className="btn" type="submit">
-              ADD
-            </Button>
-        
-            <Button className="btn" onClick={toggle}>
-              CLOSE
-            </Button>
-            </div>
+            
           </div>
           </form>
+          <Link to = "/ManageMovies">
+          <Button className="btn">
+              CLOSE
+            </Button>
+            </Link>
       </div>
   );
 }

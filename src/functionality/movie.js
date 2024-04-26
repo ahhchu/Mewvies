@@ -1,6 +1,6 @@
 //addMovie, editMovie, removeMovie, getMovies
 
-import { collection, getDocs, doc, setDoc, updateDoc, getDoc, deleteDoc, Timestamp } from "firebase/firestore";
+import { collection, getDocs, doc, setDoc, updateDoc, addDoc, deleteDoc, Timestamp } from "firebase/firestore";
 import { db } from "../config/firestore";
 
 /* Everything is a string, openingDate should be a Date().
@@ -21,12 +21,15 @@ export async function addMovie(movieTitle, category, cast, director, producer, s
             opening_date: Timestamp.fromDate(openingDate),
             movie_id: 0
         };
-        getMovies().then(async (data) => {
-            newMovie.movie_id = data.length;
-            var movieRef = doc(db, "movie", newMovie.movie_id.toString());
-            await setDoc(movieRef, newMovie);
-            return true;
-        })
+        const data = await getMovies();
+        
+        newMovie.movie_id = data.length;
+
+        // Add the new movie to the database
+        const movieRef = doc(db, "movie", newMovie.movie_id.toString());
+        await setDoc(movieRef, newMovie);
+
+        return true;
     } catch (error) {
         console.log(error);
       } // try
