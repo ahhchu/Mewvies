@@ -51,9 +51,9 @@ function ManageMovies() {
             </Link>
       </div>
       <h1>Manage Movies</h1>
-    <Button>
-        Add Movie
-    </Button>
+      <Link to ="/addmovie">
+             <button className="btn">Add Movie</button> 
+      </Link>
       <h1>Currently Running</h1>
       <div className="Currently-Running">
         {currentlyRunningShows.map((show, index) => (
