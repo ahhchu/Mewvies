@@ -68,25 +68,18 @@ function ManageMovies() {
       <h1>Currently Running</h1>
       <div className="Currently-Running">
         {currentlyRunningShows.map((show, index) => (
-          <div className="MovieCard" key={index} style={{ opacity: index === currentIndex ? 1 : 0.5 }}>
+          <div className="MovieCard" key={index} >
             <h3>{show.movie_title}</h3>
               <img
                 src={show.picture}
                 alt={show.movie_title}
                 width="300"
               />
-<<<<<<< HEAD
-            </Link>
-            <Link to={"/manageshowings/" + show.movie_id}><Button>Manage Showings</Button></Link>
-            <Link to={"/editmovie/" + show.movie_id}><Button>Update Details</Button></Link>
-            <Button>Delete Movie</Button>
-=======
             <Button>Change Theater</Button>
             <Link to ={`/editmovie/${show.movie_id}`}>
             <Button>Update Details</Button>
             </Link>
             <Button onClick={() => handleDeleteMovie(show.movie_id)}>Delete Movie</Button>
->>>>>>> admin-manageuser
           </div>
         ))}
       </div>
@@ -94,7 +87,7 @@ function ManageMovies() {
       <h1>Coming Soon</h1>
       <div className="Coming-Soon">
         {upcomingMovies.map((show, index) => (
-          <div className="MovieCard" key={index} style={{ opacity: index === currentIndex2 ? 1 : 0.5 }}>
+          <div className="MovieCard" key={index}>
             <h3>{show.movie_title}</h3>
             <Link to="/coming-soon">
               <img
@@ -103,15 +96,9 @@ function ManageMovies() {
                 width="300"
               />
             </Link>
-<<<<<<< HEAD
-            <Link to={"/manageshowings/" + show.movie_id}><Button>Manage Showings</Button></Link>
-            <Link to={"/editmovie/" + show.movie_id}><Button>Update Details</Button></Link>
-            <Button>Delete Movie</Button>
-=======
             <Button>Change Theater</Button>
             <Button>Update Details</Button>
             <Button onClick={() => handleDeleteMovie(show.movie_id)}>Delete Movie</Button>
->>>>>>> admin-manageuser
           </div>
         ))}
       </div>
