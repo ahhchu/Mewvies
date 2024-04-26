@@ -75,7 +75,9 @@ function ManageMovies() {
                 alt={show.movie_title}
                 width="300"
               />
-            <Button>Change Theater</Button>
+            <Link to ={`/manageshowings/${show.movie_id}`}>
+            <Button>Manage Showings</Button>
+            </Link>
             <Link to ={`/editmovie/${show.movie_id}`}>
             <Button>Update Details</Button>
             </Link>
@@ -96,8 +98,12 @@ function ManageMovies() {
                 width="300"
               />
             </Link>
-            <Button>Change Theater</Button>
+            <Link to ={`/manageshowings/${show.movie_id}`}>
+            <Button>Manage Showings</Button>
+            </Link>
+            <Link to ={`/editmovie/${show.movie_id}`}>
             <Button>Update Details</Button>
+            </Link>
             <Button onClick={() => handleDeleteMovie(show.movie_id)}>Delete Movie</Button>
           </div>
         ))}
