@@ -68,7 +68,7 @@ function ManagePromotions() {
     const sendingEmails = async (promoUsers, msg) => {
         try {
             // Loop through each email address
-            for (const email of emails) {
+            for (const email of promoUsers) {
                 // Send email for each recipient
                 await emailjs.send('service_ld81717', 'template_tkzlco9', { message: msg, to: email }, 'wVVyNS7NMcSjFNt5s');
                 console.log("Email sent successfully to", email);
