@@ -50,6 +50,8 @@ const MovieDetails = () => {
           <br />
           <br />
           <h2>Showing Times</h2>
+
+          <h3>Saturday, April 27th</h3>
           <Link to="/seats">
             <button className="showing">12:00 PM</button>
             <button className="showing">3:00 PM</button>
@@ -66,6 +68,20 @@ const MovieDetails = () => {
           ) : (
             <p>No reviews yet</p>
           )}
+          < br/> 
+          <h3>Sunday, April 28th</h3>
+          <Link to="/seats">
+            <button className="showing">11:30 PM</button>
+            <button className="showing">1:00 PM</button>
+            <button className="showing">5:30 PM</button>
+            <button className="showing">10:30 PM</button>
+          </Link>
+          <br/>
+          <h3>Monday, April 29th</h3>
+          <Link to="/seats">
+            <button className="showing">5:00 PM</button>
+            <button className="showing">8:00 PM</button>
+          </Link>
         </div>
       ) : (
         <p>Loading movie details...</p>

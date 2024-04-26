@@ -36,3 +36,8 @@
 .showing span {
     color: white;
 }
+
+h3 {
+    color: black;
+    font-family: 'Courier New', Courier, monospace;
+}
