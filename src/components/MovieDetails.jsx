@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import Button from "./Button";
 import { Link } from "react-router-dom";
 import { getMovies } from "../functionality/movie";
+import "./MovieDetails.css"
 
 const MovieDetails = () => {
   const { movieId } = useParams();
@@ -17,18 +18,6 @@ const MovieDetails = () => {
         }
       });
     })
-    /*const fetchMovie = async () => {
-      const docRef = doc(db, "movie", movieId); // Make sure the collection name is correctly specified
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        setMovie(docSnap.data());
-        console.log("Document data:", docSnap.data()); // This will log the fetched data
-      } else {
-        console.log("No such document!");
-      }
-    };
-
-    fetchMovie();*/
   }, [movieId]);
 
   return (
@@ -53,8 +42,14 @@ const MovieDetails = () => {
           ></iframe>
 
           <br />
+          <br/>
+          <br/>
+          <h2>Showing Times</h2>
           <Link to="/seats">
-            <Button>Buy Tickets here</Button>
+          <button className="showing">12:00 PM</button>
+            <button className="showing">3:00 PM</button>
+            <button className="showing">6:30 PM</button>
+            <button className="showing">9:30 PM</button>
           </Link>
         </div>
       ) : (
