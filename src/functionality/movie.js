@@ -1,6 +1,6 @@
 //addMovie, editMovie, removeMovie, getMovies
 
-import { collection, getDocs, doc, setDoc, updateDoc, getDoc, deleteDoc } from "firebase/firestore";
+import { collection, getDocs, doc, setDoc, updateDoc, getDoc, deleteDoc, Timestamp } from "firebase/firestore";
 import { db } from "../config/firestore";
 
 /* Everything is a string, openingDate should be a Date().
@@ -18,7 +18,7 @@ export async function addMovie(movieTitle, category, cast, director, producer, s
             trailer_url: trailerUrl,
             rating: rating,
             poster_url: posterUrl,
-            opening_date: openingDate,
+            opening_date: Timestamp.fromDate(openingDate),
             movie_id: 0
         };
         getMovies().then(async (data) => {
@@ -78,7 +78,7 @@ export async function getCurrentMovies() {
         var snapshot = await getDocs(collection(db, "movie"));
         var existingMovies = [];
         snapshot.docs.forEach((element) => {
-            if (element.opening_date < new Date()) {
+            if (element.opening_date < Timestamp.fromDate(new Date())) {
             existingMovies.push(element.data());
             }
         });
@@ -93,7 +93,7 @@ export async function getUpcomingMovies() {
         var snapshot = await getDocs(collection(db, "movie"));
         var existingMovies = [];
         snapshot.docs.forEach((element) => {
-            if (element.opening_date > new Date()) {
+            if (element.opening_date > Timestamp.fromDate(new Date())) {
             existingMovies.push(element.data());
             }
         });
