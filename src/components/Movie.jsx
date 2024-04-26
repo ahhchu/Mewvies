@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { db } from "../config/firestore";
 import { collection, getDocs } from "firebase/firestore";
 import "./Movie.css";
+import { getMovies, getCurrentMovies, getUpcomingMovies } from "../functionality/movie";
 
 function Movie() {
   const [movies, setMovies] = useState([]);
@@ -15,21 +16,10 @@ function Movie() {
   };
 
   useEffect(() => {
-    const fetchMovies = async () => {
-      try {
-        const moviesRef = collection(db, "movie");
-        const querySnapshot = await getDocs(moviesRef);
-        const moviesData = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setMovies(moviesData);
-      } catch (error) {
-        console.error("Failed to fetch movies:", error);
-      }
-    };
-
-    fetchMovies();
+    getCurrentMovies().then((moviesData) => {
+      console.log(moviesData);
+      setMovies(moviesData);
+    })
   }, []);
 
   const handleMouseEnter = (movieId) => {
