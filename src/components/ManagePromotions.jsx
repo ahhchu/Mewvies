@@ -30,16 +30,13 @@ function ManagePromotions() {
         event.preventDefault();
         try {
             //let result = await sendingEmail("internetspam25@gmail.com", "promos", "Here's a promo!");
-            
-
-
             await addPromo(promoData);
             alert('Promotion added successfully!');
             setPromoData({ promo_id: "", promo_code: "", promo_amt: "", percentage_bool: false });
             fetchPromotionsData();
            
-            var msg = "Here is your promotion for " + promo_amt + " as a discount with the code: " + promo_code
-            sendingEmail(msg);
+            const msg = "Here is your promotion for " + promoData.promo_amt + " as a discount with the code: " + promoData.promo_code
+            await sendingEmail(msg);
             
             
         } catch (e) {
@@ -49,10 +46,13 @@ function ManagePromotions() {
     };
 
     const sendingEmail = async (msg) => {
-        db.collection('employees').where(`array`, '!=', null).get();
-        emailjs.sendForm('service_ld81717', 'template_72ban69', msg, 'wVVyNS7NMcSjFNt5s');
+        try {
+            await emailjs.send('service_ld81717', 'template_tkzlco9', { message: msg }, 'wVVyNS7NMcSjFNt5s');
+            console.log("Email sent successfully");
+        } catch (error) {
+            console.error("Error sending email: ", error);
+        }
     }
-
     const handleSelectPromo = (promoId) => {
         setSelectedPromos(prev => {
             if (prev.includes(promoId)) {
