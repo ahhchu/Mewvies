@@ -22,6 +22,7 @@ export async function addShowing(movieID, roomID, showingTime) {
     }
     } catch (error) {
         console.log(error);
+        return false;
       } // try
 } // addShowing
 
