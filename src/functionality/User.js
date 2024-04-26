@@ -170,9 +170,9 @@ export async function updateUser(currentUser, user, cards) {
     }
 }
 
-export async function updateUserNoCard(currentUser, user) {
+export async function updateUserNoCard(uid, user) {
     try {
-      var userRef = doc(db, "user", currentUser.uid);
+      var userRef = doc(db, "user", uid);
       await updateDoc(userRef, user);
       console.log("Profile updated successfully");
     } catch (e) {
