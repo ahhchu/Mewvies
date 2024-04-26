@@ -35,12 +35,12 @@ function Movie() {
   }
   }, []);
 
-  const handleMouseEnter = (movieId) => {
+  const handleMouseEnter = (movie_id) => {
     if (trailerTimeout) {
       clearTimeout(trailerTimeout);
       setTrailerTimeout(null);
     }
-    setHoveredMovieId(movieId);
+    setHoveredMovieId(movie_id);
   };
 
   const handleMouseLeave = () => {
@@ -65,11 +65,11 @@ function Movie() {
       <div className="movies-container">
       {movies.length > 0 ? (
           movies.map((movie) => (
-            <div key={movie.id} className="movie-card"
-              onMouseEnter={() => handleMouseEnter(movie.id)}
+            <div key={movie.movie_id} className="movie-card"
+              onMouseEnter={() => handleMouseEnter(movie.movie_id)}
               onMouseLeave={handleMouseLeave}>
               <h2>{movie.movie_title}</h2>
-              <Link to={`/movie-details/${movie.id}`}>
+              <Link to={`/movie-details/${movie.movie_id}`}>
                 <img src={movie.picture} alt={movie.movie_title} />
               </Link>
             </div>
@@ -83,7 +83,7 @@ function Movie() {
           <iframe
             width="560"
             height="315"
-            src={movies.find(movie => movie.id === hoveredMovieId)?.trailer}
+            src={movies.find(movie => movie.movie_id === hoveredMovieId)?.trailer}
             title="YouTube Trailer"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

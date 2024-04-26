@@ -90,6 +90,25 @@ export async function fetchUserData(currentUser) {
     }
 }
 
+/* Fetch ALL users
+*/
+export async function fetchAllUsers() {
+    const usersCollection = collection(db, "user"); 
+    const userData = await getDocs(usersCollection); 
+    const userList = userData.docs.map(doc => ({ id: doc.id, ...doc.data() })); 
+    return userList; 
+}
+
+export async function addUser(userData) {
+    const userRef = doc(collection(db, "user"));
+    await setDoc(userRef, userData);
+    return userRef.id;  // Returns the new user's ID after adding them to the database
+}
+
+export async function deleteUser(userId) {
+    await deleteDoc(doc(db, "user", userId));
+}
+
 /* Resets the password of a given email
  */
 export async function resetPassword(email) {
