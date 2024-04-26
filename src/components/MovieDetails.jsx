@@ -1,29 +1,31 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import Button from "./Button";
-import { Link } from "react-router-dom";
 import { getMovies } from "../functionality/movie";
+import { getShowingsByMovie, getShowings} from "../functionality/showing";
 import "./MovieDetails.css";
 
 const MovieDetails = () => {
   const { movieId } = useParams();
   const [movie, setMovie] = useState(null);
+  const [showings, setShowings] = useState([]);
   const [hasReviews, setHasReviews] = useState(false);
 
   useEffect(() => {
-    getMovies().then((data) => {
-      console.log(data);
-      data.forEach((element) => {
-        if (element.movie_id == movieId) {
-          setMovie(element);
-        }
-        if (element.review1) {
-          setHasReviews(true);
-        }
-      });
-    });
-  }, [movieId]);
+    async function fetchData() {
+      const movies = await getMovies();
+      const movieData = movies.find(element => element.movie_id === movieId);
+      if (movieData) {
+        setMovie(movieData);
+        setHasReviews(Boolean(movieData.review1));
+      }
 
+      const showingsData = await getShowings();
+      setShowings(showingsData);
+    }
+
+    fetchData();
+  }, [movieId]);
 
   return (
     <div>
@@ -46,42 +48,23 @@ const MovieDetails = () => {
             allowFullScreen
           ></iframe>
 
-          <br />
-          <br />
-          <br />
-          <h2>Showing Times</h2>
-
-          <h3>Saturday, April 27th</h3>
-          <Link to="/seats">
-            <button className="showing">12:00 PM</button>
-            <button className="showing">3:00 PM</button>
-            <button className="showing">6:30 PM</button>
-            <button className="showing">9:30 PM</button>
-          </Link>
-          {hasReviews ? (
+          {hasReviews && (
             <>
-          <h2>Reviews</h2>
-          <p>{movie.review1}</p>
-          <p>{movie.review2}</p>
-          <p>...</p>
-          </>
-          ) : (
-            <p>No reviews yet</p>
+              <h2>Reviews</h2>
+              <p>{movie.review1}</p>
+              <p>{movie.review2}</p>
+              <p>...</p>
+            </>
           )}
-          < br/> 
-          <h3>Sunday, April 28th</h3>
-          <Link to="/seats">
-            <button className="showing">11:30 PM</button>
-            <button className="showing">1:00 PM</button>
-            <button className="showing">5:30 PM</button>
-            <button className="showing">10:30 PM</button>
-          </Link>
-          <br/>
-          <h3>Monday, April 29th</h3>
-          <Link to="/seats">
-            <button className="showing">5:00 PM</button>
-            <button className="showing">8:00 PM</button>
-          </Link>
+
+          <h2>Showing Times</h2>
+          {showings.length > 0 ? (
+            showings.map(show => (
+              <Link key={show.showing_id} to="/seats">
+                <button className ="showing">{new Date(show.showing_time.seconds).toString()}</button>
+              </Link>
+            ))
+          ) : <p>No showings available.</p>}
         </div>
       ) : (
         <p>Loading movie details...</p>
