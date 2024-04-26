@@ -79,8 +79,9 @@ function Search() {
           searchResults.map((movie) => (
             <div key={movie.id}>
               <div>
+                
                 <Link
-                  to={`/movie-details/${movie.id}`}
+                  to={`/movie-details/${movie.movie_id}`}
                   className="search-result"
                 >
                   <h3>{movie.movie_title}</h3>

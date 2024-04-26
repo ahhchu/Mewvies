@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 //import axios from "axios";
+import { AuthProvider } from './context/AuthContext';
 import Header from './components/Header';
 import Movie from './components/Movie';
 import MovieDetails from  './components/MovieDetails'
@@ -54,7 +55,7 @@ function App() {
   }, []);
 
   return (
-  
+    <AuthProvider> 
     <Router> 
       <div className="App">
         <Header token={token} updateToken={setTokenFromLocalStorage} />
@@ -92,6 +93,7 @@ function App() {
         </main>
       </div>
     </Router>
+    </AuthProvider> 
   );
 }
 
