@@ -78,12 +78,16 @@ export async function getCurrentMovies() {
         var snapshot = await getDocs(collection(db, "movie"));
         var existingMovies = [];
         snapshot.docs.forEach((element) => {
-            if (element.opening_date < Timestamp.fromDate(new Date())) {
+            console.log("comparisons")
+            console.log(element.data().opening_date)
+            console.log(Timestamp.fromDate(new Date()))
+            if (element.data().opening_date < Timestamp.fromDate(new Date())) {
             existingMovies.push(element.data());
             }
         });
         return existingMovies;
     } catch (error) {
+        console.log(error);
         return [];
     } // try
 }
@@ -93,12 +97,13 @@ export async function getUpcomingMovies() {
         var snapshot = await getDocs(collection(db, "movie"));
         var existingMovies = [];
         snapshot.docs.forEach((element) => {
-            if (element.opening_date > Timestamp.fromDate(new Date())) {
+            if (element.data().opening_date > Timestamp.fromDate(new Date())) {
             existingMovies.push(element.data());
             }
         });
         return existingMovies;
     } catch (error) {
+        console.log(error);
         return [];
     } // try
 }
