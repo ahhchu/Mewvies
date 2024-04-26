@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import Button from "./Button";
 import { Link } from "react-router-dom";
 import { getMovies } from "../functionality/movie";
-import "./MovieDetails.css"
+import "./MovieDetails.css";
 
 const MovieDetails = () => {
   const { movieId } = useParams();
@@ -12,12 +12,12 @@ const MovieDetails = () => {
   useEffect(() => {
     getMovies().then((data) => {
       console.log(data);
-      data.forEach(element => {
+      data.forEach((element) => {
         if (element.movie_id == movieId) {
           setMovie(element);
         }
       });
-    })
+    });
   }, [movieId]);
 
   return (
@@ -42,11 +42,11 @@ const MovieDetails = () => {
           ></iframe>
 
           <br />
-          <br/>
-          <br/>
+          <br />
+          <br />
           <h2>Showing Times</h2>
           <Link to="/seats">
-          <button className="showing">12:00 PM</button>
+            <button className="showing">12:00 PM</button>
             <button className="showing">3:00 PM</button>
             <button className="showing">6:30 PM</button>
             <button className="showing">9:30 PM</button>
