@@ -4,6 +4,9 @@ import Button from "./Button";
 import { addPromo, deletePromo, fetchPromotions } from "../functionality/promos";
 import "./Header.css";
 import "./Button.css";
+//import { sendingEmail } from "../services/sendEmail";
+import emailjs from '@emailjs/browser'
+
 
 function ManagePromotions() {
     const [promoData, setPromoData] = useState({
@@ -26,15 +29,29 @@ function ManagePromotions() {
     const handleFormSubmit = async (event) => {
         event.preventDefault();
         try {
+            //let result = await sendingEmail("internetspam25@gmail.com", "promos", "Here's a promo!");
+            
+
+
             await addPromo(promoData);
             alert('Promotion added successfully!');
             setPromoData({ promo_id: "", promo_code: "", promo_amt: "", percentage_bool: false });
             fetchPromotionsData();
+           
+            var msg = "Here is your promotion for " + promo_amt + " as a discount with the code: " + promo_code
+            sendingEmail(msg);
+            
+            
         } catch (e) {
             console.error("Error adding document: ", e);
             alert('Error adding promotion!');
         }
     };
+
+    const sendingEmail = async (msg) => {
+        db.collection('employees').where(`array`, '!=', null).get();
+        emailjs.sendForm('service_ld81717', 'template_72ban69', msg, 'wVVyNS7NMcSjFNt5s');
+    }
 
     const handleSelectPromo = (promoId) => {
         setSelectedPromos(prev => {
