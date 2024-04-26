@@ -6,7 +6,7 @@ import "./Movie.css";
 import Movie from "./Movie";
 import Button from "./Button";
 import Search from "./Search";
-import { getCurrentMovies, getUpcomingMovies } from "../functionality/movie";
+import { getCurrentMovies, getUpcomingMovies, removeMovie, getMovie } from "../functionality/movie";
 
 function ManageMovies() {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -40,6 +40,17 @@ function ManageMovies() {
     })
   }, []);
 
+  const fetchMovie = async() => {
+    const currentMovies = await getCurrentMovies();
+    const upcoming = await getUpcomingMovies();
+    setCurrentlyRunningShows(currentMovies);
+    setUpcomingMovies(upcoming);
+  }
+
+  const handleDeleteMovie = async (movie_id) => {
+  await removeMovie(movie_id);
+  fetchMovie();
+  }
   return (
     <div className="Movie">
      <div>
@@ -59,16 +70,23 @@ function ManageMovies() {
         {currentlyRunningShows.map((show, index) => (
           <div className="MovieCard" key={index} style={{ opacity: index === currentIndex ? 1 : 0.5 }}>
             <h3>{show.movie_title}</h3>
-            <Link to={show.movie_id}>
               <img
                 src={show.picture}
                 alt={show.movie_title}
                 width="300"
               />
+<<<<<<< HEAD
             </Link>
             <Link to={"/manageshowings/" + show.movie_id}><Button>Manage Showings</Button></Link>
             <Link to={"/editmovie/" + show.movie_id}><Button>Update Details</Button></Link>
             <Button>Delete Movie</Button>
+=======
+            <Button>Change Theater</Button>
+            <Link to ={`/editmovie/${show.movie_id}`}>
+            <Button>Update Details</Button>
+            </Link>
+            <Button onClick={() => handleDeleteMovie(show.movie_id)}>Delete Movie</Button>
+>>>>>>> admin-manageuser
           </div>
         ))}
       </div>
@@ -85,9 +103,15 @@ function ManageMovies() {
                 width="300"
               />
             </Link>
+<<<<<<< HEAD
             <Link to={"/manageshowings/" + show.movie_id}><Button>Manage Showings</Button></Link>
             <Link to={"/editmovie/" + show.movie_id}><Button>Update Details</Button></Link>
             <Button>Delete Movie</Button>
+=======
+            <Button>Change Theater</Button>
+            <Button>Update Details</Button>
+            <Button onClick={() => handleDeleteMovie(show.movie_id)}>Delete Movie</Button>
+>>>>>>> admin-manageuser
           </div>
         ))}
       </div>

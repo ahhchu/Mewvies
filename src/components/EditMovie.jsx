@@ -1,420 +1,124 @@
-import React, { useState, useContext } from "react";
-import "./EditMovie.css";
-import "./Button.css";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import Button from "./Button";
-import { checkEmailAvailability, validateEmail, registerUser, addPayment } from "../functionality/User";
+import { Link } from "react-router-dom";
+import { getMovies, updateMovieByField } from "../functionality/movie";
 
-function EditMovie({ toggle, updateToken }) {
-  /**USER */
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [number, setNumber] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-
-  const [homeAddressOne, setHomeAddressOne] = useState("");
-  const [homeAddressTwo, setHomeAddressTwo] = useState("");
-  const [homeCity, setHomeCity] = useState("");
-  const [homeState, setHomeState] = useState("");
-  const [homeZipCode, setHomeZipCode] = useState("");
- /**CARD */
-  const [cardNumber, setCardNumber] = useState("");
-  const [cardName, setCardName] = useState("");
-  const [cardType, setCardType] = useState("");
-  const [cvv, setCvv] = useState("");
-  const [expirationDate, setExpirationDate] = useState("");
-
-  const [billingAddressOne, setBillingAddressOne] = useState("");
-  const [billingAddressTwo, setBillingAddressTwo] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [zipCode, setZipCode] = useState("");
-
-  const [error, setError] = useState("");
-  const [promo, setPromo] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [signupDone, setSignupDone] = useState(false);
-  const [addNewCard, setNewCard] = useState(false);
-
-  // this function validates input from the "sign up" page, then calls registerUser from User.js
-  async function handleSignup (e) {
-    e.preventDefault();
-    setLoading(true);
-    try {
-
-      // password matching
-      if (password !== confirmPassword) {
-        setError(
-          "Passwords do not match. Please make sure both passwords are the same."
-        );
-        setLoading(false);
-        return;
-      }
-
-      // checks password length
-      if (password.length < 6) {
-        setError(
-          "Password is too short. Please use a password with at least 6 characters."
-        );
-        setLoading(false);
-        return;
-      }
-
-      // Email validation error
-      if (!validateEmail(email)) {
-        setError("Invalid email address.");
-        setLoading(false);
-        return;
-      }
-      
-      // errorMsg variable to deal with async functions that returns an error
-      var errorMsg;
-      var uid;
-
-      // Email availability errors
-      await checkEmailAvailability(email).then((response) => {errorMsg = response})
-      if (!errorMsg == 0) {
-        if (errorMsg == 1) {
-          setError("This email is already in use.");
-        } else {
-          setError("There was a problem checking email availability. Please try again.");
+const EditMovie = () => {
+  const { movieId } = useParams();
+  const [movie, setMovie] = useState({});
+  const [isEditing, setIsEditing] = useState(false);
+  
+  useEffect(() => {
+    getMovies().then((data) => {
+      console.log(data);
+      data.forEach(element => {
+        if (element.movie_id == movieId) {
+          setMovie(element);
         }
-        setLoading(false);
-        return;
-      } else {
+      });
+    })
+  }, [movieId]);
 
-        //creates the actual user
-        uid = await registerUser(firstName, lastName, email, password, number, promo, homeAddressOne, homeAddressTwo, homeCity, homeState, homeZipCode);
-        setSignupDone(true);
-        setError("");
-
-      } // if
-
-      // adds new card to the db
-      addPayment(cardName, cardNumber, cardType, expirationDate, billingAddressOne, billingAddressTwo, city, state, zipCode, uid);
-
-      setLoading(false);
-      toggle();
-    } catch (error) {
-      console.error("Signup error:", error);
-      //setError("Failed to sign up, please try again later.");
-      setLoading(false);
-    }
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setMovie(prev => ({ ...prev, [name]: value }));
   };
 
-  const toggleNewCard = () => {
-    setNewCard(!addNewCard);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await updateMovieByField(movieId, {
+      movie_title: movie.movie_title,
+      category: movie.category,
+      cast: movie.cast, 
+      director: movie.director, 
+      producer: movie.producer, 
+      synopsis: movie.synopsis, 
+      trailer: movie.trailer, 
+      rating: movie.rating,
+      picture: movie.picture,
+      opening_date: movie.opening_date
+  });    
+    setIsEditing(false); // Turn off editing mode after submission
   };
+
+  const enableEdit = () => setIsEditing(true);
 
   return (
-    <div className="popup">
-    
-    <form onSubmit={handleSignup}>
-      <div className="popup-inner">
-        <h2>SIGNUP</h2>
-        <div className="signup-divider" />
+    <div>
+      {movie ? (
+        <form onSubmit={handleSubmit}>
+          <h1>Edit Movie Details</h1>
+          {isEditing ? (
+            <>
+              <label>
+                Movie Title:
+                <input type="text" name="movie_title" value={movie.movie_title} onChange={handleChange} />
+              </label>< br/>
+              <label>
+                Category:
+                <input type="text" name="category" value={movie.category} onChange={handleChange} />
+              </label>< br/>
+              <label>
+                Cast:
+                <input type="text" name="cast" value={movie.cast} onChange={handleChange} />
+              </label>< br/>
+              <label>
+                Director:
+                <input type="text" name="director" value={movie.director} onChange={handleChange} />
+              </label>< br/>
+              <label>
+                Producer:
+                <input type="text" name="producer" value={movie.producer} onChange={handleChange} />
+              </label>< br/>
+              <label>
+                Synopsis:
+                <textarea name="synopsis" value={movie.synopsis} onChange={handleChange} />
+              </label>< br/>
+              <label>
+                Trailer URL:
+                <input type="text" name="trailer" value={movie.trailer} onChange={handleChange} />
+              </label>< br/>
+              <label>
+                Rating:
+                <input type="text" name="rating" value={movie.rating} onChange={handleChange} />
+              </label> < br/>
+              <label>
+                Poster URL:
+                <input type="text" name="picture" value={movie.picture} onChange={handleChange} /> 
+              </label> < br/> 
+              <Button type="submit">Save Changes</Button> < br/>
+              <Button onClick={() => setIsEditing(false)}>Cancel</Button> 
+            </>
+          ) : (
+            <>
 
-        {error && <p className="error-message">{error}</p>}
-
-
-        {signupDone ? (
-          <p className="success-message">
-            You have successfully signed up! Check your inbox to verify your
-            email address.
-          </p>
-        ) : (
-          <div className="personal-details">
-            <h3>Personal Details</h3>
-            <label>
-              <span style={{ color: "red" }}>*</span>
-              First Name:{" "}
-              <input
-                required
-                type="text"
-                name="firstName"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                className="input-field"
-              />
-            </label>
-            <br />
-            <label>
-              <span style={{ color: "red" }}>*</span>
-              Last Name:{" "}
-              <input
-                required
-                type="text"
-                name="lastName"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                className="input-field"
-              />
-            </label>
-            <br />
-            <label>
-              <span style={{ color: "red" }}>*</span>
-              Phone Number:{" "}
-              <input
-                required
-                type="text"
-                name="phoneNumber"
-                value={number}
-                onChange={(e) => setNumber(e.target.value)}
-                className="input-field"
-              />
-            </label>
-            <br />
-            <label>
-              <span style={{ color: "red" }}>*</span>
-              Email:{" "}
-              <input
-                required
-                type="email"
-                name="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="input-field"
-              />
-            </label>
-            <br />
-            <label>
-              <span style={{ color: "red" }}>*</span>
-              Password:{" "}
-              <input
-                required
-                type="password"
-                name="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="input-field"
-              />
-            </label>
-            <br />
-            <label>
-              <span style={{ color: "red" }}>*</span>
-              Confirm Password:{" "}
-              <input
-                required
-                type="password"
-                name="confirmPassword"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="input-field"
-              />
-            </label>
-            <br />
-            <label>
-              Home Address:{" "}
-              <input
-                type="text"
-                name="homeAddressOne"
-                value={homeAddressOne}
-                onChange={(e) => setHomeAddressOne(e.target.value)}
-                className="input-field"
-              />
-            </label>
-            <br />
-            <label>
-              Address Line 2: {" "}
-              <input
-                type="text"
-                name="homeAddressTwo"
-                value={homeAddressTwo}
-                onChange={(e) => setHomeAddressTwo(e.target.value)}
-                className="input-field"
-              />
-            </label>
-            <br />
-            <label>
-              City: {" "}
-              <input
-                type="text"
-                name="homeCity"
-                value={homeCity}
-                onChange={(e) => setHomeCity(e.target.value)}
-                className="input-field"
-              />
-            </label>
-            <br />
-            <label>
-              State: {" "}
-              <input
-                type="text"
-                name="homeState"
-                value={homeState}
-                onChange={(e) => setHomeState(e.target.value)}
-                className="input-field"
-              />
-            </label>
-            <br />
-            <label>
-              Zip Code: {" "}
-              <input
-                type="text"
-                name="homeZipCode"
-                value={homeZipCode}
-                onChange={(e) => setHomeZipCode(e.target.value)}
-                className="input-field"
-              />
-              <br />
-            </label>
-            <br />
-            <label>
-              <input
-                type="checkbox"
-                name="promo"
-                checked={promo}
-                onChange={(e) => setPromo(e.target.checked)}
-                className="checkbox-field"
-              />
-              Opt in to receive promotional emails.
-            </label>
-            </div>
-            )}
-
-
-            {addNewCard ? (
-              <>
-              <div className="card-details">
-                <h3>Financial Details</h3>
-                <label>
-                  Name on Card:
-                  <input
-                    type="text"
-                    name="cardName"
-                    value={cardName}
-                    onChange={(e) => setCardName(e.target.value)}
-                    className="input-field"
-                  />
-                </label>
-                <br />
-                <label>
-                  Card Number:{" "}
-                  <input
-                    type="text"
-                    name="cardNumber"
-                    value={cardNumber}
-                    onChange={(e) => setCardNumber(e.target.value)}
-                    className="input-field"
-                  />
-                </label>
-                <br />
-                <label>
-                  Card Type: {" "}
-                  <input
-                    type="text"
-                    name="cardType"
-                    value={cardType}
-                    onChange={(e) => setCardType(e.target.value)}
-                    className="input-field"
-                  />
-                </label>
-                <br />
-                <label>
-                  CVV:{" "}
-                  <input
-                    type="text"
-                    name="cvv"
-                    value={cvv}
-                    onChange={(e) => setCvv(e.target.value)}
-                    className="input-field"
-                  />
-                </label>
-                <br />
-                <label>
-                  Expiration Date:{" "}
-                  <input
-                    type="text"
-                    name="expirationDate"
-                    value={expirationDate}
-                    onChange={(e) => setExpirationDate(e.target.value)}
-                    className="input-field"
-                  />
-                </label>
-                <br />
-                <br />
-                <label>
-                  Billing Address:{" "}
-                  <input
-                    type="text"
-                    name="billingAddressOne"
-                    value={billingAddressOne}
-                    onChange={(e) => setBillingAddressOne(e.target.value)}
-                    className="input-field"
-                  />
-                </label>
-                <br />
-                <label>
-                  Address Line 2: {" "}
-                  <input
-                    type="text"
-                    name="billingAddressTwo"
-                    value={billingAddressTwo}
-                    onChange={(e) => setBillingAddressTwo(e.target.value)}
-                    className="input-field"
-                  />
-                </label>
-                <br />
-                <label>
-                  City: {" "}
-                  <input
-                    type="text"
-                    name="city"
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                    className="input-field"
-                  />
-                </label>
-                <br />
-                <label>
-                  State: {" "}
-                  <input
-                    type="text"
-                    name="state"
-                    value={state}
-                    onChange={(e) => setState(e.target.value)}
-                    className="input-field"
-                  />
-                </label>
-                <br />
-                <label>
-                  Zip Code: {" "}
-                  <input
-                    type="text"
-                    name="zipCode"
-                    value={zipCode}
-                    onChange={(e) => setZipCode(e.target.value)}
-                    className="input-field"
-                  />
-                  <br />
-                </label>
-                </div>
-                <Button className="btn" onClick={toggleNewCard}>
-                  CANCEL
-                </Button>
-
-              </>
-            ) : (
-              <Button className="btn" onClick={toggleNewCard}>
-                ADD CARD
-              </Button>
-            )}
-
-            <br />
-            <div>
-            <Button className="btn" type="submit">
-              SIGNUP
-            </Button>
-        
-            <Button className="btn" onClick={toggle}>
-              CLOSE
-            </Button>
-            </div>
-          </div>
-          </form>
-      </div>
+              <h2>{movie.movie_title}</h2>
+              <img src={movie.picture} alt={movie.movie_title} />
+              <p>Category: {movie.category}</p>
+              <p>Director: {movie.director}</p>
+              <p>Producer: {movie.producer}</p>
+              <p>Cast: {movie.cast}</p>
+              <p>Synopsis: {movie.synopsis}</p>
+              <p>Category: {movie.category}</p>
+              <p>Rating: {movie.rating}</p>
+              <iframe
+                width="560"
+                height="315"
+                src={movie.trailer}
+                title="Movie Trailer"
+                frameBorder="0"
+                allowFullScreen
+              ></iframe> < br/>
+              <Button onClick={enableEdit}>Edit Movie</Button>
+            </>
+          )}
+        </form>
+      ) : (
+        <p>Loading movie details...</p>
+      )}
+    </div>
   );
-}
+};
 
 export default EditMovie;

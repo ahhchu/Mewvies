@@ -1,6 +1,6 @@
 //addMovie, editMovie, removeMovie, getMovies
 
-import { collection, getDocs, doc, setDoc, updateDoc, getDoc, deleteDoc, Timestamp } from "firebase/firestore";
+import { collection, getDocs, doc, setDoc, updateDoc, where, getDoc, deleteDoc, Timestamp, query } from "firebase/firestore";
 import { db } from "../config/firestore";
 
 /* Everything is a string, openingDate should be a Date().
@@ -35,9 +35,9 @@ export async function addMovie(movieTitle, category, cast, director, producer, s
 /* Updates a particular movieID with the new parameters. All parameters are required.
  */
 export async function updateMovie(movieID, movieTitle, category, cast, director, producer, synopsis, trailerUrl, rating, posterUrl, openingDate) {
-    var newMovie = {};
     try {
-        newMovie = {
+        const movieRef = doc(db, "movie", movieID.toString());
+        const newMovie = {
             movie_title: movieTitle,
             category: category,
             cast: cast,
@@ -50,13 +50,39 @@ export async function updateMovie(movieID, movieTitle, category, cast, director,
             opening_date: openingDate,
             movie_id: movieID
         };
-            var movieRef = doc(db, "movie", newMovie.movie_id.toString());
-            await updateDoc(movieRef, newMovie);
-            return true;
+        await updateDoc(movieRef, newMovie);
+        console.log("Update successful");
+        return true;
     } catch (error) {
-        console.log(error);
-      } // try
-} // addRoom
+        console.error("Error updating document:", error);
+    }
+}
+
+// by document field ID
+export async function updateMovieByField(movieID, updates) {
+    const moviesRef = collection(db, "movie");
+    const q = query(moviesRef, where("movie_id", "==", movieID));
+
+    try {
+        const querySnapshot = await getDocs(q);
+        if (querySnapshot.empty) {
+            console.log("No matching documents.");
+            return false;
+        }
+
+        querySnapshot.forEach(async (doc) => {
+            const docRef = doc.ref;
+            await updateDoc(docRef, updates);
+        });
+        
+        console.log("Document updated successfully");
+        return true;
+    } catch (error) {
+        console.error("Error updating document:", error);
+        return false;
+    }
+}
+
 
 /* This returns an array of objects for all existing movies. No parameters required.
  */
@@ -72,6 +98,7 @@ export async function getMovies() {
         return [];
     } // try
 } // getMovies
+
 
 export async function getCurrentMovies() {
     try {
