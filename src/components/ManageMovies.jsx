@@ -6,30 +6,12 @@ import "./Movie.css";
 import Movie from "./Movie";
 import Button from "./Button";
 import Search from "./Search";
+import "./ManageMovies.css";
 import { getCurrentMovies, getUpcomingMovies, removeMovie, getMovie } from "../functionality/movie";
 
 function ManageMovies() {
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const [currentIndex2, setCurrentIndex2] = useState(0);
     const [upcomingMovies, setUpcomingMovies] = useState([]);
     const [currentlyRunningShows, setCurrentlyRunningShows] = useState([]);
-
-  const handleNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % currentlyRunningShows.length);
-  };
-
-  const handlePrev = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + currentlyRunningShows.length) % currentlyRunningShows.length);
-  };
-
-
-  const handleNext2 = () => {
-    setCurrentIndex2((prevIndex2) => (prevIndex2 + 1) % upcomingMovies.length);
-  };
-
-  const handlePrev2 = () => {
-    setCurrentIndex2((prevIndex2) => (prevIndex2 - 1 + upcomingMovies.length) % currentlyRunningShows.length);
-  };
 
   useEffect(() => {
     getUpcomingMovies().then((data) => {
@@ -75,6 +57,7 @@ function ManageMovies() {
                 alt={show.movie_title}
                 width="300"
               />
+              <div className = "buttons">
             <Link to ={`/manageshowings/${show.movie_id}`}>
             <Button>Manage Showings</Button>
             </Link>
@@ -82,6 +65,7 @@ function ManageMovies() {
             <Button>Update Details</Button>
             </Link>
             <Button onClick={() => handleDeleteMovie(show.movie_id)}>Delete Movie</Button>
+            </div>
           </div>
         ))}
       </div>
@@ -98,6 +82,7 @@ function ManageMovies() {
                 width="300"
               />
             </Link>
+            <div class ="buttons">
             <Link to ={`/manageshowings/${show.movie_id}`}>
             <Button>Manage Showings</Button>
             </Link>
@@ -105,6 +90,7 @@ function ManageMovies() {
             <Button>Update Details</Button>
             </Link>
             <Button onClick={() => handleDeleteMovie(show.movie_id)}>Delete Movie</Button>
+            </div>
           </div>
         ))}
       </div>

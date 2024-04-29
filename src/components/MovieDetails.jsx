@@ -31,6 +31,7 @@ const MovieDetails = () => {
     <div>
       {movie ? (
         <div>
+          <div className ="movie-details">
           <h1>{movie.movie_title}</h1>
           <img src={movie.picture} alt={movie.movie_title} />
           <p>{movie.synopsis}</p>
@@ -39,6 +40,7 @@ const MovieDetails = () => {
           <p>Cast: {movie.cast}</p>
           <p>Category: {movie.category}</p>
           <p>MPAA-US code: {movie.rating}</p>
+          </div>
           <iframe
             width="560"
             height="315"
@@ -48,6 +50,7 @@ const MovieDetails = () => {
             allowFullScreen
           ></iframe>
 
+        <div className ="reviews">
           {hasReviews && (
             <>
               <h2>Reviews</h2>
@@ -56,7 +59,8 @@ const MovieDetails = () => {
               <p>...</p>
             </>
           )}
-
+            </div>
+            
           <h2>Showing Times</h2>
           {showings.length > 0 ? (
             showings.map(show => (
@@ -69,6 +73,11 @@ const MovieDetails = () => {
       ) : (
         <p>Loading movie details...</p>
       )}
+      <br/>
+      <br/>
+      <br />
+      <br />
+      <br />
     </div>
   );
 };

@@ -41,3 +41,19 @@ h3 {
     color: black;
     font-family: 'Courier New', Courier, monospace;
 }
+
+.movie-details {
+  max-width: 1000px; 
+  margin: 0 auto;
+  padding: 20px; 
+  box-sizing: border-box; 
+}
+
+
+.movie-details p {
+  word-wrap: break-word; /* Ensures words do not overflow the container */
+}
+
+.reviews p {
+  font-style: italic;
+}

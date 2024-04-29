@@ -126,3 +126,8 @@
   }
   
   
+  .movies-container img{
+    margin: 1px;
+    width: 300px;
+    height: 450px;
+  }
