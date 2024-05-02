@@ -72,8 +72,9 @@ function ManagePromotions() {
             for (const email of promoUsers) {
                 var templateParams = {
                     message: msg,
-                    email_to: email,
+                    email_to: email.email,
                 };
+                console.log("Sending email to:", email.email);
 
                 // Send email for each recipient
                 await emailjs.send('service_ld81717', 'template_tkzlco9', templateParams, 'wVVyNS7NMcSjFNt5s');
