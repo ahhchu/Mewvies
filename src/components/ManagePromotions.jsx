@@ -67,10 +67,16 @@ function ManagePromotions() {
 
     const sendingEmails = async (promoUsers, msg) => {
         try {
+            
             // Loop through each email address
             for (const email of promoUsers) {
+                var templateParams = {
+                    message: msg,
+                    email_to: email,
+                };
+
                 // Send email for each recipient
-                await emailjs.send('service_ld81717', 'template_tkzlco9', { message: msg, to: email }, 'wVVyNS7NMcSjFNt5s');
+                await emailjs.send('service_ld81717', 'template_tkzlco9', templateParams, 'wVVyNS7NMcSjFNt5s');
                 console.log("Email sent successfully to", email);
             }
         } catch (error) {
