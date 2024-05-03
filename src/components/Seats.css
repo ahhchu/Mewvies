@@ -45,45 +45,7 @@
     transform: translateY(2px);
    }
 
-   .seatsRow {
-    display: flex;
-    justify-content: center;
-  }
-  
-  .seatContainer {
-    margin: 10px;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .selectContainer {
-    margin-top: 8px; /* Adjust as needed for spacing */
-  }
-  
-  select { /* drop down */
-    width: 150px; 
-    padding: 8px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #fff;
-    color: #555;
-    cursor: pointer;
-  }
-
-  /*
-  button {
-    padding: 10px 15px;
-    margin: 5px;
-    width: 100px;
-    font-size: 16px;
-    background-color: #555;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }*/
-
+   
   .checkout-button {
     width: 250px;
     margin: 3px;
@@ -130,3 +92,82 @@
     box-shadow: #D6D6E7 0 3px 7px inset;
     transform: translateY(2px);
    }
+
+
+   .seats {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 2px;
+  }
+  
+  .seatContainer {
+    width: 0 0 20%;
+    padding: 2px;
+  }
+  
+  .seat, .selected {
+    width: 30px;  
+    height: 30px;
+    background-color: #ccc;
+    border: 1px solid #fff;
+   cursor: pointer;
+}
+  
+  .selected {
+    background-color: #4CAF50 /* green selected */
+    /* red if already booked */
+  }
+  
+  .selectedSeatsInfo {
+    margin-top: 20px;
+  }
+  
+  .checkout {
+    margin-top: 20px;
+  }
+  
+
+
+  .dropbtn {
+      width: 200px;
+      margin: 3px;
+      align-items: center;
+      appearance: none;
+      background-color: white;
+      border-radius: 2px;
+      border-width: 0;
+      box-shadow: rgba(45, 35, 66, 0.2) 0 2px 4px,rgba(45, 35, 66, 0.15) 0 7px 13px -3px,#D6D6E7 0 -3px 0 inset;
+      box-sizing: border-box;
+      color: #36395A;
+      cursor: pointer;
+      display: inline-flex;
+      font-family: "JetBrains Mono",monospace;
+      height: 30px;
+      justify-content: center;
+      line-height: 1;
+      list-style: none;
+      overflow: hidden;
+      padding-left: 16px;
+      padding-right: 16px;
+      position: relative;
+      text-align: left;
+      text-decoration: none;
+      transition: box-shadow .15s,transform .15s;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+      white-space: nowrap;
+      will-change: box-shadow,transform;
+      font-size: 15px;
+     }
+
+     .selectedSeatsInfo ul {
+      font-family: 'Courier New', Courier, monospace;
+      font-weight: bold;
+     }
+
+     .movieDetails h2 {
+      font-family: 'Courier New', Courier, monospace;
+      font-weight: bold;
+     }

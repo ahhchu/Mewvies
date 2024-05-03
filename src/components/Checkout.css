@@ -44,8 +44,8 @@
     color: #36395A;
     cursor: pointer;
     display: inline-flex;
-    font-family: "JetBrains Mono",monospace;
     height: 48px;
+    font-family: 'Courier New', Courier, monospace;
     justify-content: center;
     line-height: 1;
     list-style: none;
