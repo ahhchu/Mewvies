@@ -1,15 +1,11 @@
 import React, { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import "./Header.css";
-import Login from "./Login";
 import {useLogin} from "../context/LoginContext";
 import {useSignup} from "../context/SignupContext";
-import Signup from "./Signup";
 import Search from "./Search";
 import {isLoggedIn, logout, isAdmin} from "../functionality/User";
 import { useNavigate } from "react-router-dom";
-import UserContext from "../context/UserContext";
-import yarnImage from '../img/yarn.jpg';
 
 
 
@@ -19,10 +15,10 @@ function Header({ token, updateToken }) {
 
   const openLoginPopup = useLogin();
   const openSignupPopup = useSignup();
-  const [admin, setAdmin] = useState(false);
+ // const [admin, setAdmin] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
-  const  userContext = useContext(UserContext);
-
+  const admin = localStorage.getItem('userRole');
+ 
   useEffect(() => {
     updateToken();
   }, [updateToken]);
@@ -35,13 +31,10 @@ function Header({ token, updateToken }) {
   }, []);
   
   useEffect(() => {
-    const checkAdmin = async () => {
-      const isAdminUser = await isAdmin(userContext);
-      setAdmin(isAdminUser);
-    };
-  
-    checkAdmin(); // Check admin when component mounts
-  }, [userContext]);
+    if (admin == 'admin') {
+        navigate('/admin');
+    }
+}, [admin]);
   
 
   const toggleSignup = () => {
@@ -85,7 +78,7 @@ function Header({ token, updateToken }) {
               Edit Profile
             </Link>
           </button>
-          {admin && (
+          {admin == 'admin' && (
             <button className="nav">
               <Link className="nav" to="/admin">
                 Admin

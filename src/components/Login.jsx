@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./Login.css";
 import "./Button.css";
 import ForgotPassword from "./ForgotPassword";
 import Button from "./Button";
+import UserContext from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import { login } from "../functionality/User";
 
@@ -14,6 +15,7 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const [forgotPasswordSeen, setForgotPasswordSeen] = useState(false);
   const [loginDone, setLoginDone] = useState(false);
+  const userContext = useContext(UserContext);
 
   const toggleForgotPassword = () => {
     setForgotPasswordSeen(!forgotPasswordSeen);
@@ -24,7 +26,7 @@ function Login() {
     setLoading(true);
   
     //login(), returns either uid or returns error code
-    var user = await login(email, password);
+    var user = await login(email, password, userContext);
     if (user.error == 0) {
       console.log("got here");
       setError("");
@@ -49,6 +51,7 @@ function Login() {
   };
 
   return (
+    <div className="overlay">
     <div className="popup">
       <div className="popup-inner">
         <h2>LOGIN</h2>
@@ -98,6 +101,7 @@ function Login() {
           />
         )}
         </div>
+      </div>
       </div>
   );
 }

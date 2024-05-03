@@ -13,6 +13,8 @@ import {
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { db } from "../config/firestore";
+import { useContext } from "react";
+import UserContext from "../context/UserContext";
 import { encryptData, decryptData } from "../services/crypto";
 
 
@@ -267,7 +269,8 @@ export async function addMultiplePayments(cardName, cardNumber, cardType, expira
  * user.role = admin or user
  * user.uid = uid
  */
-export async function login(email, password) {
+export async function login(email, password, userContext) {
+    
     var user = {error: 0, verified: true};
     try {
         var auth = getAuth();
@@ -314,15 +317,6 @@ export function isLoggedIn () {
         return false;
     } // if
 } // isLoggedIn
-
-export function isAdmin(userContext) {
-    if (userContext && userContext.role === "admin") {
-        useNavigate('/admin');
-        return true;
-    } else {
-        return false;
-    }
-}
 
 export async function logout() {
     var auth = getAuth();
