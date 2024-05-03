@@ -11,11 +11,7 @@ import {
     EmailAuthProvider,
     reauthenticateWithCredential,
 } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
 import { db } from "../config/firestore";
-import { useContext } from "react";
-import UserContext from "../context/UserContext";
-import { encryptData, decryptData } from "../services/crypto";
 
 
 

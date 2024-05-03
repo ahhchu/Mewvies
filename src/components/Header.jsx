@@ -4,12 +4,12 @@ import "./Header.css";
 import {useLogin} from "../context/LoginContext";
 import {useSignup} from "../context/SignupContext";
 import Search from "./Search";
-import {isLoggedIn, logout, isAdmin} from "../functionality/User";
+import {isLoggedIn, logout} from "../functionality/User";
 import { useNavigate } from "react-router-dom";
 
 
 
-function Header({ token, updateToken }) {
+function Header({ updateToken }) {
 
   const navigate = useNavigate();
 
