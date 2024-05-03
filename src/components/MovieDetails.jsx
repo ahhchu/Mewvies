@@ -28,13 +28,20 @@ const MovieDetails = () => {
     fetchData();
   }, [movieId]);
 
-  const handleRedirect = async (e) => {
-    if(isLoggedIn() == false) {
+  const handleRedirect = (show) => {
+    if (!isLoggedIn()) { 
       navigate('/login');
     } else {
-      navigate('/seats');
+      navigate(`/movie-details/${movieId}/seats/${show.showing_id}`, {
+        state: {
+          showingTime: show.showing_time,
+          showingId: show.showing_id,
+          movieName: movie.movie_title
+        }
+      });
     }
-  }
+  };
+  
 
   return (
     <div>
@@ -73,7 +80,9 @@ const MovieDetails = () => {
           <h2>Showing Times</h2>
           {showings.length > 0 ? (
             showings.map(show => (
-                <button className ="showing" onClick={handleRedirect}>{new Date(show.showing_time.seconds).toString()}</button>
+              <button className="showing" key={show.showing_id} onClick={() => handleRedirect(show)}>
+                {new Date(show.showing_time.seconds).toString()}
+              </button>
             ))
           ) : <p>No showings available.</p>}
         </div>

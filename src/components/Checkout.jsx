@@ -4,8 +4,15 @@ import { collection, getDocs, query, where, addDoc } from "firebase/firestore";
 import { db } from "../config/firestore";
 import { Link } from "react-router-dom";
 import "./Checkout.css";
+import { decryptData } from "../services/crypto";
+import {
+  getAuth,
+} from "firebase/auth";
+import { getPaymentCards, passphrase } from "../functionality/User";
 
 function Checkout() {
+
+
   const navigate = useNavigate();
 
   const [orders, setOrders] = useState([]);
@@ -19,6 +26,39 @@ function Checkout() {
   const [total, setTotal] = useState(0);
   const SALES_TAX = 0.08; // 8% tax
   const ONLINE_FEE = 2.0; // idk
+  const [cards, setCards] = useState([]); 
+  const [selectedCard, setSelectedCard] = useState(null);
+  const passphrase = "webufhibejnlisuediuwe";
+
+  const auth = getAuth();
+  const currentUser = auth.currentUser; // Get the current user
+
+  if (!currentUser) {
+    console.log("No user logged in");
+    navigate('/login'); // Redirect to login if no user
+    return;
+  }
+
+
+  try {
+    getPaymentCards(currentUser.uid).then((cardData) => {
+      const decryptedCards = cardData.map(card => ({
+        cardNumber: decryptData(card.card_number, passphrase),
+        cardName: decryptData(card.card_name, passphrase),
+        cardType: decryptData(card.card_type, passphrase),
+        expirationDate: decryptData(card.expiration, passphrase),
+        billingAddressOne: decryptData(card.billing_address_one, passphrase),
+        billingAddressTwo: decryptData(card.billing_address_two, passphrase),
+        city: decryptData(card.billing_city, passphrase),
+        state: decryptData(card.billing_state, passphrase),
+        zipCode: decryptData(card.billing_zip, passphrase)
+      }));
+      setCards(decryptedCards);
+      console.log("Cards state updated:", cards); 
+    });
+  } catch (e) {
+    console.error("Failed to fetch or decrypt card data:", e);
+  }
 
   const [formData, setFormData] = useState({
     name: "",
@@ -38,10 +78,18 @@ function Checkout() {
   
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const auth = getAuth();
+    const user = auth.currentUser;
     console.log("Form submitted:", formData);
-  
+
+    if (!selectedCard) {
+      alert('Please select a payment method');
+      return;
+    }
+
+    console.log("User UID: ", user.uid);
     const orderData = {
-      customer_id: "YourCustomerID", // replace with userid once that problem is finished
+      customer_id: user.uid,
       movie_id: showingId,
       order_id: "GenerateOrFetchThisID",
       payment_id: "GenerateOrFetchPaymentID", 
@@ -50,7 +98,18 @@ function Checkout() {
       seat_number: selectedSeats.join(", "), 
       showing_id: showingId, 
       ticket_price: total.toString(), 
-      ticket_type: JSON.stringify(editableSeatTypes) 
+      ticket_type: JSON.stringify(editableSeatTypes), 
+      payment_details: {
+        cardNumber: selectedCard.cardNumber,
+        cardName: selectedCard.cardName,
+        cardType: selectedCard.cardType,
+        expirationDate: selectedCard.expirationDate,
+        billingAddressOne: selectedCard.billingAddressOne,
+        billingAddressTwo: selectedCard.billingAddressTwo,
+        city: selectedCard.city,
+        state: selectedCard.state,
+        zipCode: selectedCard.zipCode
+      }
     };  
   
     try {
@@ -186,8 +245,18 @@ function Checkout() {
         ).toFixed(2)}
       </h3>
 
+      <h2>Checkout</h2>
+      <div className = "cards">
+        {cards.map((card, index) => (
+          <div key={index} onClick={() => setSelectedCard(card)} className="card-option">
+            <p>Card Ending in {card.cardNumber.slice(-4)}</p>
+            <p>Type: {card.cardType}</p>
+            <p>Expires: {card.expirationDate}</p>
+          </div>
+        ))}
+      </div>
+{/*
       <div className="form-container">
-        <h2>Checkout</h2>
         <form onSubmit={handleSubmit}>
           <label className="form-label">
             Name:
@@ -201,15 +270,46 @@ function Checkout() {
             />
           </label>
           <label className="form-label">
-            Billing Address:
+            Billing Address One:
             <textarea
-              name="billingAddress"
-              value={formData.billingAddress}
+              name="billingAddressOne"
+              value={formData.billingAddressOne}
               onChange={handleChange}
               required
               className="form-textarea"
             />
           </label>
+          <label className="form-label">
+            Billing Address Two:
+            <textarea
+              name="billingAddressTwo"
+              value={formData.billingAddressTwo}
+              onChange={handleChange}
+              required
+              className="form-textarea"
+            />
+          </label>
+          <label className="form-label">
+           State:
+            <textarea
+              name="state"
+              value={formData.state}
+              onChange={handleChange}
+              required
+              className="form-textarea"
+            />
+          </label>
+          <label className="form-label">
+             Zip Code:
+            <textarea
+              name="zipCode"
+              value={formData.zipCode}
+              onChange={handleChange}
+              required
+              className="form-textarea"
+            />
+          </label>
+          
           <label className="form-label">
             Credit Card Number:
             <input
@@ -247,7 +347,7 @@ function Checkout() {
               Confirm Payment Order
             </button>
         </form>
-      </div>
+        </div>*/}
     </div>
   );
 }
