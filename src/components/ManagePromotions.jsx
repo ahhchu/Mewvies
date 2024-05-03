@@ -50,7 +50,6 @@ function ManagePromotions() {
     const handleFormSubmit = async (event) => {
         event.preventDefault();
         try {
-            //let result = await sendingEmail("internetspam25@gmail.com", "promos", "Here's a promo!");
             await addPromo(promoData);
             alert('Promotion added successfully!');
             setPromoData({ promo_id: "", promo_code: "", promo_amt: "", percentage_bool: false });

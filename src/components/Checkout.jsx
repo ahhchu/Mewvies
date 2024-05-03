@@ -4,6 +4,7 @@ import { collection, getDocs, query, where, addDoc } from "firebase/firestore";
 import { db } from "../config/firestore";
 import { Link } from "react-router-dom";
 import "./Checkout.css";
+import emailjs from '@emailjs/browser'
 
 function Checkout() {
   const navigate = useNavigate();
@@ -143,6 +144,45 @@ function Checkout() {
     setTotal(totalWithTaxAndFees);
   }, [editableSeatTypes, selectedSeats]);
 
+
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+    try {
+        //let result = await sendingEmail("internetspam25@gmail.com", "promos", "Here's a promo!");
+        // await addPromo(promoData);
+        // alert('Promotion added successfully!');
+        setPromoData({ promo_id: "", promo_code: "", promo_amt: "", percentage_bool: false });
+        fetchPromotionsData();
+       
+        const msg = "Here is your promotion for " + promoData.promo_amt + " as a discount with the code: " + promoData.promo_code
+        await sendingEmails(promoUsers, msg);
+        
+        
+    } catch (e) {
+        console.error("Error adding document: ", e);
+        alert('Error adding promotion!');
+    }
+};
+
+  const sendingEmails = async (promoUsers, msg) => {
+    try {
+        
+        // Loop through each email address
+        for (const email of promoUsers) {
+            var templateParams = {
+                message: msg,
+                email_to: email.email,
+            };
+            console.log("Sending email to:", email.email);
+
+            // Send email for each recipient
+            await emailjs.send('service_ld81717', 'template_402nmrp', templateParams, 'wVVyNS7NMcSjFNt5s');
+            console.log("Email sent successfully to", email);
+        }
+    } catch (error) {
+        console.error("Error sending email: ", error);
+    }
+}
 
   return (
     <div className="Summary">
