@@ -106,15 +106,15 @@
   .headers h1 {
     margin: 0 20px;
     cursor: pointer;
-    opacity: 0.5;
-    transition: opacity 0.3s;
+    /*opacity: 0.5;
+    transition: opacity 0.3s;*/
     font-family: 'Cairo_Play';
   }
-  
+  /*
   .headers h1.active {
     opacity: 1;
   }
-
+*/
 
 
   .divider {

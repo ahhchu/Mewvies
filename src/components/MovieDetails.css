@@ -42,7 +42,7 @@ h3 {
     font-family: 'Courier New', Courier, monospace;
 }
 
-.movie-details {
+.movie-details, .reviews {
   max-width: 1000px; 
   margin: 0 auto;
   padding: 20px; 
@@ -56,4 +56,5 @@ h3 {
 
 .reviews p {
   font-style: italic;
+  word-wrap: break-word;
 }

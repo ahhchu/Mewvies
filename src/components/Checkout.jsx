@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Checkout.css"; // Import your CSS file
 
+
 function Checkout() {
   const [formData, setFormData] = useState({
     name: "",
