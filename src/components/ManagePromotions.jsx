@@ -46,6 +46,7 @@ function ManagePromotions() {
         const filteredUsers = userList.filter(user => user.promo === true);
         setPromoUsers(filteredUsers); // Store the filtered users in state
     };
+    
     const handleFormSubmit = async (event) => {
         event.preventDefault();
         try {

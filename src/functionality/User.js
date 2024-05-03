@@ -12,7 +12,8 @@ import {
     reauthenticateWithCredential,
 } from "firebase/auth";
 import { db } from "../config/firestore";
-import { encryptData, decryptData } from "../services/crypto";
+
+
 
 /* BEGINNING OF REGISTRATION */
 
@@ -264,7 +265,8 @@ export async function addMultiplePayments(cardName, cardNumber, cardType, expira
  * user.role = admin or user
  * user.uid = uid
  */
-export async function login(email, password) {
+export async function login(email, password, userContext) {
+    
     var user = {error: 0, verified: true};
     try {
         var auth = getAuth();
@@ -302,5 +304,29 @@ export async function login(email, password) {
     return user;
 
 } // login
+
+export function isLoggedIn () {
+    var auth = getAuth();
+    if (auth.currentUser) {
+        return true;
+    } else {
+        return false;
+    } // if
+} // isLoggedIn
+
+export async function logout() {
+    var auth = getAuth();
+    auth.signOut()
+    .then(() => {
+      // Logout successful
+      console.log("Logout successful");
+      // Perform any additional actions after logout, such as clearing local storage
+      localStorage.clear();
+    })
+    .catch((error) => {
+      // An error occurred during logout
+      console.error("Error during logout:", error.message);
+    });
+}// logout
 
 /* END OF LOGIN */

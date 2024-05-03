@@ -1,19 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./Login.css";
 import "./Button.css";
 import ForgotPassword from "./ForgotPassword";
 import Button from "./Button";
+import UserContext from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
-import { getAuth, signInWithEmailAndPassword, login } from "../functionality/User";
+import { login } from "../functionality/User";
 
-function Login({ toggle, updateToken, handleLoginSuccess }) {
+function Login() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [forgotPasswordSeen, setForgotPasswordSeen] = useState(false);
-  const navigate = useNavigate();
   const [loginDone, setLoginDone] = useState(false);
+  const userContext = useContext(UserContext);
 
   const toggleForgotPassword = () => {
     setForgotPasswordSeen(!forgotPasswordSeen);
@@ -24,12 +26,11 @@ function Login({ toggle, updateToken, handleLoginSuccess }) {
     setLoading(true);
   
     //login(), returns either uid or returns error code
-    var user = await login(email, password);
+    var user = await login(email, password, userContext);
     if (user.error == 0) {
       console.log("got here");
       setError("");
       localStorage.setItem("userRole", user.role); 
-      handleLoginSuccess(user.role);
       console.log(localStorage);
       setLoginDone(true);
     } else if (user.error == 1 && !user.verified) {
@@ -41,7 +42,16 @@ function Login({ toggle, updateToken, handleLoginSuccess }) {
 
   };
 
+  const handleClose = () => {
+    setError("");
+    setLoading(false);
+    navigate('/');
+    
+    window.location.reload();
+  };
+
   return (
+    <div className="overlay">
     <div className="popup">
       <div className="popup-inner">
         <h2>LOGIN</h2>
@@ -78,7 +88,7 @@ function Login({ toggle, updateToken, handleLoginSuccess }) {
           </Button>
         </form>
         )}
-        <Button className="btn" onClick={toggle}>
+        <Button className="btn" onClick={handleClose}>
           CLOSE
         </Button>
         <br />
@@ -87,11 +97,11 @@ function Login({ toggle, updateToken, handleLoginSuccess }) {
         </Button>
         {forgotPasswordSeen && (
           <ForgotPassword
-            updateToken={updateToken}
             toggle={toggleForgotPassword}
           />
         )}
         </div>
+      </div>
       </div>
   );
 }
