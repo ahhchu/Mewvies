@@ -31,8 +31,6 @@ function Login() {
       localStorage.setItem("userRole", user.role); 
       console.log(localStorage);
       setLoginDone(true);
-
-
     } else if (user.error == 1 && !user.verified) {
       setError("Please verify your email address. Check your inbox for the verification email.");
     } else {
@@ -46,6 +44,8 @@ function Login() {
     setError("");
     setLoading(false);
     navigate('/');
+    
+    window.location.reload();
   };
 
   return (
