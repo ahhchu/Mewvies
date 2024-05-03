@@ -91,7 +91,7 @@ function Seats() {
   /* backend code */
   const proceedToCheckout = async () => {
     // Logic to save to Firestore or prepare data to be passed to Checkout
-    navigate(`/movie-details/${movieId}/seats/${showingId}/ordersumm`, {
+    navigate(`/movie-details/${movieId}/seats/${showingId}/checkout`, {
       state: {
         selectedSeats,
         seatTypes,

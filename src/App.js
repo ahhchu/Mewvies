@@ -65,14 +65,13 @@ function App() {
             <Route exact path="/Mewvies" element={<Movie />} />
             <Route exact path="/" element={<Movie />} />
             
-
-            <Route path="/checkout" element={<Checkout />} />
             <Route path="/confirmation" element={<Confirmation />} />
             <Route path="/coming-soon" element={<ComingSoon />} />
 
             <Route path="/movie-details/:movieId" element={<MovieDetails />} />
-            <Route path="/movie-details/:movieId/seats/:showingId" element={<Seats />} /> 
-            <Route path="/movie-details/:movieId/seats/:showingId/ordersumm" element={<OrderSummary />} /> 
+            <Route path="/movie-details/:movieId/seats/:showingId" element={<Seats />} />
+            <Route path="/movie-details/:movieId/seats/:showingId/checkout" element={<Checkout />} /> 
+            <Route path="/movie-details/ordersumm" element={<OrderSummary />} /> 
             
 
             <Route path = "/registration" element = {<Registration/>} />
