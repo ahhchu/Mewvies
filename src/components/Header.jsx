@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import "./Header.css";
 import Login from "./Login";
+import {useLogin} from "../context/LoginContext";
+import {useSignup} from "../context/SignupContext";
 import Signup from "./Signup";
 import Search from "./Search";
-import EditProfile from "./EditProfile";
+import {isLoggedIn, logout, isAdmin} from "../functionality/User";
 import { useNavigate } from "react-router-dom";
+import UserContext from "../context/UserContext";
 import yarnImage from '../img/yarn.jpg';
 
 
@@ -14,45 +17,49 @@ function Header({ token, updateToken }) {
 
   const navigate = useNavigate();
 
-  const [signupSeen, setSignupSeen] = useState(false);
-  const [loginSeen, setLoginSeen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const openLoginPopup = useLogin();
+  const openSignupPopup = useSignup();
+  const [admin, setAdmin] = useState(false);
+  const [authenticated, setAuthenticated] = useState(false);
+  const  userContext = useContext(UserContext);
 
   useEffect(() => {
     updateToken();
   }, [updateToken]);
 
+  useEffect(() => {
+    const checkAuthentication = () => {
+      setAuthenticated(isLoggedIn());
+    };
+    checkAuthentication(); // Check authentication when component mounts
+  }, []);
+  
+  useEffect(() => {
+    const checkAdmin = async () => {
+      const isAdminUser = await isAdmin(userContext);
+      setAdmin(isAdminUser);
+    };
+  
+    checkAdmin(); // Check admin when component mounts
+  }, [userContext]);
+  
+
   const toggleSignup = () => {
-    setSignupSeen(!signupSeen);
-    if (loginSeen) {
-      setLoginSeen(false); //hide login
-    }
-    console.log("signup: " + signupSeen);
+    openSignupPopup;
+    navigate('/signup');
   };
 
-  const toggleLogin = () => {
-    setLoginSeen(!loginSeen);
-    if (signupSeen) {
-      setSignupSeen(false); //hide signup
-    }
+   const toggleLogin = () => {
+    openLoginPopup;
+    navigate('/login');
   };
-
-  function handleLoginSuccess(userRole) {
-    setIsLoggedIn(true);
-    if (userRole === "admin") {
-      setIsAdmin(true);
-      navigate("/admin");
-    } else {
-      navigate("/");
-    }
-  }
+ 
 
   function handleLogout() {
-    setIsLoggedIn(false);
-    setIsAdmin(false);
-    setLoginSeen(false); 
-    setSignupSeen(false);
+    logout();
+
+    setAuthenticated(false);
+
     navigate("/Mewvies");
     localStorage.clear();
     updateToken();
@@ -71,20 +78,20 @@ function Header({ token, updateToken }) {
         <div className="search-results">
         <Search /> {/*search bar */}
         </div>
-        {isLoggedIn ? (
+        {authenticated ? (
           <>
           <button className="nav">
             <Link className="nav" to="/edit-profile">
               Edit Profile
             </Link>
           </button>
-          {isAdmin ? (
+          {admin && (
             <button className="nav">
               <Link className="nav" to="/admin">
                 Admin
               </Link>
             </button>
-            ) : null}
+            )}
             </>
         ) : (
           <>
@@ -95,23 +102,9 @@ function Header({ token, updateToken }) {
               Login
             </button>
 
-          
-            {signupSeen ? (
-              <Signup
-                updateToken={updateToken}
-                toggle={toggleSignup}
-              />
-            ) : null}
-            {loginSeen && !signupSeen ? (
-              <Login
-                updateToken={updateToken}
-                toggle={toggleLogin}
-                handleLoginSuccess={handleLoginSuccess} 
-              />
-            ) : null}
           </>
         )}
-        {isLoggedIn && (
+        {authenticated && (
           <button className="nav" onClick={() => handleLogout()}>
             Logout
           </button>

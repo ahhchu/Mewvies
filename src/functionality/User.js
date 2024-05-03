@@ -11,8 +11,11 @@ import {
     EmailAuthProvider,
     reauthenticateWithCredential,
 } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 import { db } from "../config/firestore";
 import { encryptData, decryptData } from "../services/crypto";
+
+
 
 /* BEGINNING OF REGISTRATION */
 
@@ -302,5 +305,38 @@ export async function login(email, password) {
     return user;
 
 } // login
+
+export function isLoggedIn () {
+    var auth = getAuth();
+    if (auth.currentUser) {
+        return true;
+    } else {
+        return false;
+    } // if
+} // isLoggedIn
+
+export function isAdmin(userContext) {
+    if (userContext && userContext.role === "admin") {
+        useNavigate('/admin');
+        return true;
+    } else {
+        return false;
+    }
+}
+
+export async function logout() {
+    var auth = getAuth();
+    auth.signOut()
+    .then(() => {
+      // Logout successful
+      console.log("Logout successful");
+      // Perform any additional actions after logout, such as clearing local storage
+      localStorage.clear();
+    })
+    .catch((error) => {
+      // An error occurred during logout
+      console.error("Error during logout:", error.message);
+    });
+}// logout
 
 /* END OF LOGIN */

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
-import Button from "./Button";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { isLoggedIn } from "../functionality/User";
 import { getMovies } from "../functionality/movie";
 import { getShowingsByMovie, getShowings} from "../functionality/showing";
 import "./MovieDetails.css";
 
 const MovieDetails = () => {
+  const navigate = useNavigate();
   const { movieId } = useParams();
   const [movie, setMovie] = useState(null);
   const [showings, setShowings] = useState([]);
@@ -26,6 +27,14 @@ const MovieDetails = () => {
 
     fetchData();
   }, [movieId]);
+
+  const handleRedirect = async (e) => {
+    if(isLoggedIn() == false) {
+      navigate('/login');
+    } else {
+      navigate('/seats');
+    }
+  }
 
   return (
     <div>
@@ -64,9 +73,7 @@ const MovieDetails = () => {
           <h2>Showing Times</h2>
           {showings.length > 0 ? (
             showings.map(show => (
-              <Link key={show.showing_id} to="/seats">
-                <button className ="showing">{new Date(show.showing_time.seconds).toString()}</button>
-              </Link>
+                <button className ="showing" onClick={handleRedirect}>{new Date(show.showing_time.seconds).toString()}</button>
             ))
           ) : <p>No showings available.</p>}
         </div>

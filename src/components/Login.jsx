@@ -1,18 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Login.css";
 import "./Button.css";
 import ForgotPassword from "./ForgotPassword";
 import Button from "./Button";
 import { useNavigate } from "react-router-dom";
-import { getAuth, signInWithEmailAndPassword, login } from "../functionality/User";
+import { login } from "../functionality/User";
 
-function Login({ toggle, updateToken, handleLoginSuccess }) {
+function Login() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [forgotPasswordSeen, setForgotPasswordSeen] = useState(false);
-  const navigate = useNavigate();
   const [loginDone, setLoginDone] = useState(false);
 
   const toggleForgotPassword = () => {
@@ -29,9 +29,10 @@ function Login({ toggle, updateToken, handleLoginSuccess }) {
       console.log("got here");
       setError("");
       localStorage.setItem("userRole", user.role); 
-      handleLoginSuccess(user.role);
       console.log(localStorage);
       setLoginDone(true);
+
+
     } else if (user.error == 1 && !user.verified) {
       setError("Please verify your email address. Check your inbox for the verification email.");
     } else {
@@ -39,6 +40,12 @@ function Login({ toggle, updateToken, handleLoginSuccess }) {
     } // if
     setLoading(false);
 
+  };
+
+  const handleClose = () => {
+    setError("");
+    setLoading(false);
+    navigate('/');
   };
 
   return (
@@ -78,7 +85,7 @@ function Login({ toggle, updateToken, handleLoginSuccess }) {
           </Button>
         </form>
         )}
-        <Button className="btn" onClick={toggle}>
+        <Button className="btn" onClick={handleClose}>
           CLOSE
         </Button>
         <br />
@@ -87,7 +94,6 @@ function Login({ toggle, updateToken, handleLoginSuccess }) {
         </Button>
         {forgotPasswordSeen && (
           <ForgotPassword
-            updateToken={updateToken}
             toggle={toggleForgotPassword}
           />
         )}

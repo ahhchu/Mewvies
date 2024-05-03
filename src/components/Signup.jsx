@@ -1,10 +1,12 @@
 import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Signup.css";
 import "./Button.css";
 import Button from "./Button";
 import { checkEmailAvailability, validateEmail, registerUser, addPayment } from "../functionality/User";
 
-function Signup({ toggle, updateToken }) {
+function Signup() {
+  const navigate = useNavigate();
   /**USER */
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -95,7 +97,6 @@ function Signup({ toggle, updateToken }) {
       addPayment(cardName, cardNumber, cardType, expirationDate, billingAddressOne, billingAddressTwo, city, state, zipCode, uid);
 
       setLoading(false);
-      toggle();
     } catch (error) {
       console.error("Signup error:", error);
       //setError("Failed to sign up, please try again later.");
@@ -105,6 +106,12 @@ function Signup({ toggle, updateToken }) {
 
   const toggleNewCard = () => {
     setNewCard(!addNewCard);
+  };
+
+  const handleClose = () => {
+    setError("");
+    setLoading(false);
+    navigate('/');
   };
 
   return (
@@ -407,7 +414,7 @@ function Signup({ toggle, updateToken }) {
               SIGNUP
             </Button>
         
-            <Button className="btn" onClick={toggle}>
+            <Button className="btn" onClick={handleClose}>
               CLOSE
             </Button>
             </div>
