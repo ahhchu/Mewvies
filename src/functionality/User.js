@@ -169,17 +169,23 @@ export async function updateUserNoCard(uid, user) {
 }
 
 async function removePaymentMethods(uid) {
-    var promise;
-    var snapshot = await getDocs(collection(db, "payment_info"));
-    if (snapshot.docs.length == 0) {
+    const snapshot = await getDocs(collection(db, "payment_info"));
+
+    if (snapshot.empty) {
         return;
     }
-        snapshot.docs.forEach((element) => {
-            if (element.data().uid == uid) {
-                deleteDoc(element.ref, promise);
-                console.log("deleted");
-            } // if
-        });
+
+    const deletionPromises = [];
+    
+    snapshot.forEach((doc) => {
+        if (doc.data().uid === uid) {
+            const deletionPromise = deleteDoc(doc.ref);
+            deletionPromises.push(deletionPromise);
+            console.log("deleted");
+        }
+    });
+
+    await Promise.all(deletionPromises);
 }
 
 /* END OF MODIFY USER */
