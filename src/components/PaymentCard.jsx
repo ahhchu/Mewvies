@@ -13,6 +13,7 @@ function PaymentCard({ index, card, updateCardField }) {
         Name on Card:{" "}
         <input
           type="text"
+          placeholder={card.card_name}
           value={card.cardName}
           onChange={(e) => handleFieldChange(e, "cardName")}
         />
@@ -22,6 +23,7 @@ function PaymentCard({ index, card, updateCardField }) {
         Card Type:{" "}
         <input
           type="text"
+          placeholder={card.card_type}
           value={card.cardType}
           onChange={(e) => handleFieldChange(e, "cardType")}
         />
@@ -31,6 +33,7 @@ function PaymentCard({ index, card, updateCardField }) {
         Card Number:{" "}
         <input
           type="text"
+          placeholder={card.card_number}
           value={card.cardNumber}
           onChange={(e) => handleFieldChange(e, "cardNumber")}
         />
@@ -40,6 +43,7 @@ function PaymentCard({ index, card, updateCardField }) {
         CVV:{" "}
         <input
           type="text"
+          placeholder={card.cvv}
           value={card.cvv}
           onChange={(e) => handleFieldChange(e, "cvv")}
         />
@@ -49,6 +53,7 @@ function PaymentCard({ index, card, updateCardField }) {
         Expiration Date:{" "}
         <input
           type="text"
+          placeholder={card.expiration_date}
           value={card.expirationDate}
           onChange={(e) => handleFieldChange(e, "expirationDate")}
         />
@@ -58,6 +63,7 @@ function PaymentCard({ index, card, updateCardField }) {
         Billing Address Line One:{" "}
         <input
           type="text"
+          placeholder={card.billing_address_one}
           value={card.billingAddressOne}
           onChange={(e) => handleFieldChange(e, "billingAddressOne")}
         />
@@ -67,6 +73,7 @@ function PaymentCard({ index, card, updateCardField }) {
         Line two:{" "}
         <input
           type="text"
+          placeholder={card.billing_address_two}
           value={card.billingAddressTwo}
           onChange={(e) => handleFieldChange(e, "billingAddressTwo")}
         />
@@ -76,6 +83,7 @@ function PaymentCard({ index, card, updateCardField }) {
         City:{" "}
         <input
           type="text"
+          placeholder={card.city}
           value={card.city}
           onChange={(e) => handleFieldChange(e, "city")}
         />
@@ -85,6 +93,7 @@ function PaymentCard({ index, card, updateCardField }) {
         State:{" "}
         <input
           type="text"
+          placeholder={card.state}
           value={card.state}
           onChange={(e) => handleFieldChange(e, "state")}
         />
@@ -94,6 +103,7 @@ function PaymentCard({ index, card, updateCardField }) {
         Zip Code:{" "}
         <input
           type="text"
+          placeholder={card.zip_code}
           value={card.zipCode}
           onChange={(e) => handleFieldChange(e, "zipCode")}
         />

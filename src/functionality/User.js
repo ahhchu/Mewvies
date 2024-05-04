@@ -177,6 +177,7 @@ async function removePaymentMethods(uid) {
         snapshot.docs.forEach((element) => {
             if (element.data().uid == uid) {
                 deleteDoc(element.ref, promise);
+                console.log("deleted");
             } // if
         });
 }

@@ -333,16 +333,16 @@ useEffect(() => {
             {updatedCards.map((card, index) => (
           <div key={index}>
             <h3>Card {index + 1}</h3>
-              <p>Name on Card: {card.cardName}</p>
-              <p>Card Type: {card.cardType}</p>
-              <p>Card Number: {card.cardNumber}</p>
+              <p>Name on Card: {card.card_name}</p>
+              <p>Card Type: {card.card_type}</p>
+              <p>Card Number: {card.card_number}</p>
               <p>CVV: ***</p>
-              <p>Expiration Date: {card.expirationDate}</p>
-              <p>Billing Address One: {card.billingAddressOne}</p>
-              <p>Line Two: {card.billingAddressTwo}</p>
+              <p>Expiration Date: {card.expiration_date}</p>
+              <p>Billing Address One: {card.billing_address_one}</p>
+              <p>Line Two: {card.billing_address_two}</p>
               <p>City: {card.city}</p>
               <p>State: {card.state}</p>
-              <p>Zip Code: {card.zipCode}</p>
+              <p>Zip Code: {card.zip_code}</p>
             </div>
                     ))}
             </>
