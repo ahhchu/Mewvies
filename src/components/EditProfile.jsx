@@ -38,16 +38,16 @@ function EditProfile() {
 
   const [updatedCards, setUpdatedCards] = useState([
     {
-      cardName: "",
-      cardType: "",
-      cardNumber: "",
+      card_name: "",
+      card_type: "",
+      card_number: "",
       cvv: "",
       expiration: "",
-      billingAddressOne: "",
-      billingAddressTwo: "",
-      billingCity: "",
-      billingState: "",
-      billingZip: ""
+      billing_address_one: "",
+      billing_address_two: "",
+      billing_city: "",
+      billing_state: "",
+      billing_zip: ""
     }
   ]);
 
@@ -106,15 +106,15 @@ useEffect(() => {
       console.log("encrypted");
 
       const updatedCardsData = updatedCards.map(card => ({
-        card_name: card.cardName,
-        card_number: card.cardNumber,
-        card_type: card.cardType,
+        card_name: card.card_name,
+        card_number: card.card_number,
+        card_type: card.card_type,
         expiration: card.expiration,
-        billing_address_one: card.billingAddressOne,
-        billing_address_two: card.billingAddressTwo,
-        billing_city: card.billingCity,
-        billing_state: card.billingState,
-        billing_zip: card.billingZip,
+        billing_address_one: card.billing_address_one,
+        billing_address_two: card.billing_address_two,
+        billing_city: card.billing_city,
+        billing_state: card.billing_state,
+        billing_zip: card.billing_zip,
       }));
       updateUser(currentUser, updatedUserData, updatedCardsData);
 
@@ -333,16 +333,16 @@ useEffect(() => {
             {updatedCards.map((card, index) => (
           <div key={index}>
             <h3>Card {index + 1}</h3>
-              <p>Name on Card: {card.cardName}</p>
-              <p>Card Type: {card.cardType}</p>
-              <p>Card Number: {card.cardNumber}</p>
+              <p>Name on Card: {card.card_name}</p>
+              <p>Card Type: {card.card_type}</p>
+              <p>Card Number: {card.card_number}</p>
               <p>CVV: ***</p>
               <p>Expiration Date: {card.expiration}</p>
-              <p>Billing Address One: {card.billingAddressOne}</p>
-              <p>Line Two: {card.billingAddressTwo}</p>
-              <p>City: {card.billingCity}</p>
-              <p>State: {card.billingState}</p>
-              <p>Zip Code: {card.billingZip}</p>
+              <p>Billing Address One: {card.billing_address_one}</p>
+              <p>Line Two: {card.billing_address_two}</p>
+              <p>City: {card.billing_city}</p>
+              <p>State: {card.billing_state}</p>
+              <p>Zip Code: {card.billing_zip}</p>
             </div>
                     ))}
             </>
