@@ -24,11 +24,12 @@ function Checkout() {
   const [editableSeatTypes, setEditableSeatTypes] = useState(initialSeatTypes);
   const [editingSeat, setEditingSeat] = useState(null);
   const [total, setTotal] = useState(0);
-  const SALES_TAX = 0.08; // 8% tax
-  const ONLINE_FEE = 2.0; // idk
+  const [subtotal, setSubtotal] = useState(0);
+  const [fees, setFees] = useState({});  
   const [cards, setCards] = useState([]); 
   const [selectedCard, setSelectedCard] = useState(null);
   const passphrase = "webufhibejnlisuediuwe";
+  const [ticketPrices, setTicketPrices] = useState({});
 
   const auth = getAuth();
   const currentUser = auth.currentUser; // Get the current user
@@ -39,6 +40,54 @@ function Checkout() {
     return;
   }
 
+  /* ticket prices */
+  useEffect(() => {
+    const fetchTicketPrices = async () => {
+      const pricesSnapshot = await getDocs(collection(db, "ticket"));
+      const pricesData = {};
+      pricesSnapshot.forEach(doc => {
+        pricesData[doc.id] = doc.data().price;
+      });
+      setTicketPrices(pricesData);
+    };
+  
+    fetchTicketPrices();
+  }, []);
+
+  /* online fees */
+  useEffect(() => {
+    const fetchFees = async () => {
+      const feesSnapshot = await getDocs(collection(db, "fees"));
+      const feesData = {};
+      feesSnapshot.forEach(doc => {
+        feesData[doc.id] = doc.data().price; // assuming rates and fees could be structured differently
+      });
+      setFees(feesData);
+    };
+  
+    fetchFees();
+  }, []);
+
+  useEffect(() => {
+    console.log("Ticket Prices: ", ticketPrices);
+    console.log("Fees: ", fees);
+}, [ticketPrices, fees]);
+
+
+  const renderTicketTypeDropdown = (seat) => (
+    <select
+      value={editableSeatTypes[seat]}
+      onChange={(e) => handleTicketTypeChange(seat, e.target.value)}
+      onBlur={() => setEditingSeat(null)} // Optionally close on blur
+    >
+      {Object.entries(ticketPrices).map(([type, price]) => (
+        <option key={type} value={`${type}: ${price}`}>
+          {`${type.charAt(0).toUpperCase() + type.slice(1)}: ${price}`}
+        </option>
+      ))}
+    </select>
+  );
+  
 
   try {
     getPaymentCards(currentUser.uid).then((cardData) => {
@@ -54,7 +103,7 @@ function Checkout() {
         zipCode: decryptData(card.billing_zip, passphrase)
       }));
       setCards(decryptedCards);
-      console.log("Cards state updated:", cards); 
+//      console.log("Cards state updated:", cards); 
     });
   } catch (e) {
     console.error("Failed to fetch or decrypt card data:", e);
@@ -154,7 +203,7 @@ function Checkout() {
     return <p>No data available</p>; // or handle redirection
   }
 
-  console.log("Received Showing Time:", showingTime);
+//  console.log("Received Showing Time:", showingTime);
 
   const handleTicketTypeChange = (seat, newType) => {
     const newSeatTypes = { ...editableSeatTypes, [seat]: newType };
@@ -162,17 +211,6 @@ function Checkout() {
     setEditingSeat(null);
   };
 
-  const renderTicketTypeDropdown = (seat) => (
-    <select
-      value={editableSeatTypes[seat]}
-      onChange={(e) => handleTicketTypeChange(seat, e.target.value)}
-      onBlur={() => setEditingSeat(null)} // Optionally close on blur
-    >
-      <option value="Adult: 12-64 $10">Adult: $10</option>
-      <option value="Child: 1-11 $5">Child: $5</option>
-      <option value="Senior: 64+ $7">Senior: $7</option>
-    </select>
-  );
 
   useEffect(() => {
     const newTotal = selectedSeats.reduce((total, seat) => {
@@ -188,19 +226,22 @@ function Checkout() {
     setEditableSeatTypes(seatTypes);
   }, [seatTypes]);
 
+  /* calculating price */
   useEffect(() => {
-    const subtotal = selectedSeats.reduce((total, seat) => {
-      const priceString = editableSeatTypes[seat].split("$")[1];
+    const newSubtotal = selectedSeats.reduce((acc, seat) => {
+      const priceString = editableSeatTypes[seat] && editableSeatTypes[seat].includes("$")
+        ? editableSeatTypes[seat].split("$")[1]
+        : "0";
       const price = parseFloat(priceString);
-      return total + price;
+      return acc + price;
     }, 0);
+    setSubtotal(newSubtotal);
 
-    const tax = subtotal * SALES_TAX;
-    const onlineFees = selectedSeats.length * ONLINE_FEE;
-    const totalWithTaxAndFees = subtotal + tax + onlineFees;
-
+    const tax = newSubtotal * fees.salesTax;
+    const onlineFees = selectedSeats.length * fees.onlineFees;
+    const totalWithTaxAndFees = newSubtotal + tax + onlineFees;
     setTotal(totalWithTaxAndFees);
-  }, [editableSeatTypes, selectedSeats]);
+  }, [selectedSeats, editableSeatTypes, fees]);
 
 
   return (
@@ -212,36 +253,38 @@ function Checkout() {
       <h3>Showtime: {new Date(showingTime).toLocaleString()}</h3>
       <h3>Ticket Type and Prices:</h3>
       <ul>
-        {selectedSeats.map((seat, index) => (
-          <li key={index}>
-            Seat {seat}:
-            {editingSeat === seat ? (
-              renderTicketTypeDropdown(seat)
-            ) : (
-              <span>
-                {editableSeatTypes[seat]}
-                <button
-                  className="edit-button"
-                  onClick={() => setEditingSeat(seat)}
-                >
-                  Edit Ticket
-                </button>
-              </span>
-            )}
-          </li>
-        ))}
-      </ul>
+  {selectedSeats.map((seat, index) => (
+    <li key={index}>
+      Seat {seat}:
+      {editingSeat === seat ? (
+        renderTicketTypeDropdown(seat)
+      ) : (
+        <span>
+          {editableSeatTypes[seat]}
+          <button
+            className="edit-button"
+            onClick={() => setEditingSeat(seat)}
+          >
+            Edit Ticket
+          </button>
+        </span>
+      )}
+    </li>
+  ))}
+</ul>
+
 
       <h3>Total: </h3>
-      <h4>Ticket prices: ${total.toFixed(2)}</h4>
-      <h4>Sales Tax: (8%): ${(total * SALES_TAX).toFixed(2)}</h4>
-      <h4>Online Fees: ${(selectedSeats.length * ONLINE_FEE).toFixed(2)}</h4>
+      <h4>Ticket prices: ${subtotal.toFixed(2)}</h4>
+      <h4>Sales Tax: ({(fees.salesTax * 100).toFixed(0)}%): ${(subtotal * fees.salesTax).toFixed(2)}</h4>
+      <h4>Online Fees: ${(selectedSeats.length * fees.onlineFees).toFixed(2)}</h4>
+
       <h3>
         Total amount: $
         {(
-          total +
-          total * SALES_TAX +
-          selectedSeats.length * ONLINE_FEE
+          subtotal +
+          subtotal * fees.salesTax +
+          selectedSeats.length * fees.onlineFees
         ).toFixed(2)}
       </h3>
 

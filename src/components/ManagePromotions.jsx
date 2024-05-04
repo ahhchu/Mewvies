@@ -126,6 +126,9 @@ function ManagePromotions() {
                 <Link to="/manageusers">
                     <Button className="manage">Manage Users</Button>
                 </Link>
+                <Link to ="/manageprices">
+                <button className="btn">Manage Prices</button> 
+                </Link>
             </div>
             <div>
                 <h1>Manage Promotions</h1>

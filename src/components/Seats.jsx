@@ -5,7 +5,7 @@ import "./Seats.css";
 import { getMovies } from "../functionality/movie";
 import { getShowingsByMovie, getShowings } from "../functionality/showing";
 import { db } from "../config/firestore";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDocs, getDoc, collection } from "firebase/firestore";
 
 function Seats() {
   const location = useLocation();
@@ -15,6 +15,7 @@ function Seats() {
   const { movieId, showingId } = useParams();
   const [movie, setMovie] = useState(null);
   const [showing, setShowings] = useState(null);
+  const [ticketPrices, setTicketPrices] = useState({});
 
   useEffect(() => {
     async function fetchData() {
@@ -102,6 +103,20 @@ function Seats() {
     });
   };
 
+  /* ticket prices */
+  useEffect(() => {
+    const fetchTicketPrices = async () => {
+      const pricesSnapshot = await getDocs(collection(db, "ticket"));
+      const pricesData = {};
+      pricesSnapshot.forEach(doc => {
+        pricesData[doc.id] = doc.data().price;
+      });
+      setTicketPrices(pricesData);
+    };
+  
+    fetchTicketPrices();
+  }, []);
+  
   return (
     <div className="movieDetails">
       <h2>
@@ -150,30 +165,14 @@ function Seats() {
                       Select Seat Type
                     </button>
                     {isActiveDropdown(seat) && (
-                      <div className="dropdown-content">
-                        <p
-                          onClick={() =>
-                            handleSeatTypeChange(seat, "Adult: 12-64 $10")
-                          }
-                        >
-                          Adult: 12-64 $10
-                        </p>
-                        <p
-                          onClick={() =>
-                            handleSeatTypeChange(seat, "Child: 1-11 $5")
-                          }
-                        >
-                          Child: 1-11 $5
-                        </p>
-                        <p
-                          onClick={() =>
-                            handleSeatTypeChange(seat, "Senior: 64+ $7")
-                          }
-                        >
-                          Senior: 64+ $7
-                        </p>
-                      </div>
-                    )}
+                  <div className="dropdown-content">
+                    {Object.entries(ticketPrices).map(([type, price]) => (
+                      <p key={type} onClick={() => handleSeatTypeChange(seat, `${type}: ${price}`)}>
+                        {`${type.charAt(0).toUpperCase() + type.slice(1)}: ${price}`}
+                      </p>
+                    ))}
+                  </div>
+                )}
                   </div>
                 )}
               </li>
