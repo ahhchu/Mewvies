@@ -30,6 +30,17 @@ function EditProfile() {
   const [editMode, setEditMode] = useState(false);
   const [editProfileDone, setEditProfileDone] = useState(false);
 
+  const [cardNumber, setCardNumber] = useState("");
+  const [cardName, setCardName] = useState("");
+  const [cardType, setCardType] = useState("");
+  const [cvv, setCVV] = useState("");
+  const [expirationDate, setExpirationDate] = useState("");
+  const [billingAddressOne, setBillingAddressOne] = useState("");
+  const [billingAddressTwo, setBillingAddressTwo] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [zipCode, setZipCode] = useState("");
+
   const [cardIndex, setCardIndex] = useState(false);
   const [editedCards, setEditedCards] = useState([]);
 
@@ -78,8 +89,29 @@ useEffect(() => {
   fetchUserData();
 
   getPaymentCards(currentUser.uid).then((cardData) => {
-    console.log("retrieved" + JSON.stringify(cardData));
-    setUpdatedCards(cardData);
+    const encryptedData = 'U2FsdGVkX19m0PfwpJE4u7DOwQlONRMPtD2/gnUOBL4=';
+    //const passphrase = 'webufhibejnlisuediuwe';
+
+    const decryptedText = decryptData(encryptedData, passphrase);
+    console.log('Decrypted Text:', decryptedText);
+    //if (cardData.length > 0) {
+      const decryptedCards = cardData.map(card => ({
+        card_name: decryptData(card.card_name, passphrase),
+        card_number: decryptData(card.card_number, passphrase),
+        card_type: decryptData(card.card_type, passphrase),
+        expiration: decryptData(card.expiration, passphrase),
+        billing_address_one: decryptData(card.billing_address_one, passphrase),
+        billing_address_two: decryptData(card.billing_address_two, passphrase),
+        billing_city: decryptData(card.billing_city, passphrase),
+        billing_state: decryptData(card.billing_state, passphrase),
+        billing_zip: decryptData(card.billing_zip, passphrase),
+      }));
+    //}
+    console.log('Decrypted card_name:', card_name);
+    console.log("retrieved" + JSON.stringify(decryptedCards));
+    console.log("ckpt:" + cardData);
+    setUpdatedCards(decryptedCards);
+    //  console.log(decryptData(cardData[0].card_number, passphrase) + " " + decryptData(cardData[1].card_number, passphrase) + " " + decryptData(cardData[2].card_number, passphrase));
   });
 }, [currentUser]);
 
