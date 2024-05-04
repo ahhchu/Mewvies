@@ -12,6 +12,7 @@ import {
     reauthenticateWithCredential,
 } from "firebase/auth";
 import { db } from "../config/firestore";
+import { decryptData, encryptData } from "../services/crypto";
 
 
 
@@ -86,7 +87,7 @@ export async function fetchUserData(currentUser) {
     if (currentUser) {
         var userRef = doc(db, "user", currentUser.uid);
         var userSnap = await getDoc(userRef);
-        console.log(userSnap.data());
+        //console.log(userSnap.data());
         return userSnap.data();
     }
 }
@@ -138,12 +139,12 @@ export async function changePassword(currentUser, currPass, newPass) {
 export async function updateUser(currentUser, user, cards) {
     try {
       removePaymentMethods(currentUser.uid).then(() => {
-        console.log("printing cards");
+        console.log("updating cards");
         var increment = 0;
         cards.forEach(card => {
             increment++;
             addMultiplePayments(card.card_name, card.card_number, card.card_type, card.expiration, card.billing_address_one, card.billing_address_two, card.billing_city, card.billing_state, card.billing_zip, currentUser.uid, increment);
-            console.log("printing cards");
+            console.log("printing updating cards");
             console.log(card);
             console.log("done");
         });
@@ -190,14 +191,18 @@ const passphrase = "webufhibejnlisuediuwe";
 /* returns an array of payment cards
  */
 export async function getPaymentCards (uid) {
+    const passphrase = "webufhibejnlisuediuwe";
     try {
         var snapshot = await getDocs(collection(db, "payment_info"));
         var existingPayments = [];
         snapshot.docs.forEach((element) => {
             if (element.data().uid == uid) {
-                existingPayments.push(element.data());
+                //const decryptedData = decryptData(element.data(), passphrase);
+                const decryptedData = element.data();
+                existingPayments.push(decryptedData);
             } // if
         });
+        console.log("exisitng",JSON.stringify(existingPayments));
         return existingPayments;
     } catch (error) {
         return [];
@@ -207,17 +212,27 @@ export async function getPaymentCards (uid) {
 /* Adds payment methods
  */
 export async function addPayment(cardName, cardNumber, cardType, expirationDate, billingAddressOne, billingAddressTwo, city, state, zipCode, uid) {
+    const passphrase = "webufhibejnlisuediuwe";
     var newCard = {};
     try {
         newCard = {
-            card_name: cardName,
+            /* card_name: encryptData(cardName, passphrase),
+            card_number: encryptData(cardNumber, passphrase),
+            card_type: encryptData(cardType, passphrase),
+            expiration: encryptData(expirationDate, passphrase),
+            billing_address_one: encryptData(billingAddressOne, passphrase),
+            billing_address_two: encryptData(billingAddressTwo, passphrase),
+            billing_city: encryptData(city, passphrase),
+            billing_state: encryptData(state, passphrase),
+            billing_zip: encryptData(zipCode, passphrase), */
+            card_name: cardName, 
             card_number: cardNumber,
-            card_type: cardType,
+            card_type: cardType, 
             expiration: expirationDate,
             billing_address_one: billingAddressOne,
-            billing_address_two: billingAddressTwo,
-            billing_city: city,
-            billing_state: state,
+            billing_address_two: billingAddressTwo, 
+            billing_city: city, 
+            billing_state: state, 
             billing_zip: zipCode,
             uid: uid
         };
@@ -234,14 +249,23 @@ export async function addMultiplePayments(cardName, cardNumber, cardType, expira
     var newCard = {};
     try {
         newCard = {
-            card_name: cardName,
+           /* card_name: encryptData(cardName, passphrase),
+            card_number: encryptData(cardNumber, passphrase),
+            card_type: encryptData(cardType, passphrase),
+            expiration: encryptData(expirationDate, passphrase),
+            billing_address_one: encryptData(billingAddressOne, passphrase),
+            billing_address_two: encryptData(billingAddressTwo, passphrase),
+            billing_city: encryptData(city, passphrase),
+            billing_state: encryptData(state, passphrase),
+            billing_zip: encryptData(zipCode, passphrase), */
+            card_name: cardName, 
             card_number: cardNumber,
-            card_type: cardType,
+            card_type: cardType, 
             expiration: expirationDate,
             billing_address_one: billingAddressOne,
-            billing_address_two: billingAddressTwo,
-            billing_city: city,
-            billing_state: state,
+            billing_address_two: billingAddressTwo, 
+            billing_city: city, 
+            billing_state: state, 
             billing_zip: zipCode,
             uid: uid
         };
