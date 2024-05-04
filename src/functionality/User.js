@@ -204,12 +204,13 @@ export async function getPaymentCards (uid) {
         var existingPayments = [];
         snapshot.docs.forEach((element) => {
             if (element.data().uid == uid) {
-                //const decryptedData = decryptData(element.data(), passphrase);
-                const decryptedData = element.data();
+                //const decryptedData = decryptData(element.data(), passphrase); //WITH DECRYPTION
+                const decryptedData = element.data(); //FOR TESTING W NO DECRYPTION
+                console.log("elem",element.data());
                 existingPayments.push(decryptedData);
             } // if
         });
-        console.log("exisitng",JSON.stringify(existingPayments));
+        console.log("existing",JSON.stringify(existingPayments));
         return existingPayments;
     } catch (error) {
         return [];
@@ -223,24 +224,31 @@ export async function addPayment(cardName, cardNumber, cardType, expiration, bil
     var newCard = {};
     try {
         newCard = {
-            /* card_name: encryptData(cardName, passphrase),
-            card_number: encryptData(cardNumber, passphrase),
-            card_type: encryptData(cardType, passphrase),
-            expiration: encryptData(expirationDate, passphrase),
-            billing_address_one: encryptData(billingAddressOne, passphrase),
-            billing_address_two: encryptData(billingAddressTwo, passphrase),
-            billing_city: encryptData(city, passphrase),
-            billing_state: encryptData(state, passphrase),
-            billing_zip: encryptData(zipCode, passphrase), */
+            /* FOR TESTNG WITHOUT ENCRYPTION */
+
             card_name: cardName, 
             card_number: cardNumber,
             card_type: cardType, 
             expiration: expiration,
             billing_address_one: billingAddressOne,
             billing_address_two: billingAddressTwo, 
-            billing_city: billingCity, 
-            billing_state: billingState, 
-            billing_zip: billingZip,
+            billing_city: billingCity,
+            billing_state: billingState,
+            billing_zip: billingZip, 
+
+            /* FOR TESTNG WITH ENCRYPTION */
+
+           /* card_name: encryptData(cardName, passphrase),
+            card_number: encryptData(cardNumber,passphrase),
+            card_type: encryptData(cardType, passphrase),
+            expiration: encryptData(expiration,passphrase),
+            billing_address_one: encryptData(billingAddressOne,passphrase),
+            billing_address_two: encryptData(billingAddressTwo, passphrase),
+            billing_city: encryptData(billingCity, passphrase),
+            billing_state: encryptData(billingState, passphrase),
+            billing_zip: encryptData(billingZip,passphrase),
+            */
+
             uid: uid
         };
     } catch (error) {
@@ -256,24 +264,32 @@ export async function addMultiplePayments(cardName, cardNumber, cardType, expira
     var newCard = {};
     try {
         newCard = {
-           /* card_name: encryptData(cardName, passphrase),
-            card_number: encryptData(cardNumber, passphrase),
-            card_type: encryptData(cardType, passphrase),
-            expiration: encryptData(expirationDate, passphrase),
-            billing_address_one: encryptData(billingAddressOne, passphrase),
-            billing_address_two: encryptData(billingAddressTwo, passphrase),
-            billing_city: encryptData(city, passphrase),
-            billing_state: encryptData(state, passphrase),
-            billing_zip: encryptData(zipCode, passphrase), */
+          /* FOR TESTNG WITHOUT ENCRYPTION */
+
             card_name: cardName, 
             card_number: cardNumber,
             card_type: cardType, 
             expiration: expiration,
             billing_address_one: billingAddressOne,
             billing_address_two: billingAddressTwo, 
-            billing_city: billingCity, 
-            billing_state: billingState, 
-            billing_zip: billingZip,
+            billing_city: billingCity,
+            billing_state: billingState,
+            billing_zip: billingZip, 
+
+            /* FOR TESTNG WITH ENCRYPTION */
+
+            /*
+            card_name: encryptData(cardName, passphrase),
+            card_number: encryptData(cardNumber,passphrase),
+            card_type: encryptData(cardType, passphrase),
+            expiration: encryptData(expiration,passphrase),
+            billing_address_one: encryptData(billingAddressOne,passphrase),
+            billing_address_two: encryptData(billingAddressTwo, passphrase),
+            billing_city: encryptData(billingCity, passphrase),
+            billing_state: encryptData(billingState, passphrase),
+            billing_zip: encryptData(billingZip,passphrase),
+            */
+
             uid: uid
         };
     } catch (error) {

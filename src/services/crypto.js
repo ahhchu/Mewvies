@@ -17,3 +17,20 @@ export const decryptData = (encryptedData, passphrase) => {
  }
   return;
 };
+/*export const decryptData = (encryptedDataArray, passphrase) => {
+  try {
+    // Decrypt each object in the array
+    const decryptedDataArray = encryptedDataArray.map(encryptedData => {
+      const decryptedData = {};
+      for (const key in encryptedData) {
+        // Decrypt each property value
+        decryptedData[key] = CryptoJS.AES.decrypt(encryptedData[key], passphrase).toString(CryptoJS.enc.Utf8);
+      }
+      return decryptedData;
+    });
+    return decryptedDataArray;
+  } catch (e) {
+    console.log(e);
+    return [];
+  }
+};*/
