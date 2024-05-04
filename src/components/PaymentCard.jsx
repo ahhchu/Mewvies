@@ -43,7 +43,7 @@ function PaymentCard({ index, card, updateCardField }) {
         CVV:{" "}
         <input
           type="text"
-          placeholder={card.cvv}
+          placeholder="***"
           value={card.cvv}
           onChange={(e) => handleFieldChange(e, "cvv")}
         />
@@ -53,9 +53,9 @@ function PaymentCard({ index, card, updateCardField }) {
         Expiration Date:{" "}
         <input
           type="text"
-          placeholder={card.expiration_date}
-          value={card.expirationDate}
-          onChange={(e) => handleFieldChange(e, "expirationDate")}
+          placeholder={card.expiration}
+          value={card.expiration}
+          onChange={(e) => handleFieldChange(e, "expiration")}
         />
       </label>
       <br />
@@ -83,9 +83,9 @@ function PaymentCard({ index, card, updateCardField }) {
         City:{" "}
         <input
           type="text"
-          placeholder={card.city}
-          value={card.city}
-          onChange={(e) => handleFieldChange(e, "city")}
+          placeholder={card.billing_city}
+          value={card.billingCity}
+          onChange={(e) => handleFieldChange(e, "billingCity")}
         />
       </label>
       <br />
@@ -93,9 +93,9 @@ function PaymentCard({ index, card, updateCardField }) {
         State:{" "}
         <input
           type="text"
-          placeholder={card.state}
-          value={card.state}
-          onChange={(e) => handleFieldChange(e, "state")}
+          placeholder={card.billing_state}
+          value={card.billingState}
+          onChange={(e) => handleFieldChange(e, "billingState")}
         />
       </label>
       <br />
@@ -103,9 +103,9 @@ function PaymentCard({ index, card, updateCardField }) {
         Zip Code:{" "}
         <input
           type="text"
-          placeholder={card.zip_code}
-          value={card.zipCode}
-          onChange={(e) => handleFieldChange(e, "zipCode")}
+          placeholder={card.billing_zip}
+          value={card.billingZip}
+          onChange={(e) => handleFieldChange(e, "billingZip")}
         />
       </label>
       <br />

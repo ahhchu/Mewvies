@@ -42,12 +42,12 @@ function EditProfile() {
       cardType: "",
       cardNumber: "",
       cvv: "",
-      expirationDate: "",
+      expiration: "",
       billingAddressOne: "",
       billingAddressTwo: "",
-      city: "",
-      state: "",
-      zipCode: ""
+      billingCity: "",
+      billingState: "",
+      billingZip: ""
     }
   ]);
 
@@ -109,12 +109,12 @@ useEffect(() => {
         card_name: card.cardName,
         card_number: card.cardNumber,
         card_type: card.cardType,
-        expiration: card.expirationDate,
+        expiration: card.expiration,
         billing_address_one: card.billingAddressOne,
         billing_address_two: card.billingAddressTwo,
-        billing_city: card.city,
-        billing_state: card.state,
-        billing_zip: card.zipCode,
+        billing_city: card.billingCity,
+        billing_state: card.billingState,
+        billing_zip: card.billingZip,
       }));
       updateUser(currentUser, updatedUserData, updatedCardsData);
 
@@ -333,16 +333,16 @@ useEffect(() => {
             {updatedCards.map((card, index) => (
           <div key={index}>
             <h3>Card {index + 1}</h3>
-              <p>Name on Card: {card.card_name}</p>
-              <p>Card Type: {card.card_type}</p>
-              <p>Card Number: {card.card_number}</p>
+              <p>Name on Card: {card.cardName}</p>
+              <p>Card Type: {card.cardType}</p>
+              <p>Card Number: {card.cardNumber}</p>
               <p>CVV: ***</p>
-              <p>Expiration Date: {card.expiration_date}</p>
-              <p>Billing Address One: {card.billing_address_one}</p>
-              <p>Line Two: {card.billing_address_two}</p>
-              <p>City: {card.city}</p>
-              <p>State: {card.state}</p>
-              <p>Zip Code: {card.zip_code}</p>
+              <p>Expiration Date: {card.expiration}</p>
+              <p>Billing Address One: {card.billingAddressOne}</p>
+              <p>Line Two: {card.billingAddressTwo}</p>
+              <p>City: {card.billingCity}</p>
+              <p>State: {card.billingState}</p>
+              <p>Zip Code: {card.billingZip}</p>
             </div>
                     ))}
             </>

@@ -212,7 +212,7 @@ export async function getPaymentCards (uid) {
 
 /* Adds payment methods
  */
-export async function addPayment(cardName, cardNumber, cardType, expirationDate, billingAddressOne, billingAddressTwo, city, state, zipCode, uid) {
+export async function addPayment(cardName, cardNumber, cardType, expiration, billingAddressOne, billingAddressTwo, billingCity, billingState, billingZip, uid) {
     const passphrase = "webufhibejnlisuediuwe";
     var newCard = {};
     try {
@@ -229,12 +229,12 @@ export async function addPayment(cardName, cardNumber, cardType, expirationDate,
             card_name: cardName, 
             card_number: cardNumber,
             card_type: cardType, 
-            expiration: expirationDate,
+            expiration: expiration,
             billing_address_one: billingAddressOne,
             billing_address_two: billingAddressTwo, 
-            billing_city: city, 
-            billing_state: state, 
-            billing_zip: zipCode,
+            billing_city: billingCity, 
+            billing_state: billingState, 
+            billing_zip: billingZip,
             uid: uid
         };
     } catch (error) {
@@ -246,7 +246,7 @@ export async function addPayment(cardName, cardNumber, cardType, expirationDate,
       return true;
 } // addPayment
 
-export async function addMultiplePayments(cardName, cardNumber, cardType, expirationDate, billingAddressOne, billingAddressTwo, city, state, zipCode, uid, num) {
+export async function addMultiplePayments(cardName, cardNumber, cardType, expiration, billingAddressOne, billingAddressTwo, billingCity, billingState, billingZip, uid, num) {
     var newCard = {};
     try {
         newCard = {
@@ -262,12 +262,12 @@ export async function addMultiplePayments(cardName, cardNumber, cardType, expira
             card_name: cardName, 
             card_number: cardNumber,
             card_type: cardType, 
-            expiration: expirationDate,
+            expiration: expiration,
             billing_address_one: billingAddressOne,
             billing_address_two: billingAddressTwo, 
-            billing_city: city, 
-            billing_state: state, 
-            billing_zip: zipCode,
+            billing_city: billingCity, 
+            billing_state: billingState, 
+            billing_zip: billingZip,
             uid: uid
         };
     } catch (error) {
