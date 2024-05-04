@@ -10,7 +10,7 @@ import {
   EmailAuthProvider,
   reauthenticateWithCredential,
 } from "firebase/auth";
-import { fetchUserData, getPaymentCards, passphrase, changePassword, updateUser } from "../functionality/User";
+import { fetchUserData, getPaymentCards, passphrase, changePassword, updateUser, addPayment} from "../functionality/User";
 
 function EditProfile() {
   const auth = getAuth();
@@ -213,7 +213,10 @@ if (!editMode){
             billing_state: "",
             billing_zip: ""
           }
+          
         ]);
+        //addPayment(cardName, cardNumber, cardType, expirationDate, billingAddressOne, billingAddressTwo, city, state, zipCode, uid);
+
       }
     }
   
