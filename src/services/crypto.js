@@ -39,7 +39,7 @@ export const decryptData = (encryptedData) => {
 
     return decryptedObject;
   } catch (error) {
-    console.error("Decryption error:", error);
+    //console.error("Decryption error:", error);
     return null; // or handle the decryption error appropriately
   }
 };

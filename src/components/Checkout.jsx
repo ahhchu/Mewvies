@@ -28,7 +28,6 @@ function Checkout() {
   const [fees, setFees] = useState({});  
   const [cards, setCards] = useState([]); 
   const [selectedCard, setSelectedCard] = useState(null);
-  const passphrase = "webufhibejnlisuediuwe";
   const [ticketPrices, setTicketPrices] = useState({});
 
   const auth = getAuth();
@@ -91,20 +90,10 @@ function Checkout() {
 
   try {
     getPaymentCards(currentUser.uid).then((cardData) => {
-      const decryptedCards = cardData.map(card => ({
-        cardNumber: decryptData(card.card_number, passphrase),
-        cardName: decryptData(card.card_name, passphrase),
-        cardType: decryptData(card.card_type, passphrase),
-        expirationDate: decryptData(card.expiration, passphrase),
-        billingAddressOne: decryptData(card.billing_address_one, passphrase),
-        billingAddressTwo: decryptData(card.billing_address_two, passphrase),
-        city: decryptData(card.billing_city, passphrase),
-        state: decryptData(card.billing_state, passphrase),
-        zipCode: decryptData(card.billing_zip, passphrase)
-      }));
-      setCards(decryptedCards);
-//      console.log("Cards state updated:", cards); 
+      const onlyCardData = cardData.map((card) => card.encrypted_card_data);
+      setCards(onlyCardData);
     });
+//      console.log("Cards state updated:", cards); 
   } catch (e) {
     console.error("Failed to fetch or decrypt card data:", e);
   }
@@ -292,9 +281,9 @@ function Checkout() {
       <div className = "cards">
         {cards.map((card, index) => (
           <div key={index} onClick={() => setSelectedCard(card)} className="card-option">
-            <p>Card Ending in {card.cardNumber.slice(-4)}</p>
-            <p>Type: {card.cardType}</p>
-            <p>Expires: {card.expirationDate}</p>
+            <p>Card Ending in {card.card_number.slice(-4)}</p>
+            <p>Type: {card.card_type}</p>
+            <p>Expires: {card.expiration}</p>
           </div>
         ))}
       </div>

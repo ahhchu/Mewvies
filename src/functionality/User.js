@@ -208,8 +208,6 @@ export async function getPaymentCards(uid) {
                 existingPayments.push(decryptedData);
             }
         });
-
-        console.log("existing", JSON.stringify(existingPayments));
         return existingPayments;
     } catch (error) {
         console.error("Error fetching payment cards:", error);
