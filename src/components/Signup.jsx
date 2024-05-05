@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./Signup.css";
 import "./Button.css";
 import Button from "./Button";
-import { checkEmailAvailability, validateEmail, registerUser, addPayment } from "../functionality/User";
+import { checkEmailAvailability, validateEmail, registerUser, addPayment, addMultiplePayments } from "../functionality/User";
 
 function Signup() {
   const navigate = useNavigate();
@@ -94,7 +94,7 @@ function Signup() {
       } // if
 
       // adds new card to the db
-      addPayment(cardName, cardNumber, cardType, expirationDate, billingAddressOne, billingAddressTwo, city, state, zipCode, uid);
+      addMultiplePayments(cardName, cardNumber, cardType, expirationDate, billingAddressOne, billingAddressTwo, city, state, zipCode, uid, 1);
 
       setLoading(false);
     } catch (error) {

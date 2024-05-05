@@ -75,14 +75,10 @@ useEffect(() => {
   fetchUserData();
 
   getPaymentCards(currentUser.uid).then((cardData) => {
-    console.log("retrieved" + JSON.stringify(cardData));
-    setUpdatedCards(cardData);
+    const onlyCardData = cardData.map((card) => card.encrypted_card_data);
+    setUpdatedCards(onlyCardData);
   });
 }, [currentUser]);
-
-useEffect(() => {
-  console.log("updated", JSON.stringify(updatedCards));
-}, [updatedCards]);
 
   async function handleSave() {
     if (currentUser) {

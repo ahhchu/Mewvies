@@ -230,49 +230,6 @@ const decryptDocument = (encryptedDoc) => {
 };
 
 
-/* Adds payment methods
- */
-export async function addPayment(cardName, cardNumber, cardType, expiration, billingAddressOne, billingAddressTwo, billingCity, billingState, billingZip, uid) {
-    var newCard = {};
-    try {
-        newCard = {
-            /* FOR TESTNG WITHOUT ENCRYPTION */
-
-            /*card_name: cardName, 
-            card_number: cardNumber,
-            card_type: cardType, 
-            expiration: expiration,
-            billing_address_one: billingAddressOne,
-            billing_address_two: billingAddressTwo, 
-            billing_city: billingCity,
-            billing_state: billingState,
-            billing_zip: billingZip, 
-            */
-
-            /* FOR TESTNG WITH ENCRYPTION */
-
-            card_name: encryptData(cardName),
-            card_number: encryptData(cardNumber),
-            card_type: encryptData(cardType),
-            expiration: encryptData(expiration),
-            billing_address_one: encryptData(billingAddressOne),
-            billing_address_two: encryptData(billingAddressTwo),
-            billing_city: encryptData(billingCity),
-            billing_state: encryptData(billingState),
-            billing_zip: encryptData(billingZip),
-            
-
-            uid: uid
-        };
-    } catch (error) {
-        console.error("Error encrypting data:", error);
-      } // try
-
-      const cardRef = doc(db, "payment_info", uid + Date.now());
-      await setDoc(cardRef, newCard);
-      return true;
-} // addPayment
-
 export async function addMultiplePayments(cardName, cardNumber, cardType, expiration, billingAddressOne, billingAddressTwo, billingCity, billingState, billingZip, uid, num) {
     var newCard = {};
     try {
