@@ -168,6 +168,17 @@ function Checkout() {
         alert('Please select a payment method');
         return;
       }
+
+      // cart 
+      const cartData = {
+        customer_id: user.uid,
+        orders: selectedSeats.map(seat => ({
+          seat_number: selectedSeats.join(", "),
+          ticket_type: editableSeatTypes[seat].split(":")[0],
+          ticket_price: total.toString(),
+          showing_id: showingId,
+        }))
+      };
 //      console.log("User UID: ", user.uid);
       const orderData = {
         customer_id: user.uid,
@@ -194,8 +205,10 @@ function Checkout() {
       };  
 
     try {
-      const docRef = await addDoc(collection(db, "order"), orderData);
-      console.log("Document written with ID: ", docRef.id);
+      const cardDocRef = await addDoc(collection(db, "cart"), cartData);
+      const orderDocRef = await addDoc(collection(db, "order"), orderData);
+      console.log("Document written with ID: ", cardDocRef.id);
+      console.log("Document written with ID: ", orderDocRef.id);
   
       navigate("/movie-details/ordersumm", {
         state: {
