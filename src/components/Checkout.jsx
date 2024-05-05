@@ -328,7 +328,7 @@ function Checkout() {
               <div className="card-details">
               <form onSubmit={handleSubmit}>
                 <label>
-                  Name on Card:
+                  Name on Card:{" "}
                   <input
                     type="text"
                     name="cardName"
