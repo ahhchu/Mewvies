@@ -10,7 +10,7 @@
   
 .popup{
     position: fixed;
-    width: 600px;
+    width: 850px;
     margin: 20px auto;
     padding: 10px;
     background-color: white; 
@@ -42,10 +42,21 @@ h3 {
 
 .signup-divider {
     height: 2px; 
-    width: 500px;
+    width: 815px;
     background-color: #e4002b;
     border: none; 
 
   }
 
-  table { width: 400px; } table, td, th { border: 1px solid black; }
+  table { width: 700px; } table, td, th { border: 1px solid black; }
+
+  .personal-details th, .personal-details td {
+    padding: 15px; 
+    text-align: left; 
+    border-bottom: 1px solid #ccc;
+}
+
+.personal-details {
+    background-color: #f4f4f4; 
+    color: #333; 
+}
