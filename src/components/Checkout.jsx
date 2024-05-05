@@ -30,8 +30,9 @@ function Checkout() {
   const [selectedCard, setSelectedCard] = useState(null);
   const [ticketPrices, setTicketPrices] = useState({});
 
-  const [hasCards, setHasCards] = useState(false);
-  const [newCard, setNewCard] = useState(false);
+  const [hasCard, setHasCard] = useState(false);
+  const [has3Cards, setHas3Cards] = useState(false);
+  const [cardIndex, setCardIndex] = useState("");
 
  /**CARD */
  const [cardNumber, setCardNumber] = useState("");
@@ -103,17 +104,28 @@ function Checkout() {
       ))}
     </select>
   );
+
   useEffect(() => {
     const fetchCards = async () => {
       try {
         const cardData = await getPaymentCards(currentUser.uid);
         if (cardData === null || cardData.length === 0) { 
           setCards([]); 
-          setHasCards(false); 
+          setCardIndex(0);
+          setHasCard(false);
+          setHas3Cards(false); 
         } else {
           const onlyCardData = cardData.map((card) => card.encrypted_card_data);
           setCards(onlyCardData);
-          setHasCards(true);
+          setHasCard(true);
+          setCardIndex(cardData.length);
+  
+          if (cardData.length === 3) { 
+            setHas3Cards(true);
+            setCardIndex(3);
+          } else {
+            setHas3Cards(false);
+          }
         }
       } catch (error) {
         console.error("Failed to fetch or decrypt card data:", error);
@@ -123,26 +135,22 @@ function Checkout() {
     fetchCards();
   }, []); 
   
-  const [formData, setFormData] = useState({
-    name: "",
-    billingAddress: "",
-    creditCardNumber: "",
-    expirationDate: "",
-    cvv: "",
-  });
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const auth = getAuth();
     const user = auth.currentUser;
 
-    if (!hasCards) {
+    if (!has3Cards) {
       const uid = user.uid;
-      addMultiplePayments(cardName, cardNumber, cardType, expiration, billingAddressOne, billingAddressTwo, billingCity, billingState, billingZip, uid, 1);
-      setHasCards(true);
+      addMultiplePayments(cardName, cardNumber, cardType, expiration, billingAddressOne, billingAddressTwo, billingCity, billingState, billingZip, uid, cardIndex);
     }
 
-    window.location.reload();
+    //WAIT BEFORE RELOAD
+    setTimeout(() => {
+      window.location.reload();
+  }, 5000);
 
     };  
   
@@ -308,24 +316,11 @@ function Checkout() {
       </h3>
 
       <h2>Checkout</h2>
-      {hasCards ? (
-        <div className = "cards">
-        {cards.map((card, index) => (
-           <div key={index} onClick={() => setSelectedCard(card)} className="card-option">
-           <button className="card-button">
-            <p>Card Ending in {card.card_number.slice(-4)}</p>
-            <p>Type: {card.card_type}</p>
-            <p>Expires: {card.expiration}</p>
-            </button>
-          </div> 
-        ))}
-        <Button onClick={handleCheckout}>
-          Confirm Payment Order
-        </Button>
-      </div>
-      ):(
+
+      {!has3Cards && (
              <>
               <div className="card-details">
+              <h3>New Card</h3>
               <form onSubmit={handleSubmit}>
                 <label>
                   Name on Card:{" "}
@@ -446,102 +441,26 @@ function Checkout() {
               </>
             )}
 
-{/* PAYMENTS */}
-{/*
-      <div className="form-container">
-        <form onSubmit={handleSubmit}>
-          <label className="form-label">
-            Name:
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-              className="form-input"
-            />
-          </label>
-          <label className="form-label">
-            Billing Address One:
-            <textarea
-              name="billingAddressOne"
-              value={formData.billingAddressOne}
-              onChange={handleChange}
-              required
-              className="form-textarea"
-            />
-          </label>
-          <label className="form-label">
-            Billing Address Two:
-            <textarea
-              name="billingAddressTwo"
-              value={formData.billingAddressTwo}
-              onChange={handleChange}
-              required
-              className="form-textarea"
-            />
-          </label>
-          <label className="form-label">
-           State:
-            <textarea
-              name="state"
-              value={formData.state}
-              onChange={handleChange}
-              required
-              className="form-textarea"
-            />
-          </label>
-          <label className="form-label">
-             Zip Code:
-            <textarea
-              name="zipCode"
-              value={formData.zipCode}
-              onChange={handleChange}
-              required
-              className="form-textarea"
-            />
-          </label>
-          
-          <label className="form-label">
-            Credit Card Number:
-            <input
-              type="text"
-              name="creditCardNumber"
-              value={formData.creditCardNumber}
-              onChange={handleChange}
-              required
-              className="form-input"
-            />
-          </label>
-          <label className="form-label">
-            Expiration Date:
-            <input
-              type="text"
-              name="expirationDate"
-              value={formData.expirationDate}
-              onChange={handleChange}
-              required
-              className="form-input"
-            />
-          </label>
-          <label className="form-label">
-            CVV:
-            <input
-              type="text"
-              name="cvv"
-              value={formData.cvv}
-              onChange={handleChange}
-              required
-              className="form-input"
-            />
-          </label>
-          
-            <button type="submit" className="submit-button">
-              Confirm Payment Order
+      <div className = "cards">
+      <div className = "buttons">
+        {cards.map((card, index) => (
+           <div key={index} onClick={() => setSelectedCard(card)} className="card-option">
+           <button className="card-button">
+            <p>Card Ending in {card.card_number.slice(-4)}</p>
+            <p>Type: {card.card_type}</p>
+            <p>Expires: {card.expiration}</p>
             </button>
-        </form>
+          </div> 
+        ))}
         </div>
-        */}
+
+        {hasCard ? (
+        <Button onClick={handleCheckout}>
+          Confirm Payment Order
+        </Button>
+        ): null}
+        
+      </div>
     </div>
   );
 }
