@@ -33,6 +33,7 @@ import ManageShowings from './components/ManageShowings';
 import AddShowing from './components/AddShowing';
 import AddMovie from './components/AddMovie';
 import {test} from "./functionality/test"
+import OrderHistory from './components/OrderHistory'
 
 function App() {
 
@@ -87,6 +88,8 @@ function App() {
             <Route path='/editmovie/:movieId/' element = {<EditMovie/>} />
             <Route path='/addshowing/:movieID/' element = {<AddShowing/>} /> 
             <Route path='/manageshowings/:movieID/' element = {<ManageShowings/>} /> 
+
+            <Route path='/orderhistory/' element = {<OrderHistory/>} /> 
 
           </Routes>
         </main>

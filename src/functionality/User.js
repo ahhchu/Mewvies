@@ -85,7 +85,7 @@ export async function fetchUserData(currentUser) {
     if (currentUser) {
         var userRef = doc(db, "user", currentUser.uid);
         var userSnap = await getDoc(userRef);
-        console.log(userSnap.data());
+        //console.log(userSnap.data());
         return userSnap.data();
     }
 }
