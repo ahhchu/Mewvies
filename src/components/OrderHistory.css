@@ -1,0 +1,51 @@
+
+
+@font-face {
+    font-family: 'Cairo_Play';
+    src: url('../style/Cairo_Play/CairoPlay-VariableFont_slnt\,wght.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  
+.popup{
+    position: fixed;
+    width: 600px;
+    margin: 20px auto;
+    padding: 10px;
+    background-color: white; 
+    border: 2px solid #e4002b;
+    z-index: 1000;
+}
+
+.popup-inner {
+    max-height: 550px;
+    overflow-y: auto;
+}
+ 
+.error-message {
+   margin-top: 5px;
+}
+
+#label {
+  align-items: left;
+}
+  
+h2 {
+    color: #e4002b;
+    font-family: 'Cairo_Play';
+}
+
+h3 {
+    font-family: 'Cairo_Play';
+}
+
+.signup-divider {
+    height: 2px; 
+    width: 500px;
+    background-color: #e4002b;
+    border: none; 
+
+  }
+
+  table { width: 400px; } table, td, th { border: 1px solid black; }
