@@ -149,7 +149,7 @@ function Seats() {
               onClick={() => handleSeatSelection(seat)}
               className={
                 unavailableSeats.includes(seat.toString()) ? "unavailable" :
-                selectedSeats.includes(seat) ? "selected" : "seat"
+                selectedSeats.includes(seat.toString()) ? "selected" : "seat"
               }
             />
           </div>
@@ -173,7 +173,7 @@ function Seats() {
               >
                 Seat {seat} -{" "}
                 {seatTypes[seat] ? (
-                  seatTypes[seat]
+             `${seatTypes[seat].split(':')[0]}: $${seatTypes[seat].split(':')[1]}`
                 ) : (
                   <div className="dropdown">
                     <button
@@ -186,7 +186,7 @@ function Seats() {
                   <div className="dropdown-content">
                     {Object.entries(ticketPrices).map(([type, price]) => (
                       <p key={type} onClick={() => handleSeatTypeChange(seat, `${type}: ${price}`)}>
-                        {`${type.charAt(0).toUpperCase() + type.slice(1)}: ${price}`}
+                        {`${type.charAt(0).toUpperCase() + type.slice(1)}: $${price}`}
                       </p>
                     ))}
                   </div>

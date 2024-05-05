@@ -20,7 +20,7 @@ function Checkout() {
   const { selectedSeats, seatTypes, showingTime, showingId, movieTitle, movieId } =
     state || {}; // location.state;
   const bookingId = location.state?.bookingId;
-  const initialSeatTypes = seatTypes;
+  const initialSeatTypes = seatTypes || {};
   const [editableSeatTypes, setEditableSeatTypes] = useState(initialSeatTypes);
   const [editingSeat, setEditingSeat] = useState(null);
   const [total, setTotal] = useState(0);
@@ -85,26 +85,28 @@ function Checkout() {
     fetchFees();
   }, []);
 
-  useEffect(() => {
-    console.log("Ticket Prices: ", ticketPrices);
-    console.log("Fees: ", fees);
-}, [ticketPrices, fees]);
 
 
-  const renderTicketTypeDropdown = (seat) => (
-    <select
-      value={editableSeatTypes[seat]}
-      onChange={(e) => handleTicketTypeChange(seat, e.target.value)}
-      onBlur={() => setEditingSeat(null)} // Optionally close on blur
-    >
-      {Object.entries(ticketPrices).map(([type, price]) => (
-        <option key={type} value={`${type}: ${price}`}>
-          {`${type.charAt(0).toUpperCase() + type.slice(1)}: ${price}`}
-        </option>
-      ))}
-    </select>
-  );
+  const renderTicketTypeDropdown = (seat) => {
 
+    const currentValue = editableSeatTypes[seat] || '';
+  
+    return (
+      <select
+        value={currentValue}
+        onChange={(e) => handleTicketTypeChange(seat, e.target.value)}
+        onBlur={() => setEditingSeat(null)}
+      >
+        <option value="" disabled>{'Select a Ticket Type'}</option>
+        {Object.entries(ticketPrices).map(([type, price]) => (
+          <option key={type} value={`${type}: ${price}`}>
+            {`${type.charAt(0).toUpperCase() + type.slice(1)}: $${price}`}
+          </option>
+        ))}
+      </select>
+    );
+  };
+  
   useEffect(() => {
     const fetchCards = async () => {
       try {
@@ -163,7 +165,7 @@ function Checkout() {
         alert('Please select a payment method');
         return;
       }
-      console.log("User UID: ", user.uid);
+//      console.log("User UID: ", user.uid);
       const orderData = {
         customer_id: user.uid,
         movie_id: movieId,
@@ -232,19 +234,17 @@ function Checkout() {
 
 //  console.log("Received Showing Time:", showingTime);
 
-  const handleTicketTypeChange = (seat, newType) => {
-    const newSeatTypes = { ...editableSeatTypes, [seat]: newType };
-    setEditableSeatTypes(newSeatTypes);
-    setEditingSeat(null);
-  };
+const handleTicketTypeChange = (seat, value) => {
+//  const newType = `${Object.keys(ticketPrices).find(key => ticketPrices[key] === parseFloat(value))}: ${value}`;
+setEditableSeatTypes(prev => ({ ...prev, [seat]: value }));
+};
+
 
 
   useEffect(() => {
     const newTotal = selectedSeats.reduce((total, seat) => {
-      // Make sure to split the editableSeatTypes, not seatTypes
-      const priceString = editableSeatTypes[seat].split("$")[1];
-      const price = parseFloat(priceString);
-      return total + price;
+      const price = editableSeatTypes[seat]; 
+    return total + price;
     }, 0);
     setTotal(newTotal);
   }, [editableSeatTypes, selectedSeats]); // Listen to changes in editableSeatTypes
@@ -256,20 +256,18 @@ function Checkout() {
   /* calculating price */
   useEffect(() => {
     const newSubtotal = selectedSeats.reduce((acc, seat) => {
-      const priceString = editableSeatTypes[seat] && editableSeatTypes[seat].includes("$")
-        ? editableSeatTypes[seat].split("$")[1]
-        : "0";
-      const price = parseFloat(priceString);
+      const price = editableSeatTypes[seat] && typeof editableSeatTypes[seat] === 'string'
+        ? parseFloat(editableSeatTypes[seat].split(':')[1])
+        : 0;
       return acc + price;
     }, 0);
     setSubtotal(newSubtotal);
 
-    const tax = newSubtotal * fees.salesTax;
-    const onlineFees = selectedSeats.length * fees.onlineFees;
+    const tax = newSubtotal * (fees.salesTax || 0);
+    const onlineFees = selectedSeats.length * (fees.onlineFees || 0);
     const totalWithTaxAndFees = newSubtotal + tax + onlineFees;
     setTotal(totalWithTaxAndFees);
-  }, [selectedSeats, editableSeatTypes, fees]);
-
+}, [selectedSeats, editableSeatTypes, fees]);
 
   return (
     <div className="Summary">
@@ -282,12 +280,12 @@ function Checkout() {
       <ul>
   {selectedSeats.map((seat, index) => (
     <li key={index}>
-      Seat {seat}:
+      Seat {seat}- 
       {editingSeat === seat ? (
         renderTicketTypeDropdown(seat)
       ) : (
         <span>
-          {editableSeatTypes[seat]}
+          {editableSeatTypes[seat].split(':')[0]}: ${parseFloat(editableSeatTypes[seat].split(':')[1]).toFixed(2)}
           <button
             className="edit-button"
             onClick={() => setEditingSeat(seat)}
