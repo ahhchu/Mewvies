@@ -8,7 +8,7 @@ import { getMovies } from "../functionality/movie";
 import { addShowing, getShowings, getShowingsByMovie, removeShowing } from "../functionality/showing";
 import { useNavigate } from "react-router-dom";
 
-function AddShowing() {
+function ManageShowings() {
 
   const { movieID } = useParams();
   const [movie, setMovie] = useState({movie_title: ""});
@@ -24,10 +24,15 @@ function AddShowing() {
       });
     })
     getShowings().then((data) => {
-      data.filter((show) => {
-        show.movie_id == movieID;
-      })
-      setShowings(data)
+      var tempArray = [];
+      data.forEach(element => {
+        if (element.movie_id == movieID) {
+          tempArray.push(element);
+        }
+      });
+      console.log(tempArray);
+      console.log(movieID);
+      setShowings(tempArray)
       setReset(true)
     })
 
@@ -63,4 +68,4 @@ function AddShowing() {
   );
 }
 
-export default AddShowing;
+export default ManageShowings;
