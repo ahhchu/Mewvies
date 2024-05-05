@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { collection, getDocs, query, where, addDoc } from "firebase/firestore";
 import { db } from "../config/firestore";
-import { Link } from "react-router-dom";
+import Button from "./Button";
 import "./Checkout.css";
 import { decryptData } from "../services/crypto";
 import {
   getAuth,
 } from "firebase/auth";
-import { getPaymentCards, passphrase } from "../functionality/User";
+import { addMultiplePayments, getPaymentCards, passphrase } from "../functionality/User";
 
 function Checkout() {
 
@@ -29,6 +29,23 @@ function Checkout() {
   const [cards, setCards] = useState([]); 
   const [selectedCard, setSelectedCard] = useState(null);
   const [ticketPrices, setTicketPrices] = useState({});
+
+  const [hasCards, setHasCards] = useState(false);
+  const [newCard, setNewCard] = useState(false);
+
+ /**CARD */
+ const [cardNumber, setCardNumber] = useState("");
+ const [cardName, setCardName] = useState("");
+ const [cardType, setCardType] = useState("");
+ const [cvv, setCvv] = useState("");
+ const [expiration, setExpiration] = useState("");
+
+ const [billingAddressOne, setBillingAddressOne] = useState("");
+ const [billingAddressTwo, setBillingAddressTwo] = useState("");
+ const [billingCity, setBillingCity] = useState("");
+ const [billingState, setBillingState] = useState("");
+ const [billingZip, setBillingZip] = useState("");
+
 
   const auth = getAuth();
   const currentUser = auth.currentUser; // Get the current user
@@ -86,18 +103,34 @@ function Checkout() {
       ))}
     </select>
   );
+  useEffect(() => {
+    const fetchCards = async () => {
+      try {
+        // Fetch payment cards for the current user
+        const cardData = await getPaymentCards(currentUser.uid);
+        
+        // Check if cardData is null (no cards available)
+        if (cardData === null || cardData.length === 0) { // Check if cardData is an empty array
+          setCards([]); // Set cards state to empty array
+          setHasCards(false); // Set hasCards state to false
+        } else {
+          // Map cardData to extract only the encrypted card data
+          const onlyCardData = cardData.map((card) => card.encrypted_card_data);
+          // Update cards state with extracted card data
+          setCards(onlyCardData);
+          // Set hasCards state to true since cards are available
+          setHasCards(true);
+        }
+      } catch (error) {
+        // Handle errors during card retrieval
+        console.error("Failed to fetch or decrypt card data:", error);
+      }
+    };
   
-
-  try {
-    getPaymentCards(currentUser.uid).then((cardData) => {
-      const onlyCardData = cardData.map((card) => card.encrypted_card_data);
-      setCards(onlyCardData);
-    });
-     //console.log("Cards state updated:", cards); 
-  } catch (e) {
-    console.error("Failed to fetch or decrypt card data:", e);
-  }
-
+    // Call the fetchCards function
+    fetchCards();
+  }, []); // Dependency array is empty to run the effect only once on component mount
+  
   const [formData, setFormData] = useState({
     name: "",
     billingAddress: "",
@@ -106,50 +139,55 @@ function Checkout() {
     cvv: "",
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-  
   const handleSubmit = async (e) => {
     e.preventDefault();
     const auth = getAuth();
     const user = auth.currentUser;
-    console.log("Form submitted:", formData);
 
-    if (!selectedCard) {
-      alert('Please select a payment method');
-      return;
+    if (!hasCards) {
+      const uid = user.uid;
+      addMultiplePayments(cardName, cardNumber, cardType, expiration, billingAddressOne, billingAddressTwo, billingCity, billingState, billingZip, uid, 1);
+      setHasCards(true);
     }
 
-    console.log("User UID: ", user.uid);
-    const orderData = {
-      customer_id: user.uid,
-      movie_id: showingId,
-      order_id: "GenerateOrFetchThisID",
-      payment_id: "GenerateOrFetchPaymentID", 
-      promo_id: "YourPromoID", // idk how to do this 
-      purchase_time: new Date().toISOString(), 
-      seat_number: selectedSeats.join(", "), 
-      showing_id: showingId, 
-      ticket_price: total.toString(), 
-      ticket_type: JSON.stringify(editableSeatTypes), 
-      payment_details: {
-        cardNumber: selectedCard.cardNumber,
-        cardName: selectedCard.cardName,
-        cardType: selectedCard.cardType,
-        expirationDate: selectedCard.expirationDate,
-        billingAddressOne: selectedCard.billingAddressOne,
-        billingAddressTwo: selectedCard.billingAddressTwo,
-        city: selectedCard.city,
-        state: selectedCard.state,
-        zipCode: selectedCard.zipCode
-      }
+    window.location.reload();
+
     };  
   
+    const handleCheckout = async (e) => {
+      e.preventDefault();
+      const auth = getAuth();
+      const user = auth.currentUser;
+  
+      if (!selectedCard) {
+        alert('Please select a payment method');
+        return;
+      }
+      console.log("User UID: ", user.uid);
+      const orderData = {
+        customer_id: user.uid,
+        movie_id: showingId,
+        order_id: "GenerateOrFetchThisID",
+        payment_id: "GenerateOrFetchPaymentID", 
+        promo_id: "YourPromoID", // idk how to do this 
+        purchase_time: new Date().toISOString(), 
+        seat_number: selectedSeats.join(", "), 
+        showing_id: showingId, 
+        ticket_price: total.toString(), 
+        ticket_type: JSON.stringify(editableSeatTypes), 
+        payment_details: {
+          cardNumber: selectedCard.cardNumber,
+          cardName: selectedCard.cardName,
+          cardType: selectedCard.cardType,
+          expiration: selectedCard.expiration,
+          billingAddressOne: selectedCard.billingAddressOne,
+          billingAddressTwo: selectedCard.billingAddressTwo,
+          billingCity: selectedCard.billingCity,
+          billingState: selectedCard.billingState,
+          billingZip: selectedCard.billingZip
+        }
+      };  
+
     try {
       const docRef = await addDoc(collection(db, "order"), orderData);
       console.log("Document written with ID: ", docRef.id);
@@ -278,7 +316,8 @@ function Checkout() {
       </h3>
 
       <h2>Checkout</h2>
-      <div className = "cards">
+      {hasCards ? (
+        <div className = "cards">
         {cards.map((card, index) => (
            <div key={index} onClick={() => setSelectedCard(card)} className="card-option">
            <button className="card-button">
@@ -288,7 +327,133 @@ function Checkout() {
             </button>
           </div> 
         ))}
+        <Button onClick={handleCheckout}>
+          Confirm Payment Order
+        </Button>
       </div>
+      ):(
+             <>
+              <div className="card-details">
+              <form onSubmit={handleSubmit}>
+                <label>
+                  Name on Card:
+                  <input
+                    type="text"
+                    name="cardName"
+                    value={cardName}
+                    onChange={(e) => setCardName(e.target.value)}
+                    className="input-field"
+                  />
+                </label>
+                <br />
+                <label>
+                  Card Number:{" "}
+                  <input
+                    type="text"
+                    name="cardNumber"
+                    value={cardNumber}
+                    onChange={(e) => setCardNumber(e.target.value)}
+                    className="input-field"
+                  />
+                </label>
+                <br />
+                <label>
+                  Card Type: {" "}
+                  <input
+                    type="text"
+                    name="cardType"
+                    value={cardType}
+                    onChange={(e) => setCardType(e.target.value)}
+                    className="input-field"
+                  />
+                </label>
+                <br />
+                <label>
+                  CVV:{" "}
+                  <input
+                    type="text"
+                    name="cvv"
+                    value={cvv}
+                    onChange={(e) => setCvv(e.target.value)}
+                    className="input-field"
+                  />
+                </label>
+                <br />
+                <label>
+                  Expiration Date:{" "}
+                  <input
+                    type="text"
+                    name="expirationDate"
+                    value={expiration}
+                    onChange={(e) => setExpiration(e.target.value)}
+                    className="input-field"
+                  />
+                </label>
+                <br />
+                <br />
+                <label>
+                  Billing Address:{" "}
+                  <input
+                    type="text"
+                    name="billingAddressOne"
+                    value={billingAddressOne}
+                    onChange={(e) => setBillingAddressOne(e.target.value)}
+                    className="input-field"
+                  />
+                </label>
+                <br />
+                <label>
+                  Address Line 2: {" "}
+                  <input
+                    type="text"
+                    name="billingAddressTwo"
+                    value={billingAddressTwo}
+                    onChange={(e) => setBillingAddressTwo(e.target.value)}
+                    className="input-field"
+                  />
+                </label>
+                <br />
+                <label>
+                  City: {" "}
+                  <input
+                    type="text"
+                    name="city"
+                    value={billingCity}
+                    onChange={(e) => setBillingCity(e.target.value)}
+                    className="input-field"
+                  />
+                </label>
+                <br />
+                <label>
+                  State: {" "}
+                  <input
+                    type="text"
+                    name="state"
+                    value={billingState}
+                    onChange={(e) => setBillingState(e.target.value)}
+                    className="input-field"
+                  />
+                </label>
+                <br />
+                <label>
+                  Zip Code: {" "}
+                  <input
+                    type="text"
+                    name="zipCode"
+                    value={billingZip}
+                    onChange={(e) => setBillingZip(e.target.value)}
+                    className="input-field"
+                  />
+                  <br />
+                </label>
+                <button type="submit" className="submit-button">
+              Submit Card Info
+            </button>
+        </form>
+                </div>
+              </>
+            )}
+
 {/* PAYMENTS */}
 {/*
       <div className="form-container">
@@ -378,6 +543,7 @@ function Checkout() {
               className="form-input"
             />
           </label>
+          
             <button type="submit" className="submit-button">
               Confirm Payment Order
             </button>
