@@ -193,40 +193,52 @@ async function removePaymentMethods(uid) {
 /* BEGINNING OF PAYMENT FUNCTIONS */
 
 // For encryption
-const passphrase = "webufhibejnlisuediuwe";
+
 
 /* returns an array of payment cards
  */
-export async function getPaymentCards (uid) {
-    const passphrase = "webufhibejnlisuediuwe";
+export async function getPaymentCards(uid) {
     try {
         var snapshot = await getDocs(collection(db, "payment_info"));
         var existingPayments = [];
-        snapshot.docs.forEach((element) => {
-            if (element.data().uid == uid) {
-                //const decryptedData = decryptData(element.data(), passphrase); //WITH DECRYPTION
-                const decryptedData = element.data(); //FOR TESTING W NO DECRYPTION
-                console.log("elem",element.data());
+
+        snapshot.docs.forEach((doc) => {
+            if (doc.data().uid == uid) {
+                const decryptedData = decryptDocument(doc.data());
                 existingPayments.push(decryptedData);
-            } // if
+            }
         });
-        console.log("existing",JSON.stringify(existingPayments));
+
+        console.log("existing", JSON.stringify(existingPayments));
         return existingPayments;
     } catch (error) {
+        console.error("Error fetching payment cards:", error);
         return [];
-    } // try
-} // getPaymentCards
+    }
+}
+
+// Function to decrypt a document's fields
+const decryptDocument = (encryptedDoc) => {
+    const decryptedDoc = {};
+
+    for (const field in encryptedDoc) {
+        // Decrypt each field and add it to the decrypted document object
+        decryptedDoc[field] = decryptData(encryptedDoc[field]);
+    }
+
+    return decryptedDoc;
+};
+
 
 /* Adds payment methods
  */
 export async function addPayment(cardName, cardNumber, cardType, expiration, billingAddressOne, billingAddressTwo, billingCity, billingState, billingZip, uid) {
-    const passphrase = "webufhibejnlisuediuwe";
     var newCard = {};
     try {
         newCard = {
             /* FOR TESTNG WITHOUT ENCRYPTION */
 
-            card_name: cardName, 
+            /*card_name: cardName, 
             card_number: cardNumber,
             card_type: cardType, 
             expiration: expiration,
@@ -235,19 +247,20 @@ export async function addPayment(cardName, cardNumber, cardType, expiration, bil
             billing_city: billingCity,
             billing_state: billingState,
             billing_zip: billingZip, 
+            */
 
             /* FOR TESTNG WITH ENCRYPTION */
 
-           /* card_name: encryptData(cardName, passphrase),
-            card_number: encryptData(cardNumber,passphrase),
-            card_type: encryptData(cardType, passphrase),
-            expiration: encryptData(expiration,passphrase),
-            billing_address_one: encryptData(billingAddressOne,passphrase),
-            billing_address_two: encryptData(billingAddressTwo, passphrase),
-            billing_city: encryptData(billingCity, passphrase),
-            billing_state: encryptData(billingState, passphrase),
-            billing_zip: encryptData(billingZip,passphrase),
-            */
+            card_name: encryptData(cardName),
+            card_number: encryptData(cardNumber),
+            card_type: encryptData(cardType),
+            expiration: encryptData(expiration),
+            billing_address_one: encryptData(billingAddressOne),
+            billing_address_two: encryptData(billingAddressTwo),
+            billing_city: encryptData(billingCity),
+            billing_state: encryptData(billingState),
+            billing_zip: encryptData(billingZip),
+            
 
             uid: uid
         };
@@ -263,43 +276,38 @@ export async function addPayment(cardName, cardNumber, cardType, expiration, bil
 export async function addMultiplePayments(cardName, cardNumber, cardType, expiration, billingAddressOne, billingAddressTwo, billingCity, billingState, billingZip, uid, num) {
     var newCard = {};
     try {
-        newCard = {
-          /* FOR TESTNG WITHOUT ENCRYPTION */
-
-            card_name: cardName, 
+        // Create a single object containing all properties
+        const cardDataToEncrypt = {
+            card_name: cardName,
             card_number: cardNumber,
-            card_type: cardType, 
+            card_type: cardType,
             expiration: expiration,
             billing_address_one: billingAddressOne,
-            billing_address_two: billingAddressTwo, 
+            billing_address_two: billingAddressTwo,
             billing_city: billingCity,
             billing_state: billingState,
-            billing_zip: billingZip, 
+            billing_zip: billingZip
+        };
 
-            /* FOR TESTNG WITH ENCRYPTION */
+        const encryptedCardData = encryptData(cardDataToEncrypt);
 
-            /*
-            card_name: encryptData(cardName, passphrase),
-            card_number: encryptData(cardNumber,passphrase),
-            card_type: encryptData(cardType, passphrase),
-            expiration: encryptData(expiration,passphrase),
-            billing_address_one: encryptData(billingAddressOne,passphrase),
-            billing_address_two: encryptData(billingAddressTwo, passphrase),
-            billing_city: encryptData(billingCity, passphrase),
-            billing_state: encryptData(billingState, passphrase),
-            billing_zip: encryptData(billingZip,passphrase),
-            */
-
+        // Encrypt the entire card data object
+        newCard = {
+            encrypted_card_data: encryptedCardData,
             uid: uid
         };
     } catch (error) {
         console.error("Error encrypting data:", error);
-      } // try
+    }
 
-      const cardRef = doc(db, "payment_info", num + uid + Date.now());
-      await setDoc(cardRef, newCard);
-      return true;
-} // addPayment
+    console.log("newCard: ", newCard);
+    // Pass the entire object to the decryptData function
+    console.log("newCard Decry: ", decryptData(newCard));
+    const cardRef = doc(db, "payment_info", num + uid + Date.now());
+    await setDoc(cardRef, newCard);
+    return true;
+} //addMultiplePayments
+
 
 /* END OF PAYMENT FUNCTIONS */
 

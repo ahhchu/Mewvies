@@ -103,8 +103,6 @@ useEffect(() => {
         homeZipCode: homeZipCode,
       };
 
-      console.log("encrypted");
-
       const updatedCardsData = updatedCards.map(card => ({
         card_name: card.card_name,
         card_number: card.card_number,

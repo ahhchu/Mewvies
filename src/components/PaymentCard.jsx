@@ -1,7 +1,6 @@
 import React from "react";
 
 function PaymentCard({ index, card, updateCardField }) {
-  console.log("paymentcard",card);
   const handleFieldChange = (e, field) => {
     const value = e.target.value;
     updateCardField(index, field, value); // Call update function with index
