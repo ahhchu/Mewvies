@@ -3,6 +3,7 @@
 import { collection, getDocs, doc, setDoc, updateDoc, addDoc, deleteDoc, Timestamp, where, query } from "firebase/firestore";
 import { db } from "../config/firestore";
 
+
 /* Everything is a string, openingDate should be a Date().
  */
 export async function addMovie(movieTitle, category, cast, director, producer, synopsis, trailerUrl, rating, posterUrl, openingDate) {
@@ -108,9 +109,11 @@ export async function getCurrentMovies() {
         var snapshot = await getDocs(collection(db, "movie"));
         var existingMovies = [];
         snapshot.docs.forEach((element) => {
+            /*
             console.log("comparisons")
             console.log(element.data().opening_date)
             console.log(Timestamp.fromDate(new Date()))
+            */
             if (element.data().opening_date < Timestamp.fromDate(new Date())) {
             existingMovies.push(element.data());
             }

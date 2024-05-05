@@ -4,8 +4,10 @@
 }
 
 .button-row {
-    display: flex;
-    gap: 10px;
+    display: flex;      
+    justify-content: center; 
+    align-items: center;  
+    width: 100%; 
 }
 
 .button-row button {

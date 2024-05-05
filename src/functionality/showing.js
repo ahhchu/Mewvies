@@ -48,19 +48,15 @@ export async function getShowings() {
 */
 export async function getShowingsByMovie(movieID) {
     try {
-        var sortedShowings = []
-       getShowings().then((data) => {
-        data.forEach(element => {
-            if (element.movie_id == movieID) {
-                sortedShowings.push(element)
-            }
-        });
+        const data = await getShowings(); // Make sure this method returns an array
+        const sortedShowings = data.filter(element => element.movie_id === movieID);
         return sortedShowings;
-       })
     } catch (error) {
-        return [];
-    } // try
-} // getShowings
+        console.error("Error getting showings by movie:", error);
+        return []; // Always return an array, even on failure
+    }
+}
+
 
 /* Internal function used for the sake of checking if a time & room combination is available.
  */

@@ -83,6 +83,9 @@ function ManageUsers() {
                 <Link to="/managepromotions">
                     <Button className="manage">Manage Promos</Button>
                 </Link>
+                <Link to ="/manageprices">
+                <button className="btn">Manage Prices</button> 
+                </Link>
                 <h1>Manage Users</h1>
                 {showMessage && <div className="alert">{message}</div>}
                 <div className="header_middle">
