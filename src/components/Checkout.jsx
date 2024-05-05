@@ -30,8 +30,8 @@ function Checkout() {
   const [selectedCard, setSelectedCard] = useState(null);
   const [ticketPrices, setTicketPrices] = useState({});
 
-  const [hasCards, setHasCards] = useState(false);
-  const [newCard, setNewCard] = useState(false);
+  const [has3Cards, setHas3Cards] = useState(false);
+  const [cardIndex, setCardIndex] = useState("");
 
  /**CARD */
  const [cardNumber, setCardNumber] = useState("");
@@ -103,17 +103,26 @@ function Checkout() {
       ))}
     </select>
   );
+
   useEffect(() => {
     const fetchCards = async () => {
       try {
         const cardData = await getPaymentCards(currentUser.uid);
         if (cardData === null || cardData.length === 0) { 
           setCards([]); 
-          setHasCards(false); 
+          setCardIndex(0);
+          setHas3Cards(false); 
         } else {
           const onlyCardData = cardData.map((card) => card.encrypted_card_data);
           setCards(onlyCardData);
-          setHasCards(true);
+          setCardIndex(cardData.length);
+  
+          if (cardData.length === 3) { 
+            setHas3Cards(true);
+            setCardIndex(3);
+          } else {
+            setHas3Cards(false);
+          }
         }
       } catch (error) {
         console.error("Failed to fetch or decrypt card data:", error);
@@ -123,26 +132,22 @@ function Checkout() {
     fetchCards();
   }, []); 
   
-  const [formData, setFormData] = useState({
-    name: "",
-    billingAddress: "",
-    creditCardNumber: "",
-    expirationDate: "",
-    cvv: "",
-  });
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const auth = getAuth();
     const user = auth.currentUser;
 
-    if (!hasCards) {
+    if (!has3Cards) {
       const uid = user.uid;
-      addMultiplePayments(cardName, cardNumber, cardType, expiration, billingAddressOne, billingAddressTwo, billingCity, billingState, billingZip, uid, 1);
-      setHasCards(true);
+      addMultiplePayments(cardName, cardNumber, cardType, expiration, billingAddressOne, billingAddressTwo, billingCity, billingState, billingZip, uid, cardIndex);
     }
 
-    window.location.reload();
+    //WAIT BEFORE RELOAD
+    setTimeout(() => {
+      window.location.reload();
+  }, 5000);
 
     };  
   
@@ -308,8 +313,7 @@ function Checkout() {
       </h3>
 
       <h2>Checkout</h2>
-      {hasCards ? (
-        <div className = "cards">
+      <div className = "cards">
         {cards.map((card, index) => (
            <div key={index} onClick={() => setSelectedCard(card)} className="card-option">
            <button className="card-button">
@@ -323,7 +327,8 @@ function Checkout() {
           Confirm Payment Order
         </Button>
       </div>
-      ):(
+
+      {!has3Cards && (
              <>
               <div className="card-details">
               <form onSubmit={handleSubmit}>
