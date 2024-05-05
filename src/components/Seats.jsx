@@ -10,6 +10,7 @@ import { doc, getDocs, getDoc, collection, query, where } from "firebase/firesto
 function Seats() {
   const navigate = useNavigate();
   const { movieId, showingId } = useParams();
+  console.log("movieId: ", movieId);
   const [movie, setMovie] = useState(null);
   const [showing, setShowings] = useState(null);
   const [ticketPrices, setTicketPrices] = useState({});
@@ -109,6 +110,7 @@ function Seats() {
         showingTime: new Date(showing.showing_time.seconds).toString(),
         showingId,
         movieTitle: movie.movie_title,
+        movieId,
       },
     });
   };

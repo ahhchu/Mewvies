@@ -19,6 +19,9 @@ function Checkout() {
   const { state } = useLocation();
   const { selectedSeats, seatTypes, showingTime, showingId, movieTitle, movieId } =
     state || {}; // location.state;
+    console.log("movieId: ", movieId);
+    //console.log("showingId: ", showingId);
+
   const bookingId = location.state?.bookingId;
   const initialSeatTypes = seatTypes || {};
   const [editableSeatTypes, setEditableSeatTypes] = useState(initialSeatTypes);
