@@ -93,7 +93,7 @@ function Checkout() {
       const onlyCardData = cardData.map((card) => card.encrypted_card_data);
       setCards(onlyCardData);
     });
-//      console.log("Cards state updated:", cards); 
+     //console.log("Cards state updated:", cards); 
   } catch (e) {
     console.error("Failed to fetch or decrypt card data:", e);
   }
@@ -280,13 +280,16 @@ function Checkout() {
       <h2>Checkout</h2>
       <div className = "cards">
         {cards.map((card, index) => (
-          <div key={index} onClick={() => setSelectedCard(card)} className="card-option">
+           <div key={index} onClick={() => setSelectedCard(card)} className="card-option">
+           <button className="card-button">
             <p>Card Ending in {card.card_number.slice(-4)}</p>
             <p>Type: {card.card_type}</p>
             <p>Expires: {card.expiration}</p>
-          </div>
+            </button>
+          </div> 
         ))}
       </div>
+{/* PAYMENTS */}
 {/*
       <div className="form-container">
         <form onSubmit={handleSubmit}>
@@ -379,7 +382,8 @@ function Checkout() {
               Confirm Payment Order
             </button>
         </form>
-        </div>*/}
+        </div>
+        */}
     </div>
   );
 }
