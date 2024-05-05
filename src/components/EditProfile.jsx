@@ -7,7 +7,6 @@ import {
   getAuth
 } from "firebase/auth";
 import { fetchUserData, getPaymentCards, changePassword, updateUser } from "../functionality/User";
-import { decryptData, encryptData } from "../services/crypto";
 
 function EditProfile() {
   const auth = getAuth();
@@ -32,8 +31,6 @@ function EditProfile() {
 
   const [cardIndex, setCardIndex] = useState(false);
   const [editedCards, setEditedCards] = useState([]);
-
-  const passphrase = "webufhibejnlisuediuwe";
 
 
 
@@ -109,15 +106,15 @@ useEffect(() => {
       console.log("encrypted");
 
       const updatedCardsData = updatedCards.map(card => ({
-        card_name: encryptData(card.card_name, passphrase),
-        card_number: encryptData(card.card_number, passphrase),
-        card_type: encryptData(card.card_type, passphrase),
-        expiration: encryptData(card.expiration, passphrase),
-        billing_address_one: encryptData(card.billing_address_one, passphrase),
-        billing_address_two: encryptData(card.billing_address_two, passphrase),
-        billing_city: encryptData(card.billing_city, passphrase),
-        billing_state: encryptData(card.billing_state, passphrase),
-        billing_zip: encryptData(card.billing_zip, passphrase),
+        card_name: card.card_name,
+        card_number: card.card_number,
+        card_type: card.card_type,
+        expiration: card.expiration,
+        billing_address_one: card.billing_address_one,
+        billing_address_two: card.billing_address_two,
+        billing_city: card.billing_city,
+        billing_state: card.billing_state,
+        billing_zip: card.billing_zip,
       }));
       updateUser(currentUser, updatedUserData, updatedCardsData);
 
