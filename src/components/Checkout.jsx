@@ -106,30 +106,22 @@ function Checkout() {
   useEffect(() => {
     const fetchCards = async () => {
       try {
-        // Fetch payment cards for the current user
         const cardData = await getPaymentCards(currentUser.uid);
-        
-        // Check if cardData is null (no cards available)
-        if (cardData === null || cardData.length === 0) { // Check if cardData is an empty array
-          setCards([]); // Set cards state to empty array
-          setHasCards(false); // Set hasCards state to false
+        if (cardData === null || cardData.length === 0) { 
+          setCards([]); 
+          setHasCards(false); 
         } else {
-          // Map cardData to extract only the encrypted card data
           const onlyCardData = cardData.map((card) => card.encrypted_card_data);
-          // Update cards state with extracted card data
           setCards(onlyCardData);
-          // Set hasCards state to true since cards are available
           setHasCards(true);
         }
       } catch (error) {
-        // Handle errors during card retrieval
         console.error("Failed to fetch or decrypt card data:", error);
       }
     };
   
-    // Call the fetchCards function
     fetchCards();
-  }, []); // Dependency array is empty to run the effect only once on component mount
+  }, []); 
   
   const [formData, setFormData] = useState({
     name: "",
@@ -176,15 +168,15 @@ function Checkout() {
         ticket_price: total.toString(), 
         ticket_type: JSON.stringify(editableSeatTypes), 
         payment_details: {
-          cardNumber: selectedCard.cardNumber,
-          cardName: selectedCard.cardName,
-          cardType: selectedCard.cardType,
+          cardNumber: selectedCard.card_number,
+          cardName: selectedCard.card_name,
+          cardType: selectedCard.card_type,
           expiration: selectedCard.expiration,
-          billingAddressOne: selectedCard.billingAddressOne,
-          billingAddressTwo: selectedCard.billingAddressTwo,
-          billingCity: selectedCard.billingCity,
-          billingState: selectedCard.billingState,
-          billingZip: selectedCard.billingZip
+          billingAddressOne: selectedCard.billing_address_one,
+          billingAddressTwo: selectedCard.billing_address_two,
+          billingCity: selectedCard.billing_city,
+          billingState: selectedCard.billing_state,
+          billingZip: selectedCard.billing_zip
         }
       };  
 
