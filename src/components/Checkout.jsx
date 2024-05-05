@@ -17,7 +17,7 @@ function Checkout() {
 
   const [orders, setOrders] = useState([]);
   const { state } = useLocation();
-  const { selectedSeats, seatTypes, showingTime, showingId, movieTitle } =
+  const { selectedSeats, seatTypes, showingTime, showingId, movieTitle, movieId } =
     state || {}; // location.state;
   const bookingId = location.state?.bookingId;
   const initialSeatTypes = seatTypes;
@@ -158,7 +158,7 @@ function Checkout() {
       console.log("User UID: ", user.uid);
       const orderData = {
         customer_id: user.uid,
-        movie_id: showingId,
+        movie_id: movieId,
         order_id: "GenerateOrFetchThisID",
         payment_id: "GenerateOrFetchPaymentID", 
         promo_id: "YourPromoID", // idk how to do this 

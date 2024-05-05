@@ -97,8 +97,10 @@ export async function getMovies() {
         snapshot.docs.forEach((element) => {
             existingMovies.push(element.data());
         });
+        console.log("Success fetching movies");
         return existingMovies;
     } catch (error) {
+        console.error("Failed to fetch movies: ", error);
         return [];
     } // try
 } // getMovies

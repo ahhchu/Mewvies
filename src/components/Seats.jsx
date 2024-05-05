@@ -38,7 +38,7 @@ function Seats() {
 
   /* fetch showing details */
     const fetchShowingDetails = async () => {
-      const showingRef = doc(db, "showings", showingId);
+      const showingRef = doc(db, "showing", showingId);
       const showingSnap = await getDoc(showingRef);
       if (showingSnap.exists()) {
         const showingData = showingSnap.data();
@@ -51,13 +51,12 @@ function Seats() {
 
     /* fetch unavail seats */
   const fetchUnavailableSeats = async () => {
-    console.log("Showing ID:", showingId);
+//    console.log("Showing ID:", showingId);
     const ordersRef = collection(db, "order");
-    const q = query(ordersRef, where("movie_id", "==", movieId), where("showing_id", "==", Number(showingId)));
+    const q = query(ordersRef, where("movie_id", "==", movieId), where("showing_id", "==", showingId));
     try {
       const querySnapshot = await getDocs(q);
       const bookedSeats = querySnapshot.docs.map(doc => doc.data().seat_number); // in firestore seat_number is number type, showingid is number type, movieid is string
-
       setUnavailableSeats(bookedSeats);
       console.log("Unavailable Seats: ", bookedSeats);
     } catch (error) {
@@ -74,10 +73,11 @@ function Seats() {
 
  /* fetch seats */
   const handleSeatSelection = (seat) => {
-    if (!unavailableSeats.includes(seat)) {
-      const updatedSeats = selectedSeats.includes(seat)
-        ? selectedSeats.filter(s => s !== seat)
-        : [...selectedSeats, seat];
+    const seatString = seat.toString();
+    if (!unavailableSeats.includes(seatString)) {
+      const updatedSeats = selectedSeats.includes(seatString)
+        ? selectedSeats.filter(s => s !== seatString)
+        : [...selectedSeats, seatString];
       setSelectedSeats(updatedSeats);
     } else {
       alert('This seat is unavailable.');
@@ -148,7 +148,7 @@ function Seats() {
             <button
               onClick={() => handleSeatSelection(seat)}
               className={
-                unavailableSeats.includes(seat) ? "unavailable" :
+                unavailableSeats.includes(seat.toString()) ? "unavailable" :
                 selectedSeats.includes(seat) ? "selected" : "seat"
               }
             />
