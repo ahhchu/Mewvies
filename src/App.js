@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 //import axios from "axios";
+import { AuthProvider } from './context/AuthContext';
 import Header from './components/Header';
 import Movie from './components/Movie';
 import MovieDetails from  './components/MovieDetails'
@@ -33,6 +34,7 @@ import ManageShowings from './components/ManageShowings';
 import AddShowing from './components/AddShowing';
 import AddMovie from './components/AddMovie';
 import {test} from "./functionality/test"
+import ManagePrices from './components/ManagePrices';
 
 function App() {
 
@@ -54,7 +56,7 @@ function App() {
   }, []);
 
   return (
-  
+    <AuthProvider> 
     <Router> 
       <div className="App">
         <Header token={token} updateToken={setTokenFromLocalStorage} />
@@ -63,13 +65,15 @@ function App() {
             <Route exact path="/search-bar" element={<Search />} />
             <Route exact path="/Mewvies" element={<Movie />} />
             <Route exact path="/" element={<Movie />} />
-            <Route path="/seats" element={<Seats />} />
-            <Route path="/ordersumm" element={<OrderSummary />} />
-            <Route path="/checkout" element={<Checkout />} />
+            
             <Route path="/confirmation" element={<Confirmation />} />
             <Route path="/coming-soon" element={<ComingSoon />} />
 
             <Route path="/movie-details/:movieId" element={<MovieDetails />} />
+            <Route path="/movie-details/:movieId/seats/:showingId" element={<Seats />} />
+            <Route path="/movie-details/:movieId/seats/:showingId/checkout" element={<Checkout />} /> 
+            <Route path="/movie-details/ordersumm" element={<OrderSummary />} /> 
+            
 
             <Route path = "/registration" element = {<Registration/>} />
             <Route path ="/edit-profile" element = {<EditProfile/>} />
@@ -82,16 +86,20 @@ function App() {
 
             <Route path = "/managemovies/" element = {<ManageMovies/>} />
             <Route path = "/managepromotions/" element = {<ManagePromotions/>} />
+
             <Route path = "/manageusers/" element = {<ManageUsers/>} />
             <Route path='/addmovie/' element = {<AddMovie/>} />
             <Route path='/editmovie/:movieId/' element = {<EditMovie/>} />
             <Route path='/addshowing/:movieID/' element = {<AddShowing/>} /> 
             <Route path='/manageshowings/:movieID/' element = {<ManageShowings/>} /> 
 
+            <Route path='/manageprices/' element ={<ManagePrices/>}/>
+
           </Routes>
         </main>
       </div>
     </Router>
+    </AuthProvider> 
   );
 }
 

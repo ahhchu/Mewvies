@@ -1,58 +1,58 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import "./Header.css";
-import Login from "./Login";
-import Signup from "./Signup";
+import {useLogin} from "../context/LoginContext";
+import {useSignup} from "../context/SignupContext";
 import Search from "./Search";
-import EditProfile from "./EditProfile";
+import {isLoggedIn, logout} from "../functionality/User";
 import { useNavigate } from "react-router-dom";
-import yarnImage from '../img/yarn.jpg';
 
 
 
-function Header({ token, updateToken }) {
+function Header({ updateToken }) {
 
   const navigate = useNavigate();
 
-  const [signupSeen, setSignupSeen] = useState(false);
-  const [loginSeen, setLoginSeen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
-
+  const openLoginPopup = useLogin();
+  const openSignupPopup = useSignup();
+ // const [admin, setAdmin] = useState(false);
+  const [authenticated, setAuthenticated] = useState(false);
+  const admin = localStorage.getItem('userRole');
+ 
   useEffect(() => {
     updateToken();
   }, [updateToken]);
 
+  useEffect(() => {
+    const checkAuthentication = () => {
+      setAuthenticated(isLoggedIn());
+    };
+    checkAuthentication(); // Check authentication when component mounts
+  }, []);
+  
+  useEffect(() => {
+    if (admin == 'admin') {
+        navigate('/admin');
+    }
+}, [admin]);
+  
+
   const toggleSignup = () => {
-    setSignupSeen(!signupSeen);
-    if (loginSeen) {
-      setLoginSeen(false); //hide login
-    }
-    console.log("signup: " + signupSeen);
+    openSignupPopup;
+    navigate('/signup');
   };
 
-  const toggleLogin = () => {
-    setLoginSeen(!loginSeen);
-    if (signupSeen) {
-      setSignupSeen(false); //hide signup
-    }
+   const toggleLogin = () => {
+    openLoginPopup;
+    navigate('/login');
   };
-
-  function handleLoginSuccess(userRole) {
-    setIsLoggedIn(true);
-    if (userRole === "admin") {
-      setIsAdmin(true);
-      navigate("/admin");
-    } else {
-      navigate("/");
-    }
-  }
+ 
 
   function handleLogout() {
-    setIsLoggedIn(false);
-    setIsAdmin(false);
-    setLoginSeen(false); 
-    setSignupSeen(false);
+    logout();
+
+    setAuthenticated(false);
+
     navigate("/Mewvies");
     localStorage.clear();
     updateToken();
@@ -71,20 +71,20 @@ function Header({ token, updateToken }) {
         <div className="search-results">
         <Search /> {/*search bar */}
         </div>
-        {isLoggedIn ? (
+        {authenticated ? (
           <>
           <button className="nav">
             <Link className="nav" to="/edit-profile">
               Edit Profile
             </Link>
           </button>
-          {isAdmin ? (
+          {admin == 'admin' && (
             <button className="nav">
               <Link className="nav" to="/admin">
                 Admin
               </Link>
             </button>
-            ) : null}
+            )}
             </>
         ) : (
           <>
@@ -95,23 +95,9 @@ function Header({ token, updateToken }) {
               Login
             </button>
 
-          
-            {signupSeen ? (
-              <Signup
-                updateToken={updateToken}
-                toggle={toggleSignup}
-              />
-            ) : null}
-            {loginSeen && !signupSeen ? (
-              <Login
-                updateToken={updateToken}
-                toggle={toggleLogin}
-                handleLoginSuccess={handleLoginSuccess} 
-              />
-            ) : null}
           </>
         )}
-        {isLoggedIn && (
+        {authenticated && (
           <button className="nav" onClick={() => handleLogout()}>
             Logout
           </button>

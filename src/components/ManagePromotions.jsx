@@ -3,7 +3,11 @@ import { Link } from "react-router-dom";
 import Button from "./Button";
 import { addPromo, deletePromo, fetchPromotions } from "../functionality/promos";
 import "./Header.css";
+import {fetchAllUsers} from "../functionality/User";
 import "./Button.css";
+//import { sendingEmail } from "../services/sendEmail";
+import emailjs from '@emailjs/browser'
+
 
 function ManagePromotions() {
     const [promoData, setPromoData] = useState({
@@ -12,6 +16,9 @@ function ManagePromotions() {
         promo_amt: "",
         percentage_bool: false
     });
+    const [users, setUsers] = useState([]);
+    const [displayUsers, setDisplayUsers] = useState([]); // Added to hold the users to display
+    const [showPromoUsers, setShowPromoUsers] = useState(false);
     const [promotions, setPromotions] = useState([]);
     const [selectedPromos, setSelectedPromos] = useState([]);
 
@@ -22,20 +29,62 @@ function ManagePromotions() {
             [name]: type === "checkbox" ? checked : value
         });
     };
+    const [promoUsers, setPromoUsers] = useState([]); // State to store users who opted for promos
 
+    useEffect(() => {
+        fetchUsers();
+    }, []);
+
+    const fetchUsers = async () => {
+        const userList = await fetchAllUsers();
+        setUsers(userList);
+        filterPromoUsers(userList);
+    };
+
+    const filterPromoUsers = (userList) => {
+        // Filter users who have opted into promotions
+        const filteredUsers = userList.filter(user => user.promo === true);
+        setPromoUsers(filteredUsers); // Store the filtered users in state
+    };
+    
     const handleFormSubmit = async (event) => {
         event.preventDefault();
         try {
+            //let result = await sendingEmail("internetspam25@gmail.com", "promos", "Here's a promo!");
             await addPromo(promoData);
             alert('Promotion added successfully!');
             setPromoData({ promo_id: "", promo_code: "", promo_amt: "", percentage_bool: false });
             fetchPromotionsData();
+           
+            const msg = "Here is your promotion for " + promoData.promo_amt + " as a discount with the code: " + promoData.promo_code
+            await sendingEmails(promoUsers, msg);
+            
+            
         } catch (e) {
             console.error("Error adding document: ", e);
             alert('Error adding promotion!');
         }
     };
 
+    const sendingEmails = async (promoUsers, msg) => {
+        try {
+            
+            // Loop through each email address
+            for (const email of promoUsers) {
+                var templateParams = {
+                    message: msg,
+                    email_to: email.email,
+                };
+                console.log("Sending email to:", email.email);
+
+                // Send email for each recipient
+                await emailjs.send('service_ld81717', 'template_tkzlco9', templateParams, 'wVVyNS7NMcSjFNt5s');
+                console.log("Email sent successfully to", email);
+            }
+        } catch (error) {
+            console.error("Error sending email: ", error);
+        }
+    }
     const handleSelectPromo = (promoId) => {
         setSelectedPromos(prev => {
             if (prev.includes(promoId)) {
@@ -76,6 +125,9 @@ function ManagePromotions() {
                 </Link>
                 <Link to="/manageusers">
                     <Button className="manage">Manage Users</Button>
+                </Link>
+                <Link to ="/manageprices">
+                <button className="btn">Manage Prices</button> 
                 </Link>
             </div>
             <div>
