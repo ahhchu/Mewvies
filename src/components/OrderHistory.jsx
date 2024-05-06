@@ -94,12 +94,12 @@ function OrderHistory() {
                 <th>{order.order_id}</th>
                 <th>{order.promo_id}</th>
                 <th>{order.movie_name}</th>
-                <th>{new Date(order.showing_time.seconds).toString()}</th>
+                <th>{new Date(order.showing_time.seconds * 1000).toString()}</th>
                 <th>{order.showing_room}</th>
                 <th>{order.seat_number}</th>
                 <th>{"$" + order.ticket_price}</th>
                 <th>{order.ticket_type}</th>
-                <th>{new Date(order.purchase_time.seconds).toString()}</th>
+                <th>{new Date(order.purchase_time.seconds * 1000).toString()}</th>
                 </tr>
                 )
               })}
