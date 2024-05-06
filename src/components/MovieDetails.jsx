@@ -81,7 +81,7 @@ const MovieDetails = () => {
           {showings.length > 0 ? (
             showings.map(show => (
               <button className="showing" key={show.showing_id} onClick={() => handleRedirect(show)}>
-                {new Date(show.showing_time.seconds).toString()}
+                {new Date(show.showing_time.seconds * 1000).toString()}
               </button>
             ))
           ) : <p>No showings available.</p>}
