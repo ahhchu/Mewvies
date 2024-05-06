@@ -4,7 +4,7 @@ import { collection, getDocs, query, where, addDoc } from "firebase/firestore";
 import { db } from "../config/firestore";
 import Button from "./Button";
 import "./Checkout.css";
-import { decryptData } from "../services/crypto";
+import emailjs from '@emailjs/browser';
 import {
   getAuth,
 } from "firebase/auth";
@@ -19,9 +19,6 @@ function Checkout() {
   const { state } = useLocation();
   const { selectedSeats, seatTypes, showingTime, showingId, movieTitle, movieId } =
     state || {}; // location.state;
-//    console.log("movieId: ", movieId);
-    //console.log("showingId: ", showingId);
-
   const bookingId = location.state?.bookingId;
   const initialSeatTypes = seatTypes || {};
   const [editableSeatTypes, setEditableSeatTypes] = useState(initialSeatTypes);
@@ -93,8 +90,6 @@ function Checkout() {
     fetchFees();
   }, []);
 
-
-
   const renderTicketTypeDropdown = (seat) => {
     const currentValue = editableSeatTypes[seat] || '';
   
@@ -143,96 +138,6 @@ function Checkout() {
   
     fetchCards();
   }, []); 
-  
-
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const auth = getAuth();
-    const user = auth.currentUser;
-
-    if (!has3Cards) {
-      const uid = user.uid;
-      addMultiplePayments(cardName, cardNumber, cardType, expiration, billingAddressOne, billingAddressTwo, billingCity, billingState, billingZip, uid, cardIndex);
-    }
-
-    //WAIT BEFORE RELOAD
-    setTimeout(() => {
-      window.location.reload();
-  }, 5000);
-
-    };  
-  
-    const handleCheckout = async (e) => {
-      e.preventDefault();
-      const auth = getAuth();
-      const user = auth.currentUser;
-  
-      if (!selectedCard) {
-        alert('Please select a payment method');
-        return;
-      }
-
-      // cart 
-      const orders = selectedSeats.flatMap(seatGroup => {
-        return seatGroup.split(", ").map(seat => ({
-          seat_number: seat.trim(),
-          ticket_type: editableSeatTypes[seatGroup].split(":")[0],  
-          ticket_price: parseFloat(editableSeatTypes[seatGroup].split(":")[1]),
-          showing_id: showingId,
-        }));
-      });
-    
-      const cartData = {
-        customer_id: user.uid,
-        orders: orders
-      };
-
-//      console.log("User UID: ", user.uid);
-      const orderData = {
-        customer_id: user.uid,
-        movie_id: movieId,
-//        order_id: "GenerateID",
-//        payment_id: "GenerateOrFetchPaymentID", 
-        promo_id: promo,
-        purchase_time: new Date().toISOString(), 
-        seat_number: selectedSeats.join(", "), 
-        showing_id: showingId, 
-        ticket_price: total.toString(), 
-        ticket_type: JSON.stringify(editableSeatTypes), 
-        payment_details: {
-          cardNumber: selectedCard.card_number,
-          cardName: selectedCard.card_name,
-          cardType: selectedCard.card_type,
-          expiration: selectedCard.expiration,
-          billingAddressOne: selectedCard.billing_address_one,
-          billingAddressTwo: selectedCard.billing_address_two,
-          billingCity: selectedCard.billing_city,
-          billingState: selectedCard.billing_state,
-          billingZip: selectedCard.billing_zip
-        }
-      };  
-
-    try {
-      const cardDocRef = await addDoc(collection(db, "cart"), cartData);
-      const orderDocRef = await addDoc(collection(db, "order"), orderData);
-      console.log("Document written with ID: ", cardDocRef.id);
-      console.log("Document written with ID: ", orderDocRef.id);
-  
-      navigate("/movie-details/ordersumm", {
-        state: {
-          movieTitle: movieTitle,
-          showingTime: showingTime,
-          selectedSeats: selectedSeats,
-          seatTypes: editableSeatTypes,
-          total: total,
-        },
-        replace: true,
-      });
-    } catch (error) {
-      console.error("Error adding document: ", error);
-    }
-  };
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -306,16 +211,139 @@ setEditableSeatTypes(prev => ({ ...prev, [seat]: value }));
         if (data.percentage_bool) {
           const percentageDiscount = (ticketTotal * data.promo_amt / 100).toFixed(2);
           setDiscount(parseFloat(percentageDiscount));
-//          console.log("percentageDiscount: ", percentageDiscount);
         } else {
           setDiscount(parseFloat(data.promo_amt));
-//          console.log("percentageDiscount: ", data.promo_amt);
         }
         setPromoError('');
       });
     }
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (!has3Cards) {
+      const uid = user.uid;
+      addMultiplePayments(cardName, cardNumber, cardType, expiration, billingAddressOne, billingAddressTwo, billingCity, billingState, billingZip, uid, cardIndex);
+    }
+
+    //WAIT BEFORE RELOAD
+    setTimeout(() => {
+      window.location.reload();
+  }, 5000);
+    };  
+  
+    const handleCheckout = async (e) => {
+      e.preventDefault();
+      const auth = getAuth();
+      const user = auth.currentUser;
+  
+      if (!selectedCard) {
+        alert('Please select a payment method');
+        return;
+      }
+
+      // cart 
+      const orders = selectedSeats.flatMap(seatGroup => {
+        return seatGroup.split(", ").map(seat => ({
+          seat_number: seat.trim(),
+          ticket_type: editableSeatTypes[seatGroup].split(":")[0],  
+          ticket_price: parseFloat(editableSeatTypes[seatGroup].split(":")[1]),
+          showing_id: showingId,
+        }));
+      });
+    
+      const cartData = {
+        customer_id: user.uid,
+        orders: orders
+      };
+
+      const orderData = {
+        customer_id: user.uid,
+        movie_id: movieId,
+        promo_id: promo,
+        purchase_time: new Date().toISOString(), 
+        seat_number: selectedSeats.join(", "), 
+        showing_id: showingId, 
+        ticket_price: total.toString(), 
+        ticket_type: JSON.stringify(editableSeatTypes), 
+        payment_details: {
+          cardNumber: selectedCard.card_number,
+          cardName: selectedCard.card_name,
+          cardType: selectedCard.card_type,
+          expiration: selectedCard.expiration,
+          billingAddressOne: selectedCard.billing_address_one,
+          billingAddressTwo: selectedCard.billing_address_two,
+          billingCity: selectedCard.billing_city,
+          billingState: selectedCard.billing_state,
+          billingZip: selectedCard.billing_zip
+        }
+      };  
+
+    try {
+      const cardDocRef = await addDoc(collection(db, "cart"), cartData);
+      const orderDocRef = await addDoc(collection(db, "order"), orderData);
+      console.log("Document written with ID: ", cardDocRef.id);
+      console.log("Document written with ID: ", orderDocRef.id);
+  
+      navigate("/movie-details/ordersumm", {
+        state: {
+          movieTitle: movieTitle,
+          showingTime: showingTime,
+          selectedSeats: selectedSeats,
+          seatTypes: editableSeatTypes,
+          total: total,
+        },
+        replace: true,
+      });
+    
+      //SEND EMAIL
+      sendConfirmationEmail(user.email, orderData );
+
+    } catch (error) {
+      console.error("Error adding document: ", error);
+    }
+  };
+  
+
+  const sendConfirmationEmail = async (email, orderData) => {
+    try {  
+      const showingTime1 = new Date(showingTime).toLocaleString();
+      const total = parseFloat(orderData.ticket_price).toFixed(2);
+
+      const msg = `
+          Order Summary:
+          ---------------------------------
+          Movie: ${movieTitle}
+          Showing Time: ${showingTime1}
+          Order Total: $${total}`;
+
+        await sendingEmails(email, msg);
+    } catch (e) {
+      console.error("Error sending confirmation email: ", e);
+      alert('Error sending confirmation email!');
+    }
+};
+
+
+  const sendingEmails = async (email, msg) => {
+    try {
+        // Loop through each email address
+            var templateParams = {
+                message: msg,
+                email_to: email,
+            };
+            console.log("Sending email to:", email);
+
+            // Send email for each recipient
+            await emailjs.send('service_ld81717', 'template_402nmrp', templateParams, 'wVVyNS7NMcSjFNt5s');
+            console.log("Email sent successfully to", email);
+    } catch (error) {
+        console.error("Error sending email: ", error);
+    }
+}
 
   return (
     <div className="Summary">
