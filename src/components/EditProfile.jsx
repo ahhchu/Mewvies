@@ -92,11 +92,11 @@ useEffect(() => {
         lname: lastName,
         promo: promo || false,
 
-        homeAddressOne: homeAddressOne,
-        homeAddressTwo: homeAddressTwo,
-        homeCity: homeCity,
-        homeState: homeState,
-        homeZipCode: homeZipCode,
+        home_address_one: homeAddressOne,
+        home_address_two: homeAddressTwo,
+        home_city: homeCity,
+        home_state: homeState,
+        home_zip: homeZipCode,
       };
 
       const updatedCardsData = updatedCards.map(card => ({
