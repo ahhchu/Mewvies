@@ -58,6 +58,7 @@ function Header({ updateToken }) {
     updateToken();
   }
 
+
   return (
     <div className="header">
 {/*       <img src={yarnImage} alt="Yarn" width="75" height="75" class='image' /> to add or not to add*/}
