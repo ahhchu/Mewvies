@@ -142,8 +142,8 @@ export async function updateUser(currentUser, user, cards) {
         console.log("updating cards");
         var increment = 0;
         cards.forEach(card => {
-            increment++;
             addMultiplePayments(card.card_name, card.card_number, card.card_type, card.expiration, card.billing_address_one, card.billing_address_two, card.billing_city, card.billing_state, card.billing_zip, currentUser.uid, increment);
+            increment++;
             console.log("printing updating cards");
             console.log(card);
             console.log("done");
