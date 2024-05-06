@@ -9,6 +9,8 @@ import {
   getAuth,
 } from "firebase/auth";
 import { getPaymentCards, passphrase } from "../functionality/User";
+import { doc, getDoc } from "firebase/firestore";
+
 
 function Checkout() {
 
@@ -29,6 +31,16 @@ function Checkout() {
   const [cards, setCards] = useState([]); 
   const [selectedCard, setSelectedCard] = useState(null);
   const [ticketPrices, setTicketPrices] = useState({});
+
+  const [promoCode, setPromoCode] = useState('');
+  const [promo_code_db, setDBPromoCode] = useState('');
+  const [percent_bool, setPercBool] = useState('');
+  const [promo_amt, setPromoAmt] = useState('');
+  const [promo_id, setPromoID] = useState('');
+  const [promo_discount, setPromoDiscount] = useState('');
+  //const [promo_data, setPromoData] = useState('');
+  const [promoData, setPromoData] = useState(null); 
+
 
   const auth = getAuth();
   const currentUser = auth.currentUser; // Get the current user
@@ -86,6 +98,126 @@ function Checkout() {
       ))}
     </select>
   );
+
+
+  const handlePromoCodeChange = (e) => {
+    const code = e.target.value;
+    setPromoCode(code); // Update the promoCode state with the entered value
+  
+    const fetchData = async (promoCode) => {
+      try {
+        console.log("promoCode is: " + promoCode);
+        const q = query(collection(db, "promo"), where("promo_code", "==", promoCode));
+        const querySnapshot = await getDocs(q);
+
+        console.log(querySnapshot)
+  
+        if (!querySnapshot.empty) {
+          const document = querySnapshot.docs[0];
+          const promoData = document.data();
+          console.log(promoData);
+          setPromoData(promoData); // Set the promoData state
+        } else {
+          console.log("Not a matching code");
+          setPromoData(null); // Set promoData to null if no matching code
+        }
+      } catch (error) {
+        console.error("Error fetching document:", error);
+      }
+    };
+  
+    // Call fetchData when promoCode changes
+    fetchData(code);
+  };
+  
+  // const handlePromoCodeChange = (e) => {
+  //   setPromoCode(e.target.value);
+
+  //   const fetchData = async () => {
+  //     //try {
+  //   //     const q = query(collection(db, "promo"), where("promo_code", "==", promoCode));
+  //   //     const querySnapshot = await getDocs(q);
+
+  //   //     if (!querySnapshot.empty) {
+  //   //       const document = querySnapshot.docs[0];
+  //   //       const promoData = document.data();
+  //   //       console.log(promoData);
+
+  //   //       // Extract specific fields from the document data
+  //   //       //const { percent_bool, promo_amt, promo_code_db, promo_id} = promoData;
+
+  //   //       // Set the extracted fields to the component state
+  //   //       //setPromoData({ percent_bool, promo_amt, promo_code_db, promo_id});
+  //   //     } else {
+  //   //       console.log("Not a matching code");
+  //   //       setPromoData(null); // or handle as needed
+  //   //     }
+
+  //   //     setLoading(false);
+  //   //   } catch (error) {
+  //   //     console.error("Error fetching document:", error);
+  //   //     setLoading(false);
+  //   //   }
+  //   // };
+  //   try {
+  //     const q = query(collection(db, "promo"), where("promo_code", "==", promoCode));
+  //     const querySnapshot = await getDocs(q);
+
+  //     if (!querySnapshot.empty) {
+  //       const document = querySnapshot.docs[0];
+  //       const promoData = document.data();
+  //       console.log(promoData);
+  //       setPromoData(promoData); // Set the promoData state
+  //       console.log(promoData);
+  //       // You may also set other related states here, e.g., setPercBool(promoData.percent_bool), etc.
+  //     } else {
+  //       console.log("Not a matching code");
+  //       setPromoData(null); // Set promoData to null if no matching code
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching document:", error);
+  //   }
+  // };
+  // };
+
+  const applyPromoCode = () => {
+    //console.log("total is: " + total + " promo_amt is: " + promoData.promo_amt);
+    // if (percent_bool) {
+    //   setPromoDiscount(total*promo_data.promo_amt);
+    // } else {
+    //   setPromoDiscount(promo_data.promo_amt);
+    // }
+    console.log(promoData);
+      if (promoData && promoData.percent_bool) {
+      const discountAmount = subtotal * promoData.promo_amt;
+      setPromoDiscount(discountAmount);
+    } else if (promoData && promoData.promo_amt) {
+      setPromoDiscount(parseFloat(promoData.promo_amt));
+    } else {
+      setPromoDiscount(0);
+    }
+
+  //   try {
+  //     const q = query(collection(db, "promo"), where("promo_code", "==", promoCode));
+  //     const querySnapshot = await getDocs(q);
+
+  //     if (!querySnapshot.empty) {
+  //       // Assuming you expect only one document to match, use .docs[0]
+  //       const document = querySnapshot.docs[0];
+  //       setDocumentData(document.data());
+  //     } else {
+  //       console.log("No matching codes");
+  //       setDocumentData(null); // or handle as needed
+  //     }
+
+  //     setLoading(false);
+  //   } catch (error) {
+  //     console.error("Error fetching document:", error);
+  //     setLoading(false);
+  //   }
+  // };
+  };
+  
   
 
   try {
@@ -261,12 +393,30 @@ function Checkout() {
     </li>
   ))}
 </ul>
+      <div>
+        <label>Promo Code: </label>
+        <input
+          type="text"
+          value={promoCode}
+          onChange={handlePromoCodeChange}
+          placeholder="Enter promo code"
+        />
+        <button onClick={applyPromoCode}>Apply</button>
+      </div>
+
 
 
       <h3>Total: </h3>
       <h4>Ticket prices: ${subtotal.toFixed(2)}</h4>
       <h4>Sales Tax: ({(fees.salesTax * 100).toFixed(0)}%): ${(subtotal * fees.salesTax).toFixed(2)}</h4>
       <h4>Online Fees: ${(selectedSeats.length * fees.onlineFees).toFixed(2)}</h4>
+
+      {promoCode && promo_discount > 0 && (
+        <div>
+          <h4>Promo Discount: -${(promo_discount).toFixed(0)}</h4>
+        </div>
+      )}
+
 
       <h3>
         Total amount: $
