@@ -42,6 +42,9 @@ function ManageMovies() {
             <Link to ="/managepromotions">
              <Button className="manage">Manage Promos</Button> 
             </Link>
+            <Link to ="/manageprices">
+             <button className="btn">Manage Prices</button> 
+            </Link>
       </div>
       <h1>Manage Movies</h1>
       <Link to ="/addmovie">

@@ -98,27 +98,37 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    padding: 2px;
+    padding: 10px;
+    max-width: 300px;
+    margin: auto;
   }
   
   .seatContainer {
-    width: 0 0 20%;
-    padding: 2px;
+    width: 18%;
+    padding: 5px;
+    box-sizing: border-box;
   }
   
-  .seat, .selected {
-    width: 30px;  
-    height: 30px;
+  .seat, .selected, .unavailable {
+    width: 100%;  
+    padding-top: 100%; 
+    position: relative; 
     background-color: #ccc;
     border: 1px solid #fff;
-   cursor: pointer;
+    cursor: pointer;
+    box-sizing: border-box; 
 }
   
   .selected {
-    background-color: #4CAF50 /* green selected */
-    /* red if already booked */
+    background-color: #4CAF50 /* green currently selected */
   }
   
+  .unavailable {
+    background-color: red;
+    cursor: not-allowed;
+    opacity: .8;
+  }
+
   .selectedSeatsInfo {
     margin-top: 20px;
   }

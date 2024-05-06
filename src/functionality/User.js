@@ -12,6 +12,7 @@ import {
     reauthenticateWithCredential,
 } from "firebase/auth";
 import { db } from "../config/firestore";
+import { decryptData, encryptData } from "../services/crypto";
 
 
 
@@ -86,7 +87,7 @@ export async function fetchUserData(currentUser) {
     if (currentUser) {
         var userRef = doc(db, "user", currentUser.uid);
         var userSnap = await getDoc(userRef);
-        console.log(userSnap.data());
+        //console.log(userSnap.data());
         return userSnap.data();
     }
 }
@@ -138,12 +139,12 @@ export async function changePassword(currentUser, currPass, newPass) {
 export async function updateUser(currentUser, user, cards) {
     try {
       removePaymentMethods(currentUser.uid).then(() => {
-        console.log("printing cards");
+        console.log("updating cards");
         var increment = 0;
         cards.forEach(card => {
             increment++;
             addMultiplePayments(card.card_name, card.card_number, card.card_type, card.expiration, card.billing_address_one, card.billing_address_two, card.billing_city, card.billing_state, card.billing_zip, currentUser.uid, increment);
-            console.log("printing cards");
+            console.log("printing updating cards");
             console.log(card);
             console.log("done");
         });
@@ -168,16 +169,23 @@ export async function updateUserNoCard(uid, user) {
 }
 
 async function removePaymentMethods(uid) {
-    var promise;
-    var snapshot = await getDocs(collection(db, "payment_info"));
-    if (snapshot.docs.length == 0) {
+    const snapshot = await getDocs(collection(db, "payment_info"));
+
+    if (snapshot.empty) {
         return;
     }
-        snapshot.docs.forEach((element) => {
-            if (element.data().uid == uid) {
-                deleteDoc(element.ref, promise);
-            } // if
-        });
+
+    const deletionPromises = [];
+    
+    snapshot.forEach((doc) => {
+        if (doc.data().uid === uid) {
+            const deletionPromise = deleteDoc(doc.ref);
+            deletionPromises.push(deletionPromise);
+            console.log("deleted");
+        }
+    });
+
+    await Promise.all(deletionPromises);
 }
 
 /* END OF MODIFY USER */
@@ -185,74 +193,76 @@ async function removePaymentMethods(uid) {
 /* BEGINNING OF PAYMENT FUNCTIONS */
 
 // For encryption
-const passphrase = "webufhibejnlisuediuwe";
+
 
 /* returns an array of payment cards
  */
-export async function getPaymentCards (uid) {
+export async function getPaymentCards(uid) {
     try {
         var snapshot = await getDocs(collection(db, "payment_info"));
         var existingPayments = [];
-        snapshot.docs.forEach((element) => {
-            if (element.data().uid == uid) {
-                existingPayments.push(element.data());
-            } // if
+
+        snapshot.docs.forEach((doc) => {
+            if (doc.data().uid == uid) {
+                const decryptedData = decryptDocument(doc.data());
+                existingPayments.push(decryptedData);
+            }
         });
         return existingPayments;
     } catch (error) {
+        console.error("Error fetching payment cards:", error);
         return [];
-    } // try
-} // getPaymentCards
+    }
+}
 
-/* Adds payment methods
- */
-export async function addPayment(cardName, cardNumber, cardType, expirationDate, billingAddressOne, billingAddressTwo, city, state, zipCode, uid) {
+// Function to decrypt a document's fields
+const decryptDocument = (encryptedDoc) => {
+    const decryptedDoc = {};
+
+    for (const field in encryptedDoc) {
+        // Decrypt each field and add it to the decrypted document object
+        decryptedDoc[field] = decryptData(encryptedDoc[field]);
+    }
+
+    return decryptedDoc;
+};
+
+
+export async function addMultiplePayments(cardName, cardNumber, cardType, expiration, billingAddressOne, billingAddressTwo, billingCity, billingState, billingZip, uid, num) {
     var newCard = {};
     try {
-        newCard = {
+        // Create a single object containing all properties
+        const cardDataToEncrypt = {
             card_name: cardName,
             card_number: cardNumber,
             card_type: cardType,
-            expiration: expirationDate,
+            expiration: expiration,
             billing_address_one: billingAddressOne,
             billing_address_two: billingAddressTwo,
-            billing_city: city,
-            billing_state: state,
-            billing_zip: zipCode,
+            billing_city: billingCity,
+            billing_state: billingState,
+            billing_zip: billingZip
+        };
+
+        const encryptedCardData = encryptData(cardDataToEncrypt);
+
+        // Encrypt the entire card data object
+        newCard = {
+            encrypted_card_data: encryptedCardData,
             uid: uid
         };
     } catch (error) {
         console.error("Error encrypting data:", error);
-      } // try
+    }
 
-      const cardRef = doc(db, "payment_info", uid + Date.now());
-      await setDoc(cardRef, newCard);
-      return true;
-} // addPayment
+    console.log("newCard: ", newCard);
+    // Pass the entire object to the decryptData function
+    console.log("newCard Decry: ", decryptData(newCard));
+    const cardRef = doc(db, "payment_info", num + uid + Date.now());
+    await setDoc(cardRef, newCard);
+    return true;
+} //addMultiplePayments
 
-export async function addMultiplePayments(cardName, cardNumber, cardType, expirationDate, billingAddressOne, billingAddressTwo, city, state, zipCode, uid, num) {
-    var newCard = {};
-    try {
-        newCard = {
-            card_name: cardName,
-            card_number: cardNumber,
-            card_type: cardType,
-            expiration: expirationDate,
-            billing_address_one: billingAddressOne,
-            billing_address_two: billingAddressTwo,
-            billing_city: city,
-            billing_state: state,
-            billing_zip: zipCode,
-            uid: uid
-        };
-    } catch (error) {
-        console.error("Error encrypting data:", error);
-      } // try
-
-      const cardRef = doc(db, "payment_info", num + uid + Date.now());
-      await setDoc(cardRef, newCard);
-      return true;
-} // addPayment
 
 /* END OF PAYMENT FUNCTIONS */
 

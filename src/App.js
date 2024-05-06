@@ -34,6 +34,8 @@ import ManageShowings from './components/ManageShowings';
 import AddShowing from './components/AddShowing';
 import AddMovie from './components/AddMovie';
 import {test} from "./functionality/test"
+import OrderHistory from './components/OrderHistory'
+import ManagePrices from './components/ManagePrices';
 
 function App() {
 
@@ -85,11 +87,15 @@ function App() {
 
             <Route path = "/managemovies/" element = {<ManageMovies/>} />
             <Route path = "/managepromotions/" element = {<ManagePromotions/>} />
+
             <Route path = "/manageusers/" element = {<ManageUsers/>} />
             <Route path='/addmovie/' element = {<AddMovie/>} />
             <Route path='/editmovie/:movieId/' element = {<EditMovie/>} />
             <Route path='/addshowing/:movieID/' element = {<AddShowing/>} /> 
             <Route path='/manageshowings/:movieID/' element = {<ManageShowings/>} /> 
+
+            <Route path='/orderhistory/' element = {<OrderHistory/>} /> 
+            <Route path='/manageprices/' element ={<ManagePrices/>}/>
 
           </Routes>
         </main>

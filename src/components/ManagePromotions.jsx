@@ -6,7 +6,7 @@ import "./Header.css";
 import {fetchAllUsers} from "../functionality/User";
 import "./Button.css";
 //import { sendingEmail } from "../services/sendEmail";
-import emailjs from '@emailjs/browser'
+import emailjs from '@emailjs/browser';
 
 
 function ManagePromotions() {
@@ -125,6 +125,9 @@ function ManagePromotions() {
                 </Link>
                 <Link to="/manageusers">
                     <Button className="manage">Manage Users</Button>
+                </Link>
+                <Link to ="/manageprices">
+                <button className="btn">Manage Prices</button> 
                 </Link>
             </div>
             <div>
