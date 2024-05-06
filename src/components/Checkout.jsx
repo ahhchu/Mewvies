@@ -381,7 +381,7 @@ setEditableSeatTypes(prev => ({ ...prev, [seat]: value }));
         onChange={(e) => setPromo(e.target.value)}
         placeholder="Enter promo code"
       />
-      <button onClick={handleApplyPromo}>Apply Promo Code</button>
+      <button className = "edit-button" onClick={handleApplyPromo}>Apply Promo Code</button>
       {promoError && <p className="error">{promoError}</p>}
 
 

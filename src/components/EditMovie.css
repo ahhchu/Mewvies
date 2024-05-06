@@ -47,3 +47,20 @@ h3 {
     border: none; 
 
   }
+
+  .movie-details, .reviews {
+    max-width: 1000px; 
+    margin: 0 auto;
+    padding: 20px; 
+    box-sizing: border-box; 
+  }
+  
+  
+  .movie-details label {
+    word-wrap: break-word; 
+  }
+  
+  .reviews p {
+    font-style: italic;
+    word-wrap: break-word;
+  }

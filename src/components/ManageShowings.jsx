@@ -55,7 +55,7 @@ function ManageShowings() {
               
               {showings.map((show) => {
                 return( <tr>
-                <th>{show.room_id}</th>
+                <th>{(show.room_id).toString()}</th>
                 <th>{new Date(show.showing_time.seconds * 1000).toString()}</th>
                 <th><Button onClick={() => removeShowing(show.showing_id)}>Delete</Button></th>
                 </tr>

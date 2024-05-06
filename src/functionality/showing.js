@@ -5,29 +5,39 @@ import { getRooms } from "./showrooms";
 /* Adds a showing. Everything is a string, except showingTime, which needs to be a Date()
  */
 export async function addShowing(movieID, roomID, showingTime) {
-    var newShowing = {};
     try {
-        var returnthing = false;
-        console.log(await checkShowingAvailability(roomID, showingTime));
+        console.log("Checking availability for room:", roomID, " at time:", showingTime);
         if (await checkShowingAvailability(roomID, showingTime)) {
-        newShowing = {
-            movie_id: movieID,
-            room_id: roomID,
-            showing_time: Timestamp.fromDate(showingTime),
-            showing_id: 0,
-        };
-        var data = await getShowings()
-            newShowing.showing_id = data.length;
-            var showingRef = doc(db, "showing", newShowing.showing_id.toString());
+            // Convert roomID to string in case it is not
+            const roomIDString = roomID.toString();
+            
+            // Fetch current showings to generate a new showing_id
+            const showingsData = await getShowings();
+            const showingIDString = (showingsData.length).toString(); // Convert the index to a string
+
+            // New showing object
+            const newShowing = {
+                movie_id: movieID,
+                room_id: roomIDString,
+                showing_time: Timestamp.fromDate(showingTime),
+                showing_id: showingIDString,
+            };
+
+            // Using showingIDString as the document ID in Firestore
+            const showingRef = doc(db, "showing", showingIDString);
             await setDoc(showingRef, newShowing);
-            returnthing = true;
-            return returnthing;
-    }
+            console.log("New showing added successfully:", newShowing);
+            return true;
+        } else {
+            console.log("Showing not available for the provided time and room.");
+            return false;
+        }
     } catch (error) {
-        console.log(error);
+        console.error("Failed to add showing due to error:", error);
         return false;
-      } // try
-} // addShowing
+    }
+}
+ // addShowing
 
 /* gets all showings, no param required.
 */

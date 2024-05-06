@@ -81,7 +81,7 @@ return (
           <div className="personal-details">
             <table>
               <tr>
-                <th>Order ID</th>
+{/*                <th>Order ID</th>*/}
                 <th>Promotion</th>
                 <th>Movie</th>
                 <th>Showing Time</th>
@@ -94,7 +94,7 @@ return (
               
               {orders.map((order) => {
                 return( <tr>
-                <th>{order.order_id}</th>
+         {/*}       <th>{order.order_id}</th>*/}
                 <th>{order.promo_id}</th>
                 <th>{order.movie_name}</th>
                 <th>{new Date(order.showing_time.seconds * 1000).toString()}</th>
@@ -102,7 +102,7 @@ return (
                 <th>{order.seat_number}</th>
                 <th>{"$" + order.ticket_price}</th>
                 <th>{order.ticket_type}</th>
-                <th>{new Date(order.purchase_time.seconds * 1000).toString()}</th>
+                <th>{new Date(order.purchase_time).toString()}</th>
                 </tr>
                 )
               })}

@@ -37,7 +37,9 @@ const EditMovie = () => {
       trailer: movie.trailer, 
       rating: movie.rating,
       picture: movie.picture,
-      opening_date: movie.opening_date
+      opening_date: movie.opening_date,
+      review1: movie.review1,
+      review2: movie.review2,
   });    
     setIsEditing(false); // Turn off editing mode after submission
   };
@@ -45,7 +47,7 @@ const EditMovie = () => {
   const enableEdit = () => setIsEditing(true);
 
   return (
-    <div>
+    <div className="movie-details">
       {movie ? (
         <form onSubmit={handleSubmit}>
           <h1>Edit Movie Details</h1>
@@ -84,6 +86,14 @@ const EditMovie = () => {
                 <input type="text" name="rating" value={movie.rating} onChange={handleChange} />
               </label> < br/>
               <label>
+              Review 1:
+                <input type="text" name="review" value={movie.review1} onChange={handleChange} />
+              </label> < br/>
+              <label>
+              Review 2:
+                <input type="text" name="review" value={movie.review2} onChange={handleChange} />
+              </label> < br/>
+              <label>
                 Poster URL:
                 <input type="text" name="picture" value={movie.picture} onChange={handleChange} /> 
               </label> < br/> 
@@ -102,6 +112,8 @@ const EditMovie = () => {
               <p>Synopsis: {movie.synopsis}</p>
               <p>Category: {movie.category}</p>
               <p>MPAA-US code: {movie.rating}</p>
+              <p>Review1: {movie.review1}</p>
+              <p>Review2: {movie.review2}</p>
               <iframe
                 width="560"
                 height="315"

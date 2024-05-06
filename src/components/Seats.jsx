@@ -5,12 +5,19 @@ import "./Seats.css";
 import { getMovies } from "../functionality/movie";
 import { getShowingsByMovie, getShowings } from "../functionality/showing";
 import { db } from "../config/firestore";
-import { doc, getDocs, getDoc, collection, query, where } from "firebase/firestore";
+import {
+  doc,
+  getDocs,
+  getDoc,
+  collection,
+  query,
+  where,
+} from "firebase/firestore";
 
 function Seats() {
   const navigate = useNavigate();
   const { movieId, showingId } = useParams();
-//  console.log("movieId: ", movieId);
+  //  console.log("movieId: ", movieId);
   const [movie, setMovie] = useState(null);
   const [showing, setShowings] = useState(null);
   const [ticketPrices, setTicketPrices] = useState({});
@@ -32,18 +39,18 @@ function Seats() {
       const showingsData = await getShowingsByMovie(movieId);
       const specificShowing = showingsData.find(
         (s) => s.showing_id.toString() === showingId
-      ); 
-      setShowings(specificShowing); 
+      );
+      setShowings(specificShowing);
       console.log(showingsData);
-    }
+    };
 
-  /* fetch showing details */
+    /* fetch showing details */
     const fetchShowingDetails = async () => {
       const showingRef = doc(db, "showing", showingId);
       const showingSnap = await getDoc(showingRef);
       if (showingSnap.exists()) {
         const showingData = showingSnap.data();
-        setShowings(showingData); 
+        setShowings(showingData);
         console.log("Showing Data: ", showingData);
       } else {
         console.log("No such showing!");
@@ -53,12 +60,19 @@ function Seats() {
     /* fetch unavail seats */
     const fetchUnavailableSeats = async () => {
       const ordersRef = collection(db, "order");
-      const q = query(ordersRef, where("movie_id", "==", movieId), where("showing_id", "==", showingId));
+      const q = query(
+        ordersRef,
+        where("movie_id", "==", movieId),
+        where("showing_id", "==", showingId)
+      );
       try {
         const querySnapshot = await getDocs(q);
-        const bookedSeats = querySnapshot.docs.flatMap(doc => {
+        const bookedSeats = querySnapshot.docs.flatMap((doc) => {
           // Assuming seat_number can be "3, 4", split and trim each entry
-          return doc.data().seat_number.split(",").map(s => s.trim());
+          return doc
+            .data()
+            .seat_number.split(",")
+            .map((s) => s.trim());
         });
         setUnavailableSeats(bookedSeats);
         console.log("Unavailable Seats: ", bookedSeats);
@@ -66,32 +80,29 @@ function Seats() {
         console.error("Error fetching unavailable seats: ", error);
       }
     };
-    
 
-  fetchMovieDetails();
-  fetchShowingDetails();
-  fetchUnavailableSeats();
-  fetchShowingDetails();
-}, [movieId, showingId]);
+    fetchMovieDetails();
+    fetchShowingDetails();
+    fetchUnavailableSeats();
+    fetchShowingDetails();
+  }, [movieId, showingId]);
 
-
- /* fetch seats */
+  /* fetch seats */
   const handleSeatSelection = (seat) => {
     const seatString = seat.toString();
     if (!unavailableSeats.includes(seatString)) {
       const updatedSeats = selectedSeats.includes(seatString)
-        ? selectedSeats.filter(s => s !== seatString)
+        ? selectedSeats.filter((s) => s !== seatString)
         : [...selectedSeats, seatString];
       setSelectedSeats(updatedSeats);
     } else {
-      alert('This seat is unavailable.');
+      alert("This seat is unavailable.");
     }
   };
 
-  
   const handleSeatTypeChange = (seat, type) => {
     setSeatTypes((prev) => ({ ...prev, [seat]: type }));
-    setActiveDropdown(null); 
+    setActiveDropdown(null);
   };
 
   const toggleDropdown = (seat) => {
@@ -101,7 +112,6 @@ function Seats() {
   const isActiveDropdown = (seat) => {
     return activeDropdown === seat;
   };
-  
 
   /* backend code */
   const proceedToCheckout = async () => {
@@ -123,15 +133,15 @@ function Seats() {
     const fetchTicketPrices = async () => {
       const pricesSnapshot = await getDocs(collection(db, "ticket"));
       const pricesData = {};
-      pricesSnapshot.forEach(doc => {
+      pricesSnapshot.forEach((doc) => {
         pricesData[doc.id] = doc.data().price;
       });
       setTicketPrices(pricesData);
     };
-  
+
     fetchTicketPrices();
   }, []);
-  
+
   return (
     <div className="movieDetails">
       <h2>
@@ -145,27 +155,35 @@ function Seats() {
       </h2>
       <h2>Select seats:</h2>
 
-      <h3> Screen: Front</h3> 
+      <h3> Screen: Front</h3>
 
       <div className="seats">
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map((seat) => (
+        {[
+          1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+        ].map((seat) => (
           <div key={seat} className="seatContainer">
             <button
               onClick={() => handleSeatSelection(seat)}
               className={
-                unavailableSeats.includes(seat.toString()) ? "unavailable" :
-                selectedSeats.includes(seat.toString()) ? "selected" : "seat"
+                unavailableSeats.includes(seat.toString())
+                  ? "unavailable"
+                  : selectedSeats.includes(seat.toString())
+                  ? "selected"
+                  : "seat"
               }
             />
           </div>
         ))}
       </div>
 
-      <h3>Back</h3> 
+      <h3>Back</h3>
 
       {selectedSeats.length > 0 && (
         <div className="selectedSeatsInfo">
           <h2>Selected Seats:</h2>
+          <p>Child: Ages 0 - 10 </p>
+          <p>Adult: Ages 11 - 64</p>
+          <p>Senior: Ages 65 +</p>
           <ul>
             {selectedSeats.map((seat) => (
               <li
@@ -178,7 +196,9 @@ function Seats() {
               >
                 Seat {seat} -{" "}
                 {seatTypes[seat] ? (
-             `${seatTypes[seat].split(':')[0]}: $${seatTypes[seat].split(':')[1]}`
+                  `${seatTypes[seat].split(":")[0]}: $${
+                    seatTypes[seat].split(":")[1]
+                  }`
                 ) : (
                   <div className="dropdown">
                     <button
@@ -188,14 +208,21 @@ function Seats() {
                       Select Seat Type
                     </button>
                     {isActiveDropdown(seat) && (
-                  <div className="dropdown-content">
-                    {Object.entries(ticketPrices).map(([type, price]) => (
-                      <p key={type} onClick={() => handleSeatTypeChange(seat, `${type}: ${price}`)}>
-                        {`${type.charAt(0).toUpperCase() + type.slice(1)}: $${price}`}
-                      </p>
-                    ))}
-                  </div>
-                )}
+                      <div className="dropdown-content">
+                        {Object.entries(ticketPrices).map(([type, price]) => (
+                          <p
+                            key={type}
+                            onClick={() =>
+                              handleSeatTypeChange(seat, `${type}: ${price}`)
+                            }
+                          >
+                            {`${
+                              type.charAt(0).toUpperCase() + type.slice(1)
+                            }: $${price}`}
+                          </p>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 )}
               </li>

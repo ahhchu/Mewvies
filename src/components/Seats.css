@@ -181,3 +181,7 @@
       font-family: 'Courier New', Courier, monospace;
       font-weight: bold;
      }
+
+     .selectedSeatsInfo p {
+      font-weight: bold;
+     }
