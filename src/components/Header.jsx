@@ -78,6 +78,11 @@ function Header({ updateToken }) {
               Edit Profile
             </Link>
           </button>
+          <button className="nav">
+            <Link className="nav" to="/orderhistory">
+              Order History
+            </Link>
+          </button>
           {admin == 'admin' && (
             <button className="nav">
               <Link className="nav" to="/admin">

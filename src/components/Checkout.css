@@ -47,6 +47,8 @@
     height: 48px;
     font-family: 'Courier New', Courier, monospace;
     justify-content: center;
+    margin: 10px;
+    margin-bottom: 25px;
     line-height: 1;
     list-style: none;
     overflow: hidden;
@@ -128,6 +130,13 @@
     transform: translateY(2px);
    }
    
+   .buttons{
+    display: flex;
+    flex-direction: column;
+    margin-left: 30svw;
+    margin-right: 30svw;
+   }
+
    .card-option {
     align-items: center;
     appearance: none;

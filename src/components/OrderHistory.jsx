@@ -16,65 +16,68 @@ import {
 } from "firebase/auth";
 import { fetchUserData, getPaymentCards, passphrase, changePassword, updateUser } from "../functionality/User";
 import { getOrders } from "../functionality/order";
+import { collection, getDocs, doc, setDoc, updateDoc, addDoc, deleteDoc, Timestamp, where, query } from "firebase/firestore";
+import { db } from "../config/firestore";
 
 function OrderHistory() {
-
-  var movieID = "123456"
+//  var movieID = "123456"
   const [orders, setOrders] = useState([]);
-
+  const [movies, setMovies] = useState([]);
+  const [showings, setShowings] = useState([]);
   const auth = getAuth();
   const currentUser = auth.currentUser;
-
-  const [showings, setShowings] = useState([]);
-  const [userDetails, setUser] = useState({})
-
-  try {
-    fetchUserData(currentUser).then((userData) => {
-      setUser(userData);
-});
-  } catch (e) {
-    console.log(e);
-  }
-
-  getShowings().then((showingsList) => {getMovies().then((movieList) => {getOrders().then((data) => {
-    var tempOrders = []
-    data.forEach(element => {
-      if (element.uid == userDetails.uid) {
-        movieList.forEach(elle => {
-          if (elle.movie_id == element.movie_id) {
-            element.movie_name = elle.movie_title;
-          }
-        });
-        showingsList.forEach(ils => {
-          if (ils.showing_id == element.showing_id) {
-            element.showing_time = ils.showing_time;
-            element.showing_room = ils.room_id;
-          }
-        });
-        tempOrders.push(element);
-      }
-      setOrders(tempOrders);
-      console.log(orders);
-    });
-  })})})
   
-    getShowings().then((data) => {
-      var tempArray = [];
-      data.forEach(element => {
-        if (element.movie_id == movieID) {
-          tempArray.push(element);
-        }
+//  const [userDetails, setUser] = useState({})
+
+useEffect(() => {
+  const fetchInitialData = async () => {
+      const moviesData = await getMovies(); 
+      console.log("Movies fetched and set in state:", moviesData);
+      const showingsData = await getShowings(); 
+      setMovies(moviesData);
+      setShowings(showingsData);
+
+      const orderQuery = query(collection(db, "order"), where("customer_id", "==", currentUser.uid));
+      
+      const orderSnapshot = await getDocs(orderQuery);
+      const tempOrders = orderSnapshot.docs.map(doc => {
+          let order = doc.data();
+         
+          let movie = moviesData.find(movie => movie.movie_id === order.movie_id);
+//let movie = moviesData.find(movie => movie.movie_id === "123456");
+          console.log("Order movie_id: ", order.movie_id); // Check if movie_id is as expected
+          console.log("Movie found: ", movie ? "Yes" : "No"); // Check if movie was found
+          
+          let showing = showingsData.find(showing => showing.showing_id === order.showing_id);
+          console.log("Order showing_id: ", order.showing_id); // Check if showing_id is as expected
+          console.log("Showing found: ", showing ? "Yes" : "No"); // Check if showing was found
+          
+          return {
+              ...order,
+              movie_name: movie ? movie.movie_title : "Unknown",
+              showing_time: showing ? showing.showing_time : "Unknown",
+              showing_room: showing ? showing.room_id : "Unknown"
+          };
+          
       });
-      setShowings(tempArray)
-    })
+      
+      setOrders(tempOrders);
+//      console.log(new Date("2024-05-05T20:13:55.619Z").toString()); // Should log a valid date
+     
+  };
 
-  return (
-    <div className="popup">
-    
+  if (currentUser) {
+      fetchInitialData();
+  }
+}, [currentUser]);
+
+
+
+return (
+  <div className="popup">
       <div className="popup-inner">
-        <h2>Order History</h2>
-        <div className="signup-divider" />
-
+          <h2>Order History</h2>
+{/*          <div className="signup-divider" />*/}
           <div className="personal-details">
             <table>
               <tr>
@@ -104,10 +107,10 @@ function OrderHistory() {
                 )
               })}
               </table>
-            </div>
           </div>
       </div>
-  );
+  </div>
+);
 }
 
 export default OrderHistory;
