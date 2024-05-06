@@ -79,32 +79,33 @@ return (
           <h2>Order History</h2>
 {/*          <div className="signup-divider" />*/}
           <div className="personal-details">
-              <table>
-                  <tr>
-                      {/*<th>Order ID</th>*/}
-                      <th>Promotion</th>
-                      <th>Movie</th>
-                      <th>Showing Time</th>
-                      <th>Showing Room</th>
-                      <th>Seat Number</th>
-                      <th>Ticket Price</th>
-                      <th>Ticket Type</th>
-                      <th>Purchase time</th>
-                      
-                  </tr>
-                  {orders.map(order => (
-                      <tr key={order.order_id}>
-                          {/*<td>{order.order_id}</td>*/}
-                          <td>{order.promo_id}</td>
-                          <td>{order.movie_name}</td>
-                          <td>{new Date(order.showing_time.seconds).toString()}</td>
-                          <td>{order.showing_room}</td>
-                          <td>{order.seat_number}</td>
-                          <td>{"$" + order.ticket_price}</td>
-                          <td>{order.ticket_type}</td>
-                          <td>{new Date(order.purchase_time).toString()}</td>
-                      </tr>
-                  ))}
+            <table>
+              <tr>
+                <th>Order ID</th>
+                <th>Promotion</th>
+                <th>Movie</th>
+                <th>Showing Time</th>
+                <th>Showing Room</th>
+                <th>Seat</th>
+                <th>Ticket Price</th>
+                <th>Ticket Type</th>
+                <th>Purchase time</th>
+              </tr>
+              
+              {orders.map((order) => {
+                return( <tr>
+                <th>{order.order_id}</th>
+                <th>{order.promo_id}</th>
+                <th>{order.movie_name}</th>
+                <th>{new Date(order.showing_time.seconds * 1000).toString()}</th>
+                <th>{order.showing_room}</th>
+                <th>{order.seat_number}</th>
+                <th>{"$" + order.ticket_price}</th>
+                <th>{order.ticket_type}</th>
+                <th>{new Date(order.purchase_time.seconds * 1000).toString()}</th>
+                </tr>
+                )
+              })}
               </table>
           </div>
       </div>
