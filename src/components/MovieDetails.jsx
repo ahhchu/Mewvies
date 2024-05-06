@@ -15,6 +15,8 @@ const MovieDetails = () => {
     async function fetchData() {
       const movies = await getMovies();
       const movieData = movies.find(element => element.movie_id === movieId);
+      console.log("movies is: " + movies);
+      console.log("movieData is: " + movieData);
       if (movieData) {
         setMovie(movieData);
         console.log("Movie Name: ", movieData.movie_title);
