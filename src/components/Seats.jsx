@@ -10,7 +10,7 @@ import { doc, getDocs, getDoc, collection, query, where } from "firebase/firesto
 function Seats() {
   const navigate = useNavigate();
   const { movieId, showingId } = useParams();
-  console.log("movieId: ", movieId);
+//  console.log("movieId: ", movieId);
   const [movie, setMovie] = useState(null);
   const [showing, setShowings] = useState(null);
   const [ticketPrices, setTicketPrices] = useState({});
@@ -51,19 +51,22 @@ function Seats() {
     };
 
     /* fetch unavail seats */
-  const fetchUnavailableSeats = async () => {
-//    console.log("Showing ID:", showingId);
-    const ordersRef = collection(db, "order");
-    const q = query(ordersRef, where("movie_id", "==", movieId), where("showing_id", "==", showingId));
-    try {
-      const querySnapshot = await getDocs(q);
-      const bookedSeats = querySnapshot.docs.map(doc => doc.data().seat_number); // in firestore seat_number is number type, showingid is number type, movieid is string
-      setUnavailableSeats(bookedSeats);
-      console.log("Unavailable Seats: ", bookedSeats);
-    } catch (error) {
-      console.error("Error fetching unavailable seats: ", error);
-    }    
-  };
+    const fetchUnavailableSeats = async () => {
+      const ordersRef = collection(db, "order");
+      const q = query(ordersRef, where("movie_id", "==", movieId), where("showing_id", "==", showingId));
+      try {
+        const querySnapshot = await getDocs(q);
+        const bookedSeats = querySnapshot.docs.flatMap(doc => {
+          // Assuming seat_number can be "3, 4", split and trim each entry
+          return doc.data().seat_number.split(",").map(s => s.trim());
+        });
+        setUnavailableSeats(bookedSeats);
+        console.log("Unavailable Seats: ", bookedSeats);
+      } catch (error) {
+        console.error("Error fetching unavailable seats: ", error);
+      }
+    };
+    
 
   fetchMovieDetails();
   fetchShowingDetails();

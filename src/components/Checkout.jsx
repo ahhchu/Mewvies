@@ -19,7 +19,7 @@ function Checkout() {
   const { state } = useLocation();
   const { selectedSeats, seatTypes, showingTime, showingId, movieTitle, movieId } =
     state || {}; // location.state;
-    console.log("movieId: ", movieId);
+//    console.log("movieId: ", movieId);
     //console.log("showingId: ", showingId);
 
   const bookingId = location.state?.bookingId;
@@ -28,10 +28,14 @@ function Checkout() {
   const [editingSeat, setEditingSeat] = useState(null);
   const [total, setTotal] = useState(0);
   const [subtotal, setSubtotal] = useState(0);
+  const [ticketTotal, setTicketTotal] = useState(0);
   const [fees, setFees] = useState({});  
   const [cards, setCards] = useState([]); 
   const [selectedCard, setSelectedCard] = useState(null);
   const [ticketPrices, setTicketPrices] = useState({});
+  const [promo, setPromo] = useState('');
+  const [promoError, setPromoError] = useState('');
+  const [discount, setDiscount] = useState(0);
 
   const [hasCard, setHasCard] = useState(false);
   const [has3Cards, setHas3Cards] = useState(false);
@@ -50,6 +54,7 @@ function Checkout() {
  const [billingState, setBillingState] = useState("");
  const [billingZip, setBillingZip] = useState("");
 
+ const [percentageDiscount, setPercentageDiscount] = useState("");
 
   const auth = getAuth();
   const currentUser = auth.currentUser; // Get the current user
@@ -91,7 +96,6 @@ function Checkout() {
 
 
   const renderTicketTypeDropdown = (seat) => {
-
     const currentValue = editableSeatTypes[seat] || '';
   
     return (
@@ -170,22 +174,27 @@ function Checkout() {
       }
 
       // cart 
+      const orders = selectedSeats.flatMap(seatGroup => {
+        return seatGroup.split(", ").map(seat => ({
+          seat_number: seat.trim(),
+          ticket_type: editableSeatTypes[seatGroup].split(":")[0],  
+          ticket_price: parseFloat(editableSeatTypes[seatGroup].split(":")[1]),
+          showing_id: showingId,
+        }));
+      });
+    
       const cartData = {
         customer_id: user.uid,
-        orders: selectedSeats.map(seat => ({
-          seat_number: selectedSeats.join(", "),
-          ticket_type: editableSeatTypes[seat].split(":")[0],
-          ticket_price: total.toString(),
-          showing_id: showingId,
-        }))
+        orders: orders
       };
+
 //      console.log("User UID: ", user.uid);
       const orderData = {
         customer_id: user.uid,
         movie_id: movieId,
-        order_id: "GenerateOrFetchThisID",
-        payment_id: "GenerateOrFetchPaymentID", 
-        promo_id: "YourPromoID", // idk how to do this 
+//        order_id: "GenerateID",
+//        payment_id: "GenerateOrFetchPaymentID", 
+        promo_id: promo,
         purchase_time: new Date().toISOString(), 
         seat_number: selectedSeats.join(", "), 
         showing_id: showingId, 
@@ -256,40 +265,64 @@ setEditableSeatTypes(prev => ({ ...prev, [seat]: value }));
 };
 
 
-
+/* calculating price */
   useEffect(() => {
-    const newTotal = selectedSeats.reduce((total, seat) => {
-      const price = editableSeatTypes[seat]; 
-    return total + price;
-    }, 0);
-    setTotal(newTotal);
-  }, [editableSeatTypes, selectedSeats]); // Listen to changes in editableSeatTypes
-
-  useEffect(() => {
-    setEditableSeatTypes(seatTypes);
-  }, [seatTypes]);
-
-  /* calculating price */
-  useEffect(() => {
-    const newSubtotal = selectedSeats.reduce((acc, seat) => {
+    const ticketTotal = selectedSeats.reduce((acc, seat) => {
       const price = editableSeatTypes[seat] && typeof editableSeatTypes[seat] === 'string'
         ? parseFloat(editableSeatTypes[seat].split(':')[1])
         : 0;
       return acc + price;
     }, 0);
-    setSubtotal(newSubtotal);
+    setTicketTotal(ticketTotal);
 
-    const tax = newSubtotal * (fees.salesTax || 0);
+
+    const tax = ticketTotal * (fees.salesTax || 0);
+//    console.log("tax: ", tax);
+
     const onlineFees = selectedSeats.length * (fees.onlineFees || 0);
-    const totalWithTaxAndFees = newSubtotal + tax + onlineFees;
+
+    const totalWithTaxAndFees = ticketTotal + tax + onlineFees - discount;
     setTotal(totalWithTaxAndFees);
-}, [selectedSeats, editableSeatTypes, fees]);
+  }, [selectedSeats, editableSeatTypes, fees, discount]); // Now listens to discount changes as well
+
+
+
+  const handleApplyPromo = async () => {
+    console.log("Applying promo code:", promo);
+
+    if (!promo) {
+      setPromoError("Please enter a promo code");
+      return;
+    }
+    const promoQuery = query(collection(db, "promo"), where("promo_code", "==", promo.trim()));
+    const querySnapshot = await getDocs(promoQuery);
+
+    if (querySnapshot.empty) {
+      setPromoError("Invalid promo code");
+      setDiscount(0);
+    } else {
+      querySnapshot.forEach(doc => {
+        const data = doc.data();
+        if (data.percentage_bool) {
+          const percentageDiscount = (ticketTotal * data.promo_amt / 100).toFixed(2);
+          setDiscount(parseFloat(percentageDiscount));
+//          console.log("percentageDiscount: ", percentageDiscount);
+        } else {
+          setDiscount(parseFloat(data.promo_amt));
+//          console.log("percentageDiscount: ", data.promo_amt);
+        }
+        setPromoError('');
+      });
+    }
+  };
+
 
   return (
     <div className="Summary">
       <h1>Checkout</h1>
+      < br/>
       <h2>Order Summary View:</h2>
-
+    < br/>
       <h3> Movie: {movieTitle} </h3>
       <h3>Showtime: {new Date(showingTime).toLocaleString()}</h3>
       <h3>Ticket Type and Prices:</h3>
@@ -314,18 +347,29 @@ setEditableSeatTypes(prev => ({ ...prev, [seat]: value }));
   ))}
 </ul>
 
+    <input
+        type="text"
+        value={promo}
+        onChange={(e) => setPromo(e.target.value)}
+        placeholder="Enter promo code"
+      />
+      <button onClick={handleApplyPromo}>Apply Promo Code</button>
+      {promoError && <p className="error">{promoError}</p>}
+
 
       <h3>Total: </h3>
-      <h4>Ticket prices: ${subtotal.toFixed(2)}</h4>
-      <h4>Sales Tax: ({(fees.salesTax * 100).toFixed(0)}%): ${(subtotal * fees.salesTax).toFixed(2)}</h4>
+      <h4>Ticket prices: ${ticketTotal.toFixed(2)}</h4>
+      <h4>Sales Tax: ${(fees.salesTax * ticketTotal).toFixed(2)}</h4>
       <h4>Online Fees: ${(selectedSeats.length * fees.onlineFees).toFixed(2)}</h4>
+      <h4>Promo Discount: ${discount.toFixed(2)}</h4>
 
       <h3>
         Total amount: $
         {(
-          subtotal +
-          subtotal * fees.salesTax +
+          ticketTotal +
+          ticketTotal * fees.salesTax +
           selectedSeats.length * fees.onlineFees
+          - discount
         ).toFixed(2)}
       </h3>
 
